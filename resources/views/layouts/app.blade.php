@@ -9,6 +9,10 @@
     <!-- Google Fonts & Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦷</text></svg>">
     
+    <!-- Core Vendor Scripts (Synchronous for inline Blade scripts) -->
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+
     <!-- Vite Assets (Bootstrap 5, SCSS & jQuery) -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 

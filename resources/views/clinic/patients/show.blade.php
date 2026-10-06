@@ -564,13 +564,17 @@
         // Tooth click in patient profile
         $(document).on('click', '.tooth-item', function () {
             const toothId = $(this).data('tooth-id');
-            const toothName = $(this).data('tooth-name');
+            const toothName = $(this).data('tooth-name') || `السن رقم ${toothId}`;
             $('.tooth-item').removeClass('selected');
             $(this).addClass('selected');
 
             $('#activeToothNumber').val(toothId);
             $('#selectedToothDisplay').text(`${toothId} - ${toothName}`);
-            $('#toothActionModal').modal('show');
+            
+            const modalEl = document.getElementById('toothActionModal');
+            if (modalEl) {
+                bootstrap.Modal.getOrCreateInstance(modalEl).show();
+            }
         });
 
         // Apply Tooth condition and save via AJAX
@@ -595,7 +599,10 @@
                     notes: notes
                 },
                 success: function (res) {
-                    $('#toothActionModal').modal('hide');
+                    const modalEl = document.getElementById('toothActionModal');
+                    if (modalEl) {
+                        bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+                    }
                     window.location.reload(); // Refresh to update tooth history table
                 },
                 error: function (err) {

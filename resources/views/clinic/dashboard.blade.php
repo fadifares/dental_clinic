@@ -232,7 +232,11 @@ $(document).ready(function () {
         $(this).addClass('selected');
         $('#activeToothNumber').val(tooth);
         $('#selectedToothDisplay').text(`${tooth} - ${toothName}`);
-        $('#toothActionModal').modal('show');
+        
+        const modalEl = document.getElementById('toothActionModal');
+        if (modalEl) {
+            bootstrap.Modal.getOrCreateInstance(modalEl).show();
+        }
     });
 
     // Save Tooth Condition via AJAX
@@ -252,7 +256,10 @@ $(document).ready(function () {
                 notes: notes
             },
             success: function (res) {
-                $('#toothActionModal').modal('hide');
+                const modalEl = document.getElementById('toothActionModal');
+                if (modalEl) {
+                    bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+                }
                 
                 // Update anatomical tooth item status
                 const targetTooth = $(`.tooth-item[data-tooth-id="${toothNumber}"]`);
