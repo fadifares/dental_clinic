@@ -106,67 +106,73 @@
             </div>
 
             <!-- Adult Teeth Chart FDI (11..48) -->
-            <div class="p-3 bg-light rounded-4 border">
-                <!-- Upper Jaw (Maxilla) -->
-                <div class="text-center mb-3">
-                    <span class="badge bg-dark px-3 py-1 rounded-pill mb-2">الفك العلوي (Maxilla)</span>
-                    <div class="d-flex justify-content-center flex-wrap gap-1" dir="ltr">
-                        @foreach([18,17,16,15,14,13,12,11, 21,22,23,24,25,26,27,28] as $tooth)
-                            @php
-                                $cond = $doctorData['patientToothConditions'][$tooth] ?? 'healthy';
-                                $bgClass = match($cond) {
-                                    'caries' => 'btn-danger text-white',
-                                    'filled' => 'btn-primary text-white',
-                                    'crown' => 'btn-warning text-dark',
-                                    'rct' => 'btn-danger text-white',
-                                    'implant' => 'btn-info text-white',
-                                    'missing' => 'btn-dark text-white',
-                                    default => 'btn-outline-secondary bg-white'
-                                };
-                            @endphp
-                            <button type="button" 
-                                    class="btn {{ $bgClass }} btn-sm p-1 tooth-box shadow-sm fw-bold position-relative"
-                                    style="width: 38px; height: 46px; font-size: 0.75rem;"
-                                    data-tooth="{{ $tooth }}"
-                                    data-condition="{{ $cond }}"
-                                    title="سن #{{ $tooth }} - الحالة: {{ $cond }}">
-                                <span class="d-block">{{ $tooth }}</span>
-                                <i class="bi {{ $cond !== 'healthy' ? 'bi-circle-fill' : 'bi-circle' }}" style="font-size: 0.55rem;"></i>
-                            </button>
+            <div class="odontogram-container p-3 rounded-4 bg-white border">
+                <!-- Upper Arch (Maxilla) -->
+                <div class="text-center mb-4">
+                    <div class="small fw-bold text-muted mb-2">الفك العلوي (Upper Arch - Maxilla)</div>
+                    <div class="dental-arch justify-content-center">
+                        @foreach([18, 17, 16, 15, 14, 13, 12, 11] as $tNum)
+                            @php $status = $doctorData['patientToothConditions'][$tNum] ?? 'healthy'; @endphp
+                            <div class="tooth-item" data-tooth-id="{{ $tNum }}" data-tooth-name="السن رقم {{ $tNum }}" data-status="{{ $status }}">
+                                <div class="tooth-visual">
+                                    <div class="surface-grid">
+                                        <span class="surface"></span><span class="surface"></span>
+                                        <span class="surface"></span><span class="surface"></span>
+                                    </div>
+                                </div>
+                                <span class="tooth-number">{{ $tNum }}</span>
+                            </div>
+                        @endforeach
+
+                        <div class="border-start border-2 border-secondary mx-2 align-self-stretch" style="opacity: 0.3;"></div>
+
+                        @foreach([21, 22, 23, 24, 25, 26, 27, 28] as $tNum)
+                            @php $status = $doctorData['patientToothConditions'][$tNum] ?? 'healthy'; @endphp
+                            <div class="tooth-item" data-tooth-id="{{ $tNum }}" data-tooth-name="السن رقم {{ $tNum }}" data-status="{{ $status }}">
+                                <div class="tooth-visual">
+                                    <div class="surface-grid">
+                                        <span class="surface"></span><span class="surface"></span>
+                                        <span class="surface"></span><span class="surface"></span>
+                                    </div>
+                                </div>
+                                <span class="tooth-number">{{ $tNum }}</span>
+                            </div>
                         @endforeach
                     </div>
                 </div>
 
-                <hr class="my-2 border-secondary-subtle">
-
-                <!-- Lower Jaw (Mandible) -->
+                <!-- Lower Arch (Mandible) -->
                 <div class="text-center">
-                    <div class="d-flex justify-content-center flex-wrap gap-1 mb-2" dir="ltr">
-                        @foreach([48,47,46,45,44,43,42,41, 31,32,33,34,35,36,37,38] as $tooth)
-                            @php
-                                $cond = $doctorData['patientToothConditions'][$tooth] ?? 'healthy';
-                                $bgClass = match($cond) {
-                                    'caries' => 'btn-danger text-white',
-                                    'filled' => 'btn-primary text-white',
-                                    'crown' => 'btn-warning text-dark',
-                                    'rct' => 'btn-danger text-white',
-                                    'implant' => 'btn-info text-white',
-                                    'missing' => 'btn-dark text-white',
-                                    default => 'btn-outline-secondary bg-white'
-                                };
-                            @endphp
-                            <button type="button" 
-                                    class="btn {{ $bgClass }} btn-sm p-1 tooth-box shadow-sm fw-bold position-relative"
-                                    style="width: 38px; height: 46px; font-size: 0.75rem;"
-                                    data-tooth="{{ $tooth }}"
-                                    data-condition="{{ $cond }}"
-                                    title="سن #{{ $tooth }} - الحالة: {{ $cond }}">
-                                <i class="bi {{ $cond !== 'healthy' ? 'bi-circle-fill' : 'bi-circle' }}" style="font-size: 0.55rem;"></i>
-                                <span class="d-block">{{ $tooth }}</span>
-                            </button>
+                    <div class="dental-arch justify-content-center">
+                        @foreach([48, 47, 46, 45, 44, 43, 42, 41] as $tNum)
+                            @php $status = $doctorData['patientToothConditions'][$tNum] ?? 'healthy'; @endphp
+                            <div class="tooth-item" data-tooth-id="{{ $tNum }}" data-tooth-name="السن رقم {{ $tNum }}" data-status="{{ $status }}">
+                                <span class="tooth-number">{{ $tNum }}</span>
+                                <div class="tooth-visual">
+                                    <div class="surface-grid">
+                                        <span class="surface"></span><span class="surface"></span>
+                                        <span class="surface"></span><span class="surface"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        <div class="border-start border-2 border-secondary mx-2 align-self-stretch" style="opacity: 0.3;"></div>
+
+                        @foreach([31, 32, 33, 34, 35, 36, 37, 38] as $tNum)
+                            @php $status = $doctorData['patientToothConditions'][$tNum] ?? 'healthy'; @endphp
+                            <div class="tooth-item" data-tooth-id="{{ $tNum }}" data-tooth-name="السن رقم {{ $tNum }}" data-status="{{ $status }}">
+                                <span class="tooth-number">{{ $tNum }}</span>
+                                <div class="tooth-visual">
+                                    <div class="surface-grid">
+                                        <span class="surface"></span><span class="surface"></span>
+                                        <span class="surface"></span><span class="surface"></span>
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     </div>
-                    <span class="badge bg-dark px-3 py-1 rounded-pill">الفك السفلي (Mandible)</span>
+                    <div class="small fw-bold text-muted mt-2">الفك السفلي (Lower Arch - Mandible)</div>
                 </div>
             </div>
 

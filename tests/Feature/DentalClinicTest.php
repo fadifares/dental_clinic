@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\UserRole;
+use App\Models\DentalChart;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\User;
@@ -301,5 +302,63 @@ class DentalClinicTest extends TestCase
         $this->assertTrue($created->isReceptionist());
         $this->assertTrue($created->isAccountant());
         $this->assertEquals(['receptionist', 'accountant'], $created->getRolesArray());
+    }
+
+    /**
+     * Test FDI chart renders accurately in patient profile and doctor dashboard views.
+     */
+    public function test_fdi_chart_renders_correctly_in_patient_and_doctor_views(): void
+    {
+        $doctorUser = User::create([
+            'name' => 'د. حسام الدين',
+            'email' => 'dr.hossam@dentalcare.com',
+            'role' => UserRole::Doctor,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $doctor = Doctor::create([
+            'name' => 'د. حسام الدين',
+            'speciality' => 'طب وجراحة الفم والأسنان',
+            'email' => 'dr.hossam@dentalcare.com',
+            'phone' => '0501112233',
+            'is_active' => true,
+        ]);
+
+        $patient = Patient::create([
+            'name' => 'ماجد الشمري',
+            'file_number' => 'PT-FDI-001',
+            'phone' => '0555554433',
+        ]);
+
+        // Add tooth conditions
+        DentalChart::create([
+            'patient_id' => $patient->id,
+            'tooth_number' => 16,
+            'condition' => 'caries',
+            'notes' => 'Occlusal decay',
+        ]);
+        DentalChart::create([
+            'patient_id' => $patient->id,
+            'tooth_number' => 21,
+            'condition' => 'filled',
+            'notes' => 'Composite restoration',
+        ]);
+
+        // 1. Verify Patient Profile FDI view
+        $responsePatient = $this->actingAs($doctorUser)->get("/clinic/patients/{$patient->id}");
+        $responsePatient->assertStatus(200);
+        $responsePatient->assertSee('data-tooth-id="16"', false);
+        $responsePatient->assertSee('data-status="caries"', false);
+        $responsePatient->assertSee('data-tooth-id="21"', false);
+        $responsePatient->assertSee('data-status="filled"', false);
+
+        // 2. Verify Doctor Dashboard FDI view
+        $responseDocDashboard = $this->actingAs($doctorUser)->get("/clinic?patient_id={$patient->id}");
+        $responseDocDashboard->assertStatus(200);
+        $responseDocDashboard->assertSee('data-tooth-id="16"', false);
+        $responseDocDashboard->assertSee('data-status="caries"', false);
+        $responseDocDashboard->assertSee('data-tooth-id="21"', false);
+        $responseDocDashboard->assertSee('data-status="filled"', false);
     }
 }

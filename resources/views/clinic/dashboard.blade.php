@@ -227,8 +227,11 @@ $(document).ready(function () {
     // Handle Odontogram Tooth Clicks
     $(document).on('click', '.tooth-box, .tooth-item', function () {
         const tooth = $(this).data('tooth') || $(this).data('tooth-id');
+        const toothName = $(this).data('tooth-name') || `السن رقم ${tooth}`;
+        $('.tooth-item').removeClass('selected');
+        $(this).addClass('selected');
         $('#activeToothNumber').val(tooth);
-        $('#selectedToothDisplay').text(tooth);
+        $('#selectedToothDisplay').text(`${tooth} - ${toothName}`);
         $('#toothActionModal').modal('show');
     });
 
@@ -251,6 +254,12 @@ $(document).ready(function () {
             success: function (res) {
                 $('#toothActionModal').modal('hide');
                 
+                // Update anatomical tooth item status
+                const targetTooth = $(`.tooth-item[data-tooth-id="${toothNumber}"]`);
+                if (targetTooth.length) {
+                    targetTooth.attr('data-status', condition);
+                }
+
                 // Update button style
                 const targetBtn = $(`.tooth-box[data-tooth="${toothNumber}"]`);
                 if (targetBtn.length) {
@@ -263,8 +272,6 @@ $(document).ready(function () {
                     else if (condition === 'missing') targetBtn.addClass('btn-dark text-white');
                     else targetBtn.addClass('btn-outline-secondary bg-white');
                 }
-
-                alert(`تم تحديث حالة السن #${toothNumber} (${condition}) بنجاح في قاعدة البيانات.`);
             },
             error: function () {
                 alert('حدث خطأ أثناء حفظ حالة السن. يرجى التحقق من الاتصال.');
