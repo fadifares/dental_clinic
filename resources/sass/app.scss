@@ -1,0 +1,290 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+// Bootstrap Icons
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// Custom Clinic Variables & Theme Colors
+$font-family-sans-serif: 'IBM Plex Sans Arabic', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+$primary: #0284c7; // Medical Sky Blue
+$secondary: #0f172a; // Deep Navy
+$success: #0d9488; // Medical Teal / Mint
+$info: #06b6d4; // Cyan
+$warning: #f59e0b; // Amber
+$danger: #ef4444; // Coral Red
+$light: #f8fafc; // Soft Clinical Background
+$dark: #0b192c; // Dark Charcoal Navy
+
+$body-bg: #f8fafc;
+$body-color: #1e293b;
+$card-border-radius: 1rem;
+$btn-border-radius: 0.65rem;
+$input-border-radius: 0.65rem;
+
+// Import Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// ==========================================
+// Custom Dental Clinic Modern Design System
+// ==========================================
+
+:root {
+    --clinic-primary: #0284c7;
+    --clinic-secondary: #0b192c;
+    --clinic-teal: #0d9488;
+    --clinic-bg: #f8fafc;
+    --clinic-card-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+    --clinic-hover-shadow: 0 20px 30px -10px rgba(2, 132, 199, 0.15);
+}
+
+body {
+    font-family: $font-family-sans-serif;
+    background-color: var(--clinic-bg);
+    color: #334155;
+    overflow-x: hidden;
+}
+
+// Medical Glassmorphism & Cards
+.clinic-card {
+    background: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: var(--clinic-card-shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+        box-shadow: var(--clinic-hover-shadow);
+    }
+}
+
+// Clinic Form Controls & Input Styling
+.form-control,
+.form-select {
+    padding: 0.65rem 1.8rem;
+    font-size: 0.95rem;
+    border-color: #cbd5e1;
+    border-radius: 0.65rem;
+    background-color: #f8fafc;
+    transition: all 0.2s ease-in-out;
+
+    &:focus {
+        background-color: #ffffff;
+        border-color: #0284c7;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+}
+
+// Integrated Seamless Input Icons (Clean RTL/LTR)
+.clinic-input-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    i {
+        position: absolute;
+        font-size: 1.15rem;
+        color: #94a3b8;
+        pointer-events: none;
+        transition: color 0.2s ease;
+        z-index: 5;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    &:focus-within i {
+        color: #0284c7;
+    }
+}
+
+[dir="rtl"] .clinic-input-icon {
+    i {
+        right: 14px;
+    }
+
+    .form-control {
+        padding-right: 42px;
+        padding-left: 14px;
+    }
+}
+
+[dir="ltr"] .clinic-input-icon {
+    i {
+        left: 14px;
+    }
+
+    .form-control {
+        padding-left: 42px;
+        padding-right: 14px;
+    }
+}
+
+.clinic-glass-nav {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+// Brand Badges & Gradients
+.bg-clinic-gradient {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+}
+
+.bg-clinic-hero {
+    background: radial-gradient(circle at top right, rgba(2, 132, 199, 0.08), transparent 40%),
+        radial-gradient(circle at bottom left, rgba(13, 148, 136, 0.08), transparent 40%),
+        #ffffff;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+// Stats & Widget Cards
+.clinic-stat-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.85rem;
+    font-size: 1.4rem;
+}
+
+// Interactive Odontogram (Dental Chart) Styling
+.odontogram-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+}
+
+.dental-arch {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.tooth-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+
+    &:hover {
+        transform: translateY(-4px);
+    }
+
+    &.selected .tooth-visual {
+        box-shadow: 0 0 0 3px #0284c7;
+        background: #e0f2fe;
+    }
+
+    .tooth-number {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #64748b;
+        margin-top: 4px;
+    }
+
+    .tooth-visual {
+        width: 42px;
+        height: 58px;
+        border: 2px solid #cbd5e1;
+        border-radius: 10px;
+        background: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 4px;
+        position: relative;
+        transition: all 0.2s ease;
+
+        .surface-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            height: 100%;
+
+            .surface {
+                border-radius: 3px;
+                background: #e2e8f0;
+                transition: background-color 0.2s ease;
+
+                &:hover {
+                    background: #93c5fd;
+                }
+            }
+        }
+    }
+
+    // Tooth Status Color Overlays
+    &[data-status="healthy"] .tooth-visual {
+        border-color: #10b981;
+        background: #ecfdf5;
+    }
+
+    &[data-status="caries"] .tooth-visual {
+        border-color: #ef4444;
+        background: #fef2f2;
+    }
+
+    &[data-status="filled"] .tooth-visual {
+        border-color: #0284c7;
+        background: #f0f9ff;
+    }
+
+    &[data-status="crown"] .tooth-visual {
+        border-color: #f59e0b;
+        background: #fffbeb;
+    }
+
+    &[data-status="missing"] .tooth-visual {
+        border-color: #94a3b8;
+        background: #f1f5f9;
+        opacity: 0.5;
+    }
+
+    &[data-status="implant"] .tooth-visual {
+        border-color: #8b5cf6;
+        background: #f5f3ff;
+    }
+
+    &[data-status="rct"] .tooth-visual {
+        border-color: #ec4899;
+        background: #fdf2f8;
+    }
+}
+
+// RTL Utilities
+[dir="rtl"] {
+    .me-auto {
+        margin-right: 0 !important;
+        margin-left: auto !important;
+    }
+
+    .ms-auto {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+
+    .text-end {
+        text-align: left !important;
+    }
+
+    .text-start {
+        text-align: right !important;
+    }
+}

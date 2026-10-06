@@ -1,0 +1,245 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Enums\UserRole;
+use App\Models\Doctor;
+use App\Models\Patient;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class DentalClinicTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /**
+     * Test public dental clinic homepage renders successfully without authentication.
+     */
+    public function test_public_website_renders_successfully(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('دنتال');
+        $response->assertSee('حجز موعد كشف أونلاين');
+    }
+
+    /**
+     * Test unauthenticated access to clinic ERP is redirected to login (Security Check).
+     */
+    public function test_unauthenticated_users_are_redirected_to_login(): void
+    {
+        $response = $this->get('/clinic');
+
+        $response->assertRedirect('/login');
+    }
+
+    /**
+     * Test login page renders with roles demo switcher.
+     */
+    public function test_login_page_renders_successfully(): void
+    {
+        $response = $this->get('/login');
+
+        $response->assertStatus(200);
+        $response->assertSee('تسجيل الدخول');
+        $response->assertSee('admin@dentalcare.com');
+    }
+
+    /**
+     * Test admin can access all clinic sections.
+     */
+    public function test_admin_can_access_all_sections(): void
+    {
+        $admin = User::create([
+            'name' => 'د. أحمد السالم',
+            'email' => 'admin@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $doctor = Doctor::create([
+            'name' => 'د. أحمد السالم',
+            'speciality' => 'استشاري جراحة وزراعة الأسنان',
+        ]);
+
+        $patient = Patient::create([
+            'name' => 'فهد العتيبي',
+            'file_number' => 'PT-1001',
+            'phone' => '0501234567',
+        ]);
+
+        $response = $this->actingAs($admin)->get('/clinic');
+        $response->assertStatus(200);
+        $response->assertSee('لوحة القيادة والتشغيل اليومي');
+
+        $responseBilling = $this->actingAs($admin)->get('/clinic/billing');
+        $responseBilling->assertStatus(200);
+
+        $responseLabs = $this->actingAs($admin)->get('/clinic/labs');
+        $responseLabs->assertStatus(200);
+    }
+
+    /**
+     * Test role-based authorization: Receptionist CANNOT access financial billing (403 Forbidden).
+     */
+    public function test_receptionist_cannot_access_billing_records(): void
+    {
+        $receptionist = User::create([
+            'name' => 'منى العتيبي',
+            'email' => 'reception@dentalcare.com',
+            'role' => UserRole::Receptionist,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($receptionist)->get('/clinic/billing');
+
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Test role-based authorization: Accountant CAN access billing, but CANNOT modify odontogram.
+     */
+    public function test_accountant_can_access_billing_but_cannot_modify_odontogram(): void
+    {
+        $accountant = User::create([
+            'name' => 'طارق الحربي',
+            'email' => 'accounting@dentalcare.com',
+            'role' => UserRole::Accountant,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $patient = Patient::create([
+            'name' => 'فهد العتيبي',
+            'file_number' => 'PT-1001',
+            'phone' => '0501234567',
+        ]);
+
+        // Can access billing
+        $responseBilling = $this->actingAs($accountant)->get('/clinic/billing');
+        $responseBilling->assertStatus(200);
+
+        // Cannot update clinical tooth chart (403)
+        $responseTooth = $this->actingAs($accountant)->postJson('/clinic/tooth-update', [
+            'patient_id' => $patient->id,
+            'tooth_number' => 16,
+            'condition' => 'crown',
+        ]);
+        $responseTooth->assertStatus(403);
+    }
+
+    /**
+     * Test doctor can update tooth condition in dental chart.
+     */
+    public function test_doctor_can_update_tooth_condition(): void
+    {
+        $doctorUser = User::create([
+            'name' => 'د. سارة المنصور',
+            'email' => 'doctor@dentalcare.com',
+            'role' => UserRole::Doctor,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $patient = Patient::create([
+            'name' => 'فهد العتيبي',
+            'file_number' => 'PT-1001',
+            'phone' => '0501234567',
+        ]);
+
+        $response = $this->actingAs($doctorUser)->postJson('/clinic/tooth-update', [
+            'patient_id' => $patient->id,
+            'tooth_number' => 16,
+            'condition' => 'crown',
+            'notes' => 'Crown restoration',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('dental_charts', [
+            'patient_id' => $patient->id,
+            'tooth_number' => 16,
+            'condition' => 'crown',
+        ]);
+    }
+
+    /**
+     * Test only Admin can access users and permissions module.
+     */
+    public function test_only_admin_can_access_user_management(): void
+    {
+        $doctor = User::create([
+            'name' => 'د. خالد القحطاني',
+            'email' => 'dr.khalid@dentalcare.com',
+            'role' => UserRole::Doctor,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $admin = User::create([
+            'name' => 'المدير العام',
+            'email' => 'admin.chief@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        // Doctor is blocked (403 Forbidden)
+        $this->actingAs($doctor)->get('/clinic/users')->assertStatus(403);
+
+        // Admin can access successfully (200 OK)
+        $this->actingAs($admin)->get('/clinic/users')->assertStatus(200);
+    }
+
+    /**
+     * Test admin can create a new user with valid role and password.
+     */
+    public function test_admin_can_create_new_user(): void
+    {
+        $admin = User::create([
+            'name' => 'المدير العام',
+            'email' => 'admin.root@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($admin)->post('/clinic/users', [
+            'name' => 'هدى العيسى',
+            'email' => 'huda@dentalcare.com',
+            'role' => 'receptionist',
+            'password' => 'SecurePass2026#',
+        ]);
+
+        $response->assertRedirect('/clinic/users');
+        $this->assertDatabaseHas('users', [
+            'email' => 'huda@dentalcare.com',
+            'role' => 'receptionist',
+            'is_active' => true,
+        ]);
+    }
+
+    /**
+     * Test admin cannot deactivate their own logged in account.
+     */
+    public function test_admin_cannot_deactivate_self(): void
+    {
+        $admin = User::create([
+            'name' => 'المدير الأصلي',
+            'email' => 'master@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($admin)->patch('/clinic/users/'.$admin->id.'/toggle');
+        $response->assertSessionHas('error');
+
+        $this->assertTrue($admin->fresh()->is_active);
+    }
+}
