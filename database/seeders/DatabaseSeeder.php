@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'د. أحمد السالم',
                 'role' => UserRole::Admin,
+                'roles' => ['admin'],
                 'password' => Hash::make('Password123#'),
                 'is_active' => true,
             ]
@@ -36,6 +37,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'د. سارة المنصور',
                 'role' => UserRole::Doctor,
+                'roles' => ['doctor'],
                 'password' => Hash::make('Password123#'),
                 'is_active' => true,
             ]
@@ -46,6 +48,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'منى العتيبي (الاستقبال)',
                 'role' => UserRole::Receptionist,
+                'roles' => ['receptionist'],
                 'password' => Hash::make('Password123#'),
                 'is_active' => true,
             ]
@@ -56,6 +59,18 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'طارق الحربي (المحاسب)',
                 'role' => UserRole::Accountant,
+                'roles' => ['accountant'],
+                'password' => Hash::make('Password123#'),
+                'is_active' => true,
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'dual@dentalcare.com'],
+            [
+                'name' => 'هند الدوسري (استقبال ومحاسبة)',
+                'role' => UserRole::Receptionist,
+                'roles' => ['receptionist', 'accountant'],
                 'password' => Hash::make('Password123#'),
                 'is_active' => true,
             ]

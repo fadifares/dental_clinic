@@ -23,10 +23,11 @@ class UserController extends Controller
 
         $stats = [
             'total' => $users->count(),
-            'admins' => $users->where('role', UserRole::Admin)->count(),
-            'doctors' => $users->where('role', UserRole::Doctor)->count(),
-            'receptionists' => $users->where('role', UserRole::Receptionist)->count(),
-            'accountants' => $users->where('role', UserRole::Accountant)->count(),
+            'admins' => $users->filter(fn ($u) => $u->isAdmin())->count(),
+            'doctors' => $users->filter(fn ($u) => $u->isDoctor())->count(),
+            'receptionists' => $users->filter(fn ($u) => $u->isReceptionist())->count(),
+            'accountants' => $users->filter(fn ($u) => $u->isAccountant())->count(),
+            'multi_role' => $users->filter(fn ($u) => count($u->getRolesArray()) > 1)->count(),
             'active' => $users->where('is_active', true)->count(),
             'inactive' => $users->where('is_active', false)->count(),
         ];
@@ -75,7 +76,7 @@ class UserController extends Controller
             ],
             [
                 'module' => 'إدارة المستخدمين والصلاحيات والرقابة الأمنية',
-                'description' => 'إنشاء موظفين جدد، تعديل الصلاحيات، تعطيل الحسابات، ومراجعة الأمان',
+                'description' => 'إنشاء موظفين جدد، تعيين مجموعات الصلاحيات المتعددة، وتعطيل الحسابات',
                 'admin' => true,
                 'doctor' => false,
                 'receptionist' => false,
@@ -87,29 +88,34 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created user in storage with strict password & role validation.
+     * Store a newly created user in storage with support for multiple roles/groups.
      */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'role' => ['required', new Enum(UserRole::class)],
+            'roles' => ['nullable', 'array', 'min:1'],
+            'roles.*' => [new Enum(UserRole::class)],
+            'role' => ['nullable', new Enum(UserRole::class)],
             'password' => ['required', 'string', Password::min(8)],
             'phone' => ['nullable', 'string', 'max:20'],
             'speciality' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $user = User::create([
+        $roles = $validated['roles'] ?? (isset($validated['role']) ? [$validated['role']] : ['receptionist']);
+
+        $user = new User([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'role' => $validated['role'],
             'password' => Hash::make($validated['password']),
             'is_active' => true,
         ]);
+        $user->roles = $roles;
+        $user->save();
 
-        // If newly created user is a Doctor, link or create Doctor profile if requested
-        if ($user->role === UserRole::Doctor && ! empty($validated['speciality'])) {
+        // If newly created user has Doctor role, link or create Doctor profile if requested
+        if ($user->isDoctor() && ! empty($validated['speciality'])) {
             Doctor::create([
                 'name' => $user->name,
                 'email' => $user->email,
@@ -120,8 +126,10 @@ class UserController extends Controller
             ]);
         }
 
+        $labels = $user->getRoleLabelsString();
+
         return redirect()->route('clinic.users.index')
-            ->with('success', "تم إضافة المستخدم '{$user->name}' بصلاحية ({$user->role->label()}) بنجاح.");
+            ->with('success', "تم إضافة المستخدم '{$user->name}' بنجاح وتعيينه للمجموعات: ({$labels}).");
     }
 
     /**
@@ -145,26 +153,30 @@ class UserController extends Controller
     }
 
     /**
-     * Update user details and role.
+     * Update user details and multiple roles/groups.
      */
     public function update(Request $request, User $user): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
-            'role' => ['required', new Enum(UserRole::class)],
+            'roles' => ['nullable', 'array', 'min:1'],
+            'roles.*' => [new Enum(UserRole::class)],
+            'role' => ['nullable', new Enum(UserRole::class)],
             'password' => ['nullable', 'string', Password::min(8)],
         ]);
 
+        $roles = $validated['roles'] ?? (isset($validated['role']) ? [$validated['role']] : $user->getRolesArray());
+
         // Security check: Admin cannot revoke their own admin role to prevent lockout
-        if ($user->id === auth()->id() && $validated['role'] !== UserRole::Admin->value) {
+        if ($user->id === auth()->id() && ! in_array(UserRole::Admin->value, $roles, true)) {
             return redirect()->route('clinic.users.index')
                 ->with('error', 'لا يمكنك إزالة صلاحية المدير عن حسابك الشخصي منعاً لفقدان السيطرة على النظام.');
         }
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
-        $user->role = $validated['role'];
+        $user->roles = $roles;
 
         if (! empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
@@ -172,7 +184,9 @@ class UserController extends Controller
 
         $user->save();
 
+        $labels = $user->getRoleLabelsString();
+
         return redirect()->route('clinic.users.index')
-            ->with('success', "تم تحديث بيانات وصلاحيات '{$user->name}' بنجاح.");
+            ->with('success', "تم تحديث بيانات وصلاحيات '{$user->name}' وتعيين المجموعات: ({$labels}).");
     }
 }

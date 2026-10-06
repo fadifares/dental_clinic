@@ -10,7 +10,7 @@
         <div class="d-flex align-items-center gap-2">
             <h3 class="fw-bold text-dark mb-0">لوحة القيادة والتشغيل اليومي 🩺</h3>
             <span class="badge bg-primary-subtle text-primary border px-3 py-1 rounded-pill">
-                {{ auth()->user()->role->label() }}
+                {{ auth()->user()->getRoleLabelsString() }}
             </span>
         </div>
         <p class="text-muted small mb-0 mt-1">مرحباً بك، <strong class="text-dark">{{ auth()->user()->name }}</strong> • البيانات معروضة خصيصاً وفق مهامك ومسؤولياتك</p>
@@ -55,6 +55,31 @@
                class="btn btn-sm rounded-pill px-3 fw-bold {{ $effectiveRole === 'accountant' ? 'btn-success shadow-sm' : 'btn-light text-muted' }}">
                 <i class="bi bi-wallet2 me-1"></i> المحاسب (Accountant)
             </a>
+        </div>
+    </div>
+</div>
+@endif
+
+<!-- Multi-Role Switcher for Dual-Role Staff (e.g. Receptionist + Accountant) -->
+@if(!auth()->user()->isAdmin() && count($userRoles) > 1)
+<div class="clinic-card p-3 mb-4 bg-white border border-warning-subtle rounded-4 shadow-sm">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-warning text-dark p-2 rounded-circle">
+                <i class="bi bi-layers-fill"></i>
+            </span>
+            <div>
+                <strong class="text-dark small d-block">أنت معين في أكثر من مجموعة صلاحيات (صلاحيات مدمجة):</strong>
+                <span class="text-muted" style="font-size: 0.75rem;">يمكنك التبديل الفوري بين واجهات مهامك اليومية:</span>
+            </div>
+        </div>
+        <div class="btn-group rounded-pill p-1 bg-light border shadow-sm" role="group">
+            @foreach(auth()->user()->getRoleInstances() as $roleInstance)
+                <a href="{{ route('clinic.dashboard', ['role_view' => $roleInstance->value]) }}" 
+                   class="btn btn-sm rounded-pill px-3 fw-bold {{ $effectiveRole === $roleInstance->value ? 'btn-primary shadow-sm' : 'btn-light text-muted' }}">
+                    <i class="bi bi-check2-circle me-1"></i> لوحة {{ $roleInstance->label() }}
+                </a>
+            @endforeach
         </div>
     </div>
 </div>

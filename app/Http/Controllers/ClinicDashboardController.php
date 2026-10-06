@@ -23,11 +23,15 @@ class ClinicDashboardController extends Controller
         $user = auth()->user();
         $today = now()->toDateString();
 
-        // Effective role: User's role, or allowed preview for Admin
-        $effectiveRole = $user->role->value;
-        if ($user->isAdmin() && $request->has('role_preview')) {
+        // Effective role: selected by user from their assigned roles, or preview for Admin
+        $userRoles = $user->getRolesArray();
+        $effectiveRole = $userRoles[0] ?? 'receptionist';
+
+        if ($request->has('role_view') && in_array($request->query('role_view'), $userRoles, true)) {
+            $effectiveRole = $request->query('role_view');
+        } elseif ($user->isAdmin() && $request->has('role_preview')) {
             $preview = $request->query('role_preview');
-            if (in_array($preview, ['admin', 'doctor', 'receptionist', 'accountant'])) {
+            if (in_array($preview, ['admin', 'doctor', 'receptionist', 'accountant'], true)) {
                 $effectiveRole = $preview;
             }
         }
@@ -173,7 +177,8 @@ class ClinicDashboardController extends Controller
             'receptionData',
             'accountantData',
             'activePatient',
-            'patientToothConditions'
+            'patientToothConditions',
+            'userRoles'
         ));
     }
 

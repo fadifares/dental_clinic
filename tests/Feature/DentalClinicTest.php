@@ -242,4 +242,64 @@ class DentalClinicTest extends TestCase
 
         $this->assertTrue($admin->fresh()->is_active);
     }
+
+    /**
+     * Test a user with multiple roles (Receptionist + Accountant) can access both modules.
+     */
+    public function test_user_with_multiple_roles_can_access_both_reception_and_billing(): void
+    {
+        $dualUser = User::create([
+            'name' => 'هند الدوسري',
+            'email' => 'hind.dual@dentalcare.com',
+            'password' => bcrypt('Password123#'),
+            'roles' => ['receptionist', 'accountant'],
+            'is_active' => true,
+        ]);
+
+        $this->assertTrue($dualUser->isReceptionist());
+        $this->assertTrue($dualUser->isAccountant());
+        $this->assertFalse($dualUser->isDoctor());
+        $this->assertFalse($dualUser->isAdmin());
+
+        // Can access appointments (as receptionist)
+        $this->actingAs($dualUser)->get('/clinic/appointments')->assertStatus(200);
+
+        // Can access billing (as accountant)
+        $this->actingAs($dualUser)->get('/clinic/billing')->assertStatus(200);
+
+        // Cannot access lab orders (restricted to doctor/admin) -> 403
+        $this->actingAs($dualUser)->get('/clinic/labs')->assertStatus(403);
+
+        // Cannot access user management (restricted to admin) -> 403
+        $this->actingAs($dualUser)->get('/clinic/users')->assertStatus(403);
+    }
+
+    /**
+     * Test admin can create user with multiple roles array.
+     */
+    public function test_admin_can_create_user_with_multiple_roles(): void
+    {
+        $admin = User::create([
+            'name' => 'المدير العام',
+            'email' => 'admin.chief2@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($admin)->post('/clinic/users', [
+            'name' => 'سارة العلي',
+            'email' => 'sara.ali@dentalcare.com',
+            'roles' => ['receptionist', 'accountant'],
+            'password' => 'SecurePass2026#',
+        ]);
+
+        $response->assertRedirect('/clinic/users');
+
+        $created = User::where('email', 'sara.ali@dentalcare.com')->first();
+        $this->assertNotNull($created);
+        $this->assertTrue($created->isReceptionist());
+        $this->assertTrue($created->isAccountant());
+        $this->assertEquals(['receptionist', 'accountant'], $created->getRolesArray());
+    }
 }

@@ -59,13 +59,14 @@
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
-        <div class="clinic-card p-3 d-flex align-items-center justify-content-between">
+        <div class="clinic-card p-3 d-flex align-items-center justify-content-between border-info-subtle">
             <div>
-                <span class="text-muted small d-block mb-1">أطباء العيادة (Doctors)</span>
-                <h3 class="fw-bold text-info mb-0">{{ $stats['doctors'] }}</h3>
+                <span class="text-muted small d-block mb-1">صلاحيات متعددة (Multi-Group)</span>
+                <h3 class="fw-bold text-info mb-0">{{ $stats['multi_role'] }}</h3>
+                <span class="text-muted" style="font-size: 0.75rem;">مثل: محاسب + استقبال</span>
             </div>
             <div class="clinic-stat-icon bg-info-subtle text-info">
-                <i class="bi bi-person-badge-fill fs-4"></i>
+                <i class="bi bi-layers-fill fs-4"></i>
             </div>
         </div>
     </div>
@@ -74,6 +75,7 @@
             <div>
                 <span class="text-muted small d-block mb-1">الاستقبال والمحاسبة</span>
                 <h3 class="fw-bold text-warning mb-0">{{ $stats['receptionists'] + $stats['accountants'] }}</h3>
+                <span class="text-muted" style="font-size: 0.75rem;">الأطباء: {{ $stats['doctors'] }}</span>
             </div>
             <div class="clinic-stat-icon bg-warning-subtle text-warning">
                 <i class="bi bi-headset fs-4"></i>
@@ -85,6 +87,7 @@
             <div>
                 <span class="text-muted small d-block mb-1">الحسابات النشطة</span>
                 <h3 class="fw-bold text-success mb-0">{{ $stats['active'] }} <span class="fs-6 fw-normal text-muted">/ {{ $stats['total'] }}</span></h3>
+                <span class="text-muted" style="font-size: 0.75rem;">معطلة: {{ $stats['inactive'] }}</span>
             </div>
             <div class="clinic-stat-icon bg-success-subtle text-success">
                 <i class="bi bi-shield-check fs-4"></i>
@@ -152,23 +155,32 @@
                                 <span class="font-monospace text-dark">{{ $u->email }}</span>
                             </td>
                             <td>
-                                @if($u->role === \App\Enums\UserRole::Admin)
-                                    <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-semibold border border-danger-subtle">
-                                        <i class="bi bi-shield-check me-1"></i> {{ $u->role->label() }}
-                                    </span>
-                                @elseif($u->role === \App\Enums\UserRole::Doctor)
-                                    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-semibold border border-primary-subtle">
-                                        <i class="bi bi-person-badge me-1"></i> {{ $u->role->label() }}
-                                    </span>
-                                @elseif($u->role === \App\Enums\UserRole::Accountant)
-                                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-semibold border border-success-subtle">
-                                        <i class="bi bi-wallet2 me-1"></i> {{ $u->role->label() }}
-                                    </span>
-                                @else
-                                    <span class="badge bg-warning-subtle text-warning-emphasis px-3 py-2 rounded-pill fw-semibold border border-warning-subtle">
-                                        <i class="bi bi-calendar-check me-1"></i> {{ $u->role->label() }}
-                                    </span>
-                                @endif
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach($u->getRoleInstances() as $r)
+                                        @if($r === \App\Enums\UserRole::Admin)
+                                            <span class="badge bg-danger-subtle text-danger px-2 py-1 rounded-pill fw-semibold border border-danger-subtle">
+                                                <i class="bi bi-shield-check me-1"></i> {{ $r->label() }}
+                                            </span>
+                                        @elseif($r === \App\Enums\UserRole::Doctor)
+                                            <span class="badge bg-primary-subtle text-primary px-2 py-1 rounded-pill fw-semibold border border-primary-subtle">
+                                                <i class="bi bi-person-badge me-1"></i> {{ $r->label() }}
+                                            </span>
+                                        @elseif($r === \App\Enums\UserRole::Accountant)
+                                            <span class="badge bg-success-subtle text-success px-2 py-1 rounded-pill fw-semibold border border-success-subtle">
+                                                <i class="bi bi-wallet2 me-1"></i> {{ $r->label() }}
+                                            </span>
+                                        @else
+                                            <span class="badge bg-warning-subtle text-warning-emphasis px-2 py-1 rounded-pill fw-semibold border border-warning-subtle">
+                                                <i class="bi bi-headset me-1"></i> {{ $r->label() }}
+                                            </span>
+                                        @endif
+                                    @endforeach
+                                    @if(count($u->getRolesArray()) > 1)
+                                        <span class="badge bg-info text-white px-2 py-1 rounded-pill" title="هذا الموظف يمتلك صلاحيات مدمجة في أكثر من قسم">
+                                            <i class="bi bi-layers-fill"></i> مدمج
+                                        </span>
+                                    @endif
+                                </div>
                             </td>
                             <td>
                                 @if($u->is_active)
@@ -228,17 +240,24 @@
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label small fw-bold">الدور والصلاحية (Role) <span class="text-danger">*</span></label>
-                                                <select name="role" class="form-select" {{ $u->id === auth()->id() ? 'disabled' : '' }} required>
+                                                <label class="form-label small fw-bold">مجموعات الصلاحيات الممنوحة (يمكن اختيار أكثر من مجموعة) <span class="text-danger">*</span></label>
+                                                <div class="row g-2">
                                                     @foreach(\App\Enums\UserRole::cases() as $role)
-                                                        <option value="{{ $role->value }}" {{ $u->role === $role ? 'selected' : '' }}>
-                                                            {{ $role->label() }}
-                                                        </option>
+                                                    <div class="col-6">
+                                                        <div class="form-check p-2 border rounded-3 bg-light">
+                                                            <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->value }}" id="editRole{{ $u->id }}_{{ $role->value }}"
+                                                                   {{ $u->hasRole($role) ? 'checked' : '' }}
+                                                                   {{ ($u->id === auth()->id() && $role === \App\Enums\UserRole::Admin) ? 'checked disabled' : '' }}>
+                                                            <label class="form-check-label small fw-bold text-dark" for="editRole{{ $u->id }}_{{ $role->value }}">
+                                                                {{ $role->label() }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
                                                     @endforeach
-                                                </select>
+                                                </div>
                                                 @if($u->id === auth()->id())
-                                                    <input type="hidden" name="role" value="{{ $u->role->value }}">
-                                                    <span class="text-muted small" style="font-size: 0.75rem;">لا يمكنك تغيير دورك الإداري الخاص لمنع غلق النظام على نفسك.</span>
+                                                    <input type="hidden" name="roles[]" value="admin">
+                                                    <span class="text-muted small" style="font-size: 0.75rem;">لا يمكنك إزالة صلاحية المدير عن حسابك الخاص لمنع قفل النظام.</span>
                                                 @endif
                                             </div>
 
@@ -428,14 +447,42 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">الدور والصلاحية الممنوحة (Role) <span class="text-danger">*</span></label>
-                        <select name="role" id="roleSelect" class="form-select" required>
-                            <option value="">-- اختر الصلاحية المناسبة --</option>
-                            <option value="doctor">طبيب أسنان (Doctor) - فحص ومخطط أسنان وخطط علاج</option>
-                            <option value="receptionist">موظف استقبال (Receptionist) - مواعيد وسجل مرضى</option>
-                            <option value="accountant">محاسب مالي (Accountant) - فواتير وأقساط وتقارير</option>
-                            <option value="admin">مدير النظام (Admin) - تحكم شامل بكل الصلاحيات</option>
-                        </select>
+                        <label class="form-label small fw-bold">مجموعات الصلاحيات الممنوحة (يمكنك اختيار أكثر من مجموعة) <span class="text-danger">*</span></label>
+                        <p class="text-muted small mb-2" style="font-size: 0.75rem;">يمكنك تحديد أكثر من دور معاً لنفس الموظف (مثال: الجمع بين موظف استقبال ومحاسب مالي):</p>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="form-check p-2 border rounded-3 bg-light">
+                                    <input class="form-check-input role-group-check" type="checkbox" name="roles[]" value="receptionist" id="newRoleReceptionist" checked>
+                                    <label class="form-check-label small fw-bold text-dark" for="newRoleReceptionist">
+                                        <i class="bi bi-headset text-warning me-1"></i> موظف استقبال
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check p-2 border rounded-3 bg-light">
+                                    <input class="form-check-input role-group-check" type="checkbox" name="roles[]" value="accountant" id="newRoleAccountant">
+                                    <label class="form-check-label small fw-bold text-dark" for="newRoleAccountant">
+                                        <i class="bi bi-cash-coin text-success me-1"></i> محاسب مالي
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check p-2 border rounded-3 bg-light">
+                                    <input class="form-check-input role-group-check" type="checkbox" name="roles[]" value="doctor" id="newRoleDoctor">
+                                    <label class="form-check-label small fw-bold text-dark" for="newRoleDoctor">
+                                        <i class="bi bi-heart-pulse text-primary me-1"></i> طبيب أسنان
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check p-2 border rounded-3 bg-light">
+                                    <input class="form-check-input role-group-check" type="checkbox" name="roles[]" value="admin" id="newRoleAdmin">
+                                    <label class="form-check-label small fw-bold text-dark" for="newRoleAdmin">
+                                        <i class="bi bi-shield-shaded text-danger me-1"></i> مدير النظام
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="doctorExtraFields" class="d-none">
@@ -467,8 +514,8 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    $('#roleSelect').on('change', function() {
-        if ($(this).val() === 'doctor') {
+    $('#newRoleDoctor').on('change', function() {
+        if ($(this).is(':checked')) {
             $('#doctorExtraFields').removeClass('d-none');
         } else {
             $('#doctorExtraFields').addClass('d-none');

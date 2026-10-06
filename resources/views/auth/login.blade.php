@@ -116,6 +116,9 @@
                 <span class="badge bg-light text-dark border p-2 quick-role-btn" data-email="accounting@dentalcare.com" data-role="Accountant">
                     💳 محاسب
                 </span>
+                <span class="badge bg-warning-subtle text-dark border p-2 quick-role-btn" data-email="dual@dentalcare.com" data-role="Dual">
+                    ⚡ استقبال + محاسب (صلاحيات مزدوجة)
+                </span>
             </div>
             <div class="small text-muted mt-2" style="font-size:0.75rem;">كلمة المرور المشتركة: <code>Password123#</code></div>
         </div>

@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\UserRole;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,10 +30,8 @@ class EnsureUserHasRole
             return $next($request);
         }
 
-        // Check if user's role matches any allowed role
-        $userRoleValue = $user->role instanceof UserRole ? $user->role->value : (string) $user->role;
-
-        if (! in_array($userRoleValue, $roles, true)) {
+        // Check if user has any of the allowed roles
+        if (! $user->hasAnyRole($roles)) {
             abort(403, 'عذراً، ليس لديك الصلاحية الكافية للوصول إلى هذا القسم الطبي أو المالي.');
         }
 

@@ -155,7 +155,9 @@
                 </div>
                 <div class="overflow-hidden">
                     <div class="fw-bold small text-truncate text-white">{{ auth()->user()->name }}</div>
-                    <div class="badge bg-secondary-subtle text-light px-1" style="font-size: 0.7rem;">{{ auth()->user()->role->label() }}</div>
+                    <div class="badge bg-secondary-subtle text-light px-1 text-truncate" style="font-size: 0.7rem; max-width: 170px;" title="{{ auth()->user()->getRoleLabelsString() }}">
+                        {{ auth()->user()->getRoleLabelsString() }}
+                    </div>
                 </div>
             </div>
 
