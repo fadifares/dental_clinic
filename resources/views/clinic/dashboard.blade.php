@@ -303,7 +303,13 @@
             <div>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold text-dark mb-0">طلبيات معمل الأسنان 📦</h5>
-                    <span class="badge bg-info-subtle text-info">Lab Orders</span>
+                    @if(auth()->user()->isAdmin() || auth()->user()->isDoctor())
+                        <a href="{{ route('clinic.labs.index') }}" class="badge bg-info-subtle text-info text-decoration-none px-2 py-1 rounded-pill">
+                            كل الطلبيات <i class="bi bi-arrow-left"></i>
+                        </a>
+                    @else
+                        <span class="badge bg-info-subtle text-info">Lab Orders</span>
+                    @endif
                 </div>
                 
                 <div class="d-flex flex-column gap-3">
@@ -337,7 +343,15 @@
                         <div class="small fw-bold text-dark">نظام الفواتير والتحصيل</div>
                         <div class="text-muted small">سندات القبض المسجلة: {{ $todayAppointments->count() }}</div>
                     </div>
-                    <button class="btn btn-outline-dark btn-sm rounded-pill" onclick="alert('قسم الفواتير الشامل قيد التطوير');">عرض المالية</button>
+                    @if(auth()->user()->isAdmin() || auth()->user()->isAccountant())
+                        <a href="{{ route('clinic.billing.index') }}" class="btn btn-outline-dark btn-sm rounded-pill px-3">
+                            عرض المالية <i class="bi bi-arrow-left ms-1"></i>
+                        </a>
+                    @else
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" disabled title="خاص بالمحاسبة والإدارة فقط">
+                            عرض المالية
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
