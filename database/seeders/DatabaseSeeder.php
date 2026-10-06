@@ -282,5 +282,47 @@ class DatabaseSeeder extends Seeder
             'payment_method' => 'card',
             'status' => 'paid',
         ]);
+
+        Invoice::create([
+            'invoice_number' => 'INV-2026-0002',
+            'patient_id' => $patient2->id,
+            'doctor_id' => $drSara->id,
+            'subtotal' => 1200.00,
+            'discount' => 0.00,
+            'tax' => 0.00,
+            'total' => 1200.00,
+            'paid_amount' => 800.00,
+            'remaining_amount' => 400.00,
+            'payment_method' => 'cash',
+            'status' => 'partially_paid',
+        ]);
+
+        Invoice::create([
+            'invoice_number' => 'INV-2026-0003',
+            'patient_id' => $patient3->id,
+            'doctor_id' => $drKhalid->id,
+            'subtotal' => 1500.00,
+            'discount' => 100.00,
+            'tax' => 0.00,
+            'total' => 1400.00,
+            'paid_amount' => 1400.00,
+            'remaining_amount' => 0.00,
+            'payment_method' => 'card',
+            'status' => 'paid',
+        ]);
+
+        Invoice::create([
+            'invoice_number' => 'INV-2026-0004',
+            'patient_id' => $patient4->id,
+            'doctor_id' => $drReem->id,
+            'subtotal' => 450.00,
+            'discount' => 0.00,
+            'tax' => 0.00,
+            'total' => 450.00,
+            'paid_amount' => 0.00,
+            'remaining_amount' => 450.00,
+            'payment_method' => 'cash',
+            'status' => 'unpaid',
+        ]);
     }
 }
