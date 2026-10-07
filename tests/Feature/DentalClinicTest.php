@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\UserRole;
 use App\Models\DentalChart;
 use App\Models\Doctor;
+use App\Models\Expense;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\User;
@@ -468,5 +469,60 @@ class DentalClinicTest extends TestCase
         $showResponse->assertSee('ج.م');
         $showResponse->assertSee('A4 Portrait');
         $showResponse->assertSee('طباعة الفاتورة (A4)');
+    }
+
+    /**
+     * Test recording, listing, and deleting clinic expenses.
+     */
+    public function test_clinic_expenses_management(): void
+    {
+        $accountant = User::create([
+            'name' => 'طارق المحاسب',
+            'email' => 'tariq.expenses@dentalcare.com',
+            'role' => UserRole::Accountant,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $doctor = User::create([
+            'name' => 'د. خالد الطبيب',
+            'email' => 'khaled.doc@dentalcare.com',
+            'role' => UserRole::Doctor,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        // 1. Doctor is blocked from expenses (403 Forbidden)
+        $this->actingAs($doctor)->get('/clinic/expenses')->assertStatus(403);
+
+        // 2. Accountant can view expenses index
+        $responseIndex = $this->actingAs($accountant)->get('/clinic/expenses');
+        $responseIndex->assertStatus(200);
+        $responseIndex->assertSee('سجل مصاريف ونفقات العيادة');
+        $responseIndex->assertSee('تسجيل مصروف جديد');
+
+        // 3. Store a new expense
+        $responseStore = $this->actingAs($accountant)->post('/clinic/expenses', [
+            'title' => 'شراء كراتين بنج وحشوات كمبوزيت',
+            'category' => 'materials',
+            'amount' => 850.00,
+            'expense_date' => date('Y-m-d'),
+            'payment_method' => 'cash',
+            'invoice_reference' => 'INV-SUPPLIER-101',
+            'notes' => 'توريد من شركة المدار للمستلزمات الطبية',
+        ]);
+
+        $responseStore->assertSessionHas('success');
+        $expense = Expense::where('title', 'شراء كراتين بنج وحشوات كمبوزيت')->first();
+        $this->assertNotNull($expense);
+        $this->assertEquals(850.00, $expense->amount);
+        $this->assertEquals('materials', $expense->category);
+        $this->assertEquals('cash', $expense->payment_method);
+        $this->assertEquals($accountant->id, $expense->user_id);
+
+        // 4. Delete the expense
+        $responseDelete = $this->actingAs($accountant)->delete("/clinic/expenses/{$expense->id}");
+        $responseDelete->assertSessionHas('success');
+        $this->assertDatabaseMissing('expenses', ['id' => $expense->id]);
     }
 }

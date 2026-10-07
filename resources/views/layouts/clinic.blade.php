@@ -290,6 +290,12 @@
                         <span>الفواتير والأقساط</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('clinic.expenses.index') }}" class="nav-link {{ request()->routeIs('clinic.expenses.*') ? 'active' : '' }}">
+                        <i class="bi bi-wallet2 fs-5 text-warning"></i>
+                        <span>المصاريف والنفقات</span>
+                    </a>
+                </li>
                 @endif
 
                 @if(auth()->user()->isAdmin())

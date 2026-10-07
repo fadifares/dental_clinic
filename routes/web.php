@@ -4,6 +4,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\ClinicDashboardController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\LabOrderController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\UserController;
@@ -74,6 +75,13 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth'])->group(function (
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
         Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::patch('/users/{user}/toggle', [UserController::class, 'toggleStatus'])->name('users.toggle');
+    });
+
+    // 8. Clinic Expenses Management (Admin & Accountant)
+    Route::middleware(['role:admin,accountant'])->group(function () {
+        Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
+        Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
+        Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
     });
 });
 
