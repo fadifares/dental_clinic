@@ -131,17 +131,38 @@
         body.overflow-hidden-mobile {
             overflow: hidden !important;
         }
+        @media print {
+            .clinic-sidebar,
+            .clinic-topbar,
+            .sidebar-backdrop,
+            .d-print-none,
+            #sidebarBackdrop {
+                display: none !important;
+            }
+            .clinic-content-wrapper {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                width: 100% !important;
+                min-height: auto !important;
+                overflow: visible !important;
+            }
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+        }
     </style>
     @stack('styles')
 </head>
 <body class="bg-light">
 
 <!-- Mobile Sidebar Backdrop -->
-<div class="sidebar-backdrop d-lg-none" id="sidebarBackdrop"></div>
+<div class="sidebar-backdrop d-lg-none d-print-none" id="sidebarBackdrop"></div>
 
 <div class="d-flex w-100 position-relative">
     <!-- Sidebar -->
-    <aside class="clinic-sidebar shadow">
+    <aside class="clinic-sidebar shadow d-print-none">
         <!-- Logo & Mobile Close Button -->
         <div class="p-3 border-bottom border-secondary d-flex align-items-center justify-content-between flex-shrink-0">
             <a href="{{ route('clinic.dashboard') }}" class="d-flex align-items-center gap-2 text-white text-decoration-none">
@@ -250,7 +271,7 @@
     <!-- Main Content Area -->
     <div class="clinic-content-wrapper">
         <!-- Topbar -->
-        <header class="clinic-topbar px-3 px-md-4 py-2 d-flex align-items-center justify-content-between sticky-top">
+        <header class="clinic-topbar px-3 px-md-4 py-2 d-flex align-items-center justify-content-between sticky-top d-print-none">
             <div class="d-flex align-items-center gap-2 gap-md-3 flex-grow-1 flex-md-grow-0" style="max-width: 420px;">
                 <button class="btn btn-light border d-lg-none shadow-sm px-2 py-1" id="toggleSidebar" aria-label="فتح القائمة الجانبية">
                     <i class="bi bi-list fs-4"></i>

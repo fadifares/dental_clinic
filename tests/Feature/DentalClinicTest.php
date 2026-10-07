@@ -420,4 +420,53 @@ class DentalClinicTest extends TestCase
         $this->assertEquals(0.00, $invoice->remaining_amount);
         $this->assertEquals('paid', $invoice->status);
     }
+
+    /**
+     * Test invoice creation and printable A4 invoice receipt view.
+     */
+    public function test_invoice_creation_and_printable_view(): void
+    {
+        $accountant = User::create([
+            'name' => 'سارة المحاسبة',
+            'email' => 'sara.acc@dentalcare.com',
+            'role' => UserRole::Accountant,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $patient = Patient::create([
+            'name' => 'محمد أحمد',
+            'file_number' => 'PT-TEST-005',
+            'phone' => '0551122334',
+        ]);
+
+        // 1. Create invoice
+        $createResponse = $this->actingAs($accountant)->post('/clinic/billing', [
+            'patient_id' => $patient->id,
+            'subtotal' => 1200.00,
+            'discount' => 200.00,
+            'tax' => 0.00,
+            'paid_amount' => 500.00,
+            'payment_method' => 'card',
+        ]);
+
+        $createResponse->assertSessionHas('success');
+        $invoice = Invoice::where('patient_id', $patient->id)->latest()->first();
+        $this->assertNotNull($invoice);
+        $this->assertEquals(1200.00, $invoice->subtotal);
+        $this->assertEquals(200.00, $invoice->discount);
+        $this->assertEquals(1000.00, $invoice->total);
+        $this->assertEquals(500.00, $invoice->paid_amount);
+        $this->assertEquals(500.00, $invoice->remaining_amount);
+        $this->assertEquals('partially_paid', $invoice->status);
+
+        // 2. View printable A4 invoice
+        $showResponse = $this->actingAs($accountant)->get("/clinic/billing/{$invoice->id}");
+        $showResponse->assertStatus(200);
+        $showResponse->assertSee($invoice->invoice_number);
+        $showResponse->assertSee('محمد أحمد');
+        $showResponse->assertSee('ج.م');
+        $showResponse->assertSee('A4 Portrait');
+        $showResponse->assertSee('طباعة الفاتورة (A4)');
+    }
 }
