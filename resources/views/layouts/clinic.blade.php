@@ -152,6 +152,69 @@
                 color: #000000 !important;
             }
         }
+
+        /* Dark Mode Theme Styles */
+        body.dark-mode {
+            background-color: #0b1120 !important;
+            color: #cbd5e1 !important;
+        }
+        body.dark-mode .clinic-content-wrapper {
+            background-color: #0b1120 !important;
+        }
+        body.dark-mode .clinic-topbar {
+            background-color: #0f172a !important;
+            border-color: #1e293b !important;
+        }
+        body.dark-mode .clinic-card,
+        body.dark-mode .card,
+        body.dark-mode .modal-content,
+        body.dark-mode .dropdown-menu {
+            background-color: #0f172a !important;
+            border-color: #1e293b !important;
+            color: #cbd5e1 !important;
+        }
+        body.dark-mode .text-dark,
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3,
+        body.dark-mode h4,
+        body.dark-mode h5,
+        body.dark-mode h6 {
+            color: #f1f5f9 !important;
+        }
+        body.dark-mode .text-muted {
+            color: #94a3b8 !important;
+        }
+        body.dark-mode .bg-light,
+        body.dark-mode .table-light {
+            background-color: #1e293b !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode .table {
+            color: #cbd5e1 !important;
+            border-color: #334155 !important;
+        }
+        body.dark-mode .table td,
+        body.dark-mode .table th {
+            border-color: #1e293b !important;
+            color: #cbd5e1 !important;
+        }
+        body.dark-mode .form-control,
+        body.dark-mode .form-select {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+        body.dark-mode .btn-light {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode .border,
+        body.dark-mode .border-bottom,
+        body.dark-mode .border-top {
+            border-color: #1e293b !important;
+        }
     </style>
     @stack('styles')
 </head>
@@ -313,6 +376,11 @@
                         <li><a class="dropdown-item small py-2 rounded" href="{{ route('clinic.dashboard') }}">📦 استلام تركيبة زيركون من معمل النخبة</a></li>
                     </ul>
                 </div>
+
+                <!-- Dark / Light Mode Toggle Button -->
+                <button class="btn btn-light rounded-circle p-2 shadow-sm border ms-1 d-flex align-items-center justify-content-center" id="themeToggleBtn" type="button" title="تبديل الوضع الليلي والنهاري" aria-label="الوضع الليلي والنهاري" style="width: 38px; height: 38px;">
+                    <i class="bi bi-moon-stars-fill fs-5" id="themeToggleIcon"></i>
+                </button>
 
                 <!-- Direct Topbar User Profile & Logout Dropdown -->
                 <div class="dropdown ms-1">
@@ -521,6 +589,24 @@
         $(document).on('keydown', function (e) {
             if (e.key === 'Escape' && $('.clinic-sidebar').hasClass('show')) {
                 closeSidebar();
+            }
+        });
+
+        // Theme Toggle (Dark / Light mode)
+        const savedTheme = localStorage.getItem('dental_theme') || 'light';
+        if (savedTheme === 'dark') {
+            $('body').addClass('dark-mode');
+            $('#themeToggleIcon').removeClass('bi-moon-stars-fill').addClass('bi-sun-fill text-warning');
+        }
+
+        $('#themeToggleBtn').on('click', function () {
+            $('body').toggleClass('dark-mode');
+            const isDark = $('body').hasClass('dark-mode');
+            localStorage.setItem('dental_theme', isDark ? 'dark' : 'light');
+            if (isDark) {
+                $('#themeToggleIcon').removeClass('bi-moon-stars-fill').addClass('bi-sun-fill text-warning');
+            } else {
+                $('#themeToggleIcon').removeClass('bi-sun-fill text-warning').addClass('bi-moon-stars-fill');
             }
         });
     });
