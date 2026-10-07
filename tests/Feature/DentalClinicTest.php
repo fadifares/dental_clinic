@@ -8,6 +8,7 @@ use App\Models\Doctor;
 use App\Models\Expense;
 use App\Models\Invoice;
 use App\Models\Patient;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -601,5 +602,86 @@ class DentalClinicTest extends TestCase
         $legacyUser->update(['name' => 'د. سمير الجديد']);
         $this->assertEquals('د. سمير الجديد', $legacyDoctor->fresh()->name);
         $this->assertEquals($legacyUser->id, $legacyDoctor->fresh()->user_id);
+    }
+
+    /**
+     * Test clinic settings page, currency, and payment methods configuration.
+     */
+    public function test_settings_page_and_currency_payment_methods_management(): void
+    {
+        $admin = User::create([
+            'name' => 'مدير النظام المالي',
+            'email' => 'admin.settings@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $receptionist = User::create([
+            'name' => 'موظفة استقبال',
+            'email' => 'reception.settings@dentalcare.com',
+            'role' => UserRole::Receptionist,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        // 1. Non-admin is forbidden (403)
+        $this->actingAs($receptionist)->get('/clinic/settings')->assertStatus(403);
+
+        // 2. Admin can access settings page
+        $response = $this->actingAs($admin)->get('/clinic/settings');
+        $response->assertStatus(200);
+        $response->assertSee('إعدادات النظام والعيادة');
+        $response->assertSee('العملة والتهيئة المالية');
+        $response->assertSee('قنوات وطرق الدفع والتحصيل');
+
+        // 3. Admin can update currency and payment methods
+        $responseUpdate = $this->actingAs($admin)->put('/clinic/settings', [
+            'currency_symbol' => 'ر.س',
+            'currency_name' => 'ريال سعودي',
+            'currency_code' => 'SAR',
+            'currency_position' => 'after',
+            'default_payment_method' => 'card',
+            'clinic_name' => 'مركز ابتسامة المستقبل لطب الأسنان',
+            'clinic_phone' => '0555555555',
+            'tax_number' => '310999999900003',
+            'tax_rate' => 15.00,
+            'methods' => [
+                'cash' => [
+                    'enabled' => '1',
+                    'name' => 'نقداً (كاش)',
+                    'description' => 'دفع مباشر',
+                ],
+                'card' => [
+                    'enabled' => '1',
+                    'name' => 'مدى وبطاقات بنكية',
+                    'description' => 'أجهزة نقاط البيع',
+                ],
+                'bank_transfer' => [
+                    'enabled' => '1',
+                    'name' => 'حوالة بنكية سريعة',
+                    'description' => 'حساب الراجحي والأهلي',
+                ],
+                'installments' => [
+                    'enabled' => '0',
+                    'name' => 'أقساط',
+                    'description' => 'معطلة مؤقتاً',
+                ],
+            ],
+        ]);
+
+        $responseUpdate->assertSessionHas('success');
+
+        // Verify stored settings and helper methods
+        $this->assertEquals('ر.س', Setting::currencySymbol());
+        $this->assertEquals('SAR', Setting::currencyCode());
+        $this->assertEquals('ريال سعودي', Setting::currencyName());
+        $this->assertEquals('1,500.00 ر.س', Setting::formatMoney(1500));
+
+        $paymentMethods = Setting::paymentMethods();
+        $this->assertTrue($paymentMethods['card']['enabled']);
+        $this->assertTrue($paymentMethods['card']['is_default']);
+        $this->assertFalse($paymentMethods['installments']['enabled']);
+        $this->assertEquals('مدى وبطاقات بنكية', $paymentMethods['card']['name']);
     }
 }

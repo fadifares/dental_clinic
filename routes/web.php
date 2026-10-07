@@ -7,6 +7,7 @@ use App\Http\Controllers\ClinicDashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\LabOrderController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,6 +83,12 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth'])->group(function (
         Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
         Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
         Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
+    });
+
+    // 9. Clinic System & Financial Settings (Admin only)
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
     });
 });
 

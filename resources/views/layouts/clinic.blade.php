@@ -299,6 +299,12 @@
                         <span class="fw-bold">المستخدمين والأمان (RBAC)</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('clinic.settings.index') }}" class="nav-link {{ request()->routeIs('clinic.settings.*') ? 'active' : '' }}">
+                        <i class="bi bi-gear-fill fs-5 text-info"></i>
+                        <span>إعدادات النظام والعيادة</span>
+                    </a>
+                </li>
                 @endif
             </ul>
         </div>
