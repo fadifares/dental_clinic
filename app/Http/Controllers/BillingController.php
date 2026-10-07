@@ -25,7 +25,7 @@ class BillingController extends Controller
 
         $invoices = $query->paginate(15)->withQueryString();
         $patients = Patient::select('id', 'name', 'phone', 'file_number')->latest()->get();
-        $doctors = Doctor::where('is_active', true)->get();
+        $doctors = Doctor::activeDoctors()->get();
 
         $stats = [
             'total_invoiced' => Invoice::sum('total'),

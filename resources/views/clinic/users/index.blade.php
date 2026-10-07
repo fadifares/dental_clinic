@@ -52,6 +52,7 @@
             <div>
                 <span class="text-muted small d-block mb-1">إجمالي الحسابات</span>
                 <h3 class="fw-bold text-dark mb-0">{{ $stats['total'] }}</h3>
+                <span class="text-muted" style="font-size: 0.75rem;">نشط: {{ $stats['active'] }} | معطل: {{ $stats['inactive'] }}</span>
             </div>
             <div class="clinic-stat-icon bg-primary-subtle text-primary">
                 <i class="bi bi-people-fill fs-4"></i>
@@ -59,35 +60,35 @@
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
+        <div class="clinic-card p-3 d-flex align-items-center justify-content-between border-primary-subtle">
+            <div>
+                <span class="text-muted small d-block mb-1">الكادر الطبي (أطباء)</span>
+                <h3 class="fw-bold text-primary mb-0">{{ $stats['doctors_type'] }}</h3>
+                <span class="text-success small" style="font-size: 0.75rem;"><i class="bi bi-heart-pulse me-1"></i>يظهرون في قائمة الطبيب المعالج</span>
+            </div>
+            <div class="clinic-stat-icon bg-primary-subtle text-primary">
+                <i class="bi bi-heart-pulse-fill fs-4"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
         <div class="clinic-card p-3 d-flex align-items-center justify-content-between border-info-subtle">
             <div>
-                <span class="text-muted small d-block mb-1">صلاحيات متعددة (Multi-Group)</span>
-                <h3 class="fw-bold text-info mb-0">{{ $stats['multi_role'] }}</h3>
-                <span class="text-muted" style="font-size: 0.75rem;">مثل: محاسب + استقبال</span>
+                <span class="text-muted small d-block mb-1">الكادر الإداري</span>
+                <h3 class="fw-bold text-info mb-0">{{ $stats['administrative_type'] }}</h3>
+                <span class="text-muted" style="font-size: 0.75rem;">إدارة، استقبال، ومحاسبة</span>
             </div>
             <div class="clinic-stat-icon bg-info-subtle text-info">
-                <i class="bi bi-layers-fill fs-4"></i>
+                <i class="bi bi-person-workspace fs-4"></i>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
-        <div class="clinic-card p-3 d-flex align-items-center justify-content-between">
-            <div>
-                <span class="text-muted small d-block mb-1">الاستقبال والمحاسبة</span>
-                <h3 class="fw-bold text-warning mb-0">{{ $stats['receptionists'] + $stats['accountants'] }}</h3>
-                <span class="text-muted" style="font-size: 0.75rem;">الأطباء: {{ $stats['doctors'] }}</span>
-            </div>
-            <div class="clinic-stat-icon bg-warning-subtle text-warning">
-                <i class="bi bi-headset fs-4"></i>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-3">
-        <div class="clinic-card p-3 d-flex align-items-center justify-content-between">
+        <div class="clinic-card p-3 d-flex align-items-center justify-content-between border-success-subtle">
             <div>
                 <span class="text-muted small d-block mb-1">الحسابات النشطة</span>
                 <h3 class="fw-bold text-success mb-0">{{ $stats['active'] }} <span class="fs-6 fw-normal text-muted">/ {{ $stats['total'] }}</span></h3>
-                <span class="text-muted" style="font-size: 0.75rem;">معطلة: {{ $stats['inactive'] }}</span>
+                <span class="text-muted" style="font-size: 0.75rem;">صلاحيات متعددة: {{ $stats['multi_role'] }}</span>
             </div>
             <div class="clinic-stat-icon bg-success-subtle text-success">
                 <i class="bi bi-shield-check fs-4"></i>
@@ -119,11 +120,31 @@
     <!-- Tab 1: Users List -->
     <div class="tab-pane fade show active" id="pills-users" role="tabpanel">
         <div class="clinic-card">
+            <!-- Filter Bar for User Types -->
+            <div class="p-3 bg-white border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <span class="fw-bold small text-muted"><i class="bi bi-funnel me-1"></i>تصفية حسب نوع المستخدم:</span>
+                    <button type="button" class="btn btn-sm btn-primary rounded-pill user-filter-btn px-3" data-filter="all">
+                        الكل ({{ $users->count() }})
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary rounded-pill user-filter-btn px-3" data-filter="doctor">
+                        <i class="bi bi-heart-pulse me-1"></i>الأطباء المعالجون ({{ $stats['doctors_type'] }})
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-info rounded-pill user-filter-btn px-3" data-filter="administrative">
+                        <i class="bi bi-person-workspace me-1"></i>الكادر الإداري ({{ $stats['administrative_type'] }})
+                    </button>
+                </div>
+                <div class="small text-muted">
+                    <i class="bi bi-check-circle-fill text-success me-1"></i>المستخدمون النشطون من نوع <strong>طبيب</strong> فقط يظهرون في قائمة الطبيب المعالج
+                </div>
+            </div>
+
             <div class="table-responsive">
-                <table class="table align-middle mb-0">
+                <table class="table align-middle mb-0" id="usersTable">
                     <thead class="table-light">
                         <tr>
                             <th class="ps-4">المستخدم</th>
+                            <th>نوع المستخدم</th>
                             <th>البريد الإلكتروني</th>
                             <th>الدور الوظيفي / الصلاحية</th>
                             <th>حالة الحساب</th>
@@ -133,12 +154,12 @@
                     </thead>
                     <tbody>
                         @foreach($users as $u)
-                        <tr>
+                        <tr class="user-row" data-user-type="{{ $u->user_type ?? 'administrative' }}">
                             <td class="ps-4">
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm" 
-                                         style="width: 40px; height: 40px; background: {{ $u->role === \App\Enums\UserRole::Admin ? '#dc3545' : ($u->role === \App\Enums\UserRole::Doctor ? '#0d6efd' : ($u->role === \App\Enums\UserRole::Accountant ? '#198754' : '#fd7e14')) }};">
-                                        <i class="bi {{ $u->role === \App\Enums\UserRole::Admin ? 'bi-shield-shaded' : ($u->role === \App\Enums\UserRole::Doctor ? 'bi-heart-pulse' : ($u->role === \App\Enums\UserRole::Accountant ? 'bi-cash-coin' : 'bi-headset')) }}"></i>
+                                         style="width: 40px; height: 40px; background: {{ $u->user_type === 'doctor' ? '#0d6efd' : ($u->role === \App\Enums\UserRole::Admin ? '#dc3545' : ($u->role === \App\Enums\UserRole::Accountant ? '#198754' : '#fd7e14')) }};">
+                                        <i class="bi {{ $u->user_type === 'doctor' ? 'bi-heart-pulse' : ($u->role === \App\Enums\UserRole::Admin ? 'bi-shield-shaded' : ($u->role === \App\Enums\UserRole::Accountant ? 'bi-cash-coin' : 'bi-headset')) }}"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold text-dark">
@@ -150,6 +171,20 @@
                                         <div class="text-muted small">ID: #USR-{{ str_pad($u->id, 4, '0', STR_PAD_LEFT) }}</div>
                                     </div>
                                 </div>
+                            </td>
+                            <td>
+                                @if($u->user_type === 'doctor')
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-pill fw-bold">
+                                        <i class="bi bi-heart-pulse-fill me-1"></i> طبيب
+                                    </span>
+                                    @if($u->speciality)
+                                        <div class="text-muted small mt-1" style="font-size: 0.75rem;">{{ $u->speciality }}</div>
+                                    @endif
+                                @else
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1 rounded-pill fw-bold">
+                                        <i class="bi bi-person-workspace me-1"></i> إداري
+                                    </span>
+                                @endif
                             </td>
                             <td>
                                 <span class="font-monospace text-dark">{{ $u->email }}</span>
@@ -237,6 +272,40 @@
                                             <div class="mb-3">
                                                 <label class="form-label small fw-bold">البريد الإلكتروني <span class="text-danger">*</span></label>
                                                 <input type="email" name="email" class="form-control" value="{{ old('email', $u->email) }}" required>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-bold">نوع المستخدم والتصنيف <span class="text-danger">*</span></label>
+                                                <div class="row g-2">
+                                                    <div class="col-6">
+                                                        <div class="form-check p-2 border rounded-3 bg-light">
+                                                            <input class="form-check-input edit-user-type-radio" type="radio" name="user_type" value="doctor" id="editTypeDoctor{{ $u->id }}" {{ $u->user_type === 'doctor' ? 'checked' : '' }} data-target="#editDoctorFields{{ $u->id }}" required>
+                                                            <label class="form-check-label small fw-bold text-primary" for="editTypeDoctor{{ $u->id }}">
+                                                                <i class="bi bi-heart-pulse me-1"></i> طبيب (كادر طبي)
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="form-check p-2 border rounded-3 bg-light">
+                                                            <input class="form-check-input edit-user-type-radio" type="radio" name="user_type" value="administrative" id="editTypeAdmin{{ $u->id }}" {{ $u->user_type !== 'doctor' ? 'checked' : '' }} data-target="#editDoctorFields{{ $u->id }}" required>
+                                                            <label class="form-check-label small fw-bold text-dark" for="editTypeAdmin{{ $u->id }}">
+                                                                <i class="bi bi-person-workspace me-1"></i> إداري (كادر إداري)
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-text small" style="font-size: 0.75rem;">الأطباء فقط يظهرون في قائمة الطبيب المعالج عند حجز المواعيد والمعاملات.</div>
+                                            </div>
+
+                                            <div id="editDoctorFields{{ $u->id }}" class="{{ $u->user_type === 'doctor' ? '' : 'd-none' }}">
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">التخصص الطبي</label>
+                                                    <input type="text" name="speciality" class="form-control" value="{{ old('speciality', $u->speciality) }}" placeholder="مثال: استشاري جراحة وزراعة الأسنان">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">رقم الهاتف</label>
+                                                    <input type="text" name="phone" class="form-control" value="{{ old('phone', $u->phone) }}" placeholder="05xxxxxxxx">
+                                                </div>
                                             </div>
 
                                             <div class="mb-3">
@@ -447,6 +516,40 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label small fw-bold">نوع المستخدم والتصنيف <span class="text-danger">*</span></label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="form-check p-2 border rounded-3 bg-light">
+                                    <input class="form-check-input" type="radio" name="user_type" value="doctor" id="newTypeDoctor" required>
+                                    <label class="form-check-label small fw-bold text-primary" for="newTypeDoctor">
+                                        <i class="bi bi-heart-pulse me-1"></i> طبيب (كادر طبي)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check p-2 border rounded-3 bg-light">
+                                    <input class="form-check-input" type="radio" name="user_type" value="administrative" id="newTypeAdmin" checked required>
+                                    <label class="form-check-label small fw-bold text-dark" for="newTypeAdmin">
+                                        <i class="bi bi-person-workspace me-1"></i> إداري (كادر إداري)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-text small" style="font-size: 0.75rem;">الأطباء الفعالين فقط يظهرون في قائمة الطبيب المعالج عند حجز المواعيد والعمليات.</div>
+                    </div>
+
+                    <div id="doctorExtraFields" class="d-none">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">التخصص الطبي</label>
+                            <input type="text" name="speciality" class="form-control" placeholder="مثال: أخصائي علاج جذور وعصب">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">رقم هاتف الطبيب</label>
+                            <input type="text" name="phone" class="form-control" placeholder="05xxxxxxxx">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label small fw-bold">مجموعات الصلاحيات الممنوحة (يمكنك اختيار أكثر من مجموعة) <span class="text-danger">*</span></label>
                         <p class="text-muted small mb-2" style="font-size: 0.75rem;">يمكنك تحديد أكثر من دور معاً لنفس الموظف (مثال: الجمع بين موظف استقبال ومحاسب مالي):</p>
                         <div class="row g-2">
@@ -485,17 +588,6 @@
                         </div>
                     </div>
 
-                    <div id="doctorExtraFields" class="d-none">
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">التخصص الطبي</label>
-                            <input type="text" name="speciality" class="form-control" placeholder="مثال: أخصائي علاج جذور وعصب">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">رقم هاتف الطبيب</label>
-                            <input type="text" name="phone" class="form-control" placeholder="05xxxxxxxx">
-                        </div>
-                    </div>
-
                     <div class="mb-3">
                         <label class="form-label small fw-bold">كلمة المرور الابتدائية <span class="text-danger">*</span></label>
                         <input type="password" name="password" class="form-control" placeholder="حد أدنى 8 أحرف وأرقام ورموز" required>
@@ -514,11 +606,48 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    $('#newRoleDoctor').on('change', function() {
-        if ($(this).is(':checked')) {
+    // Filter users list by type
+    $('.user-filter-btn').on('click', function() {
+        $('.user-filter-btn').removeClass('btn-primary btn-info btn-secondary')
+                             .addClass('btn-outline-primary btn-outline-info');
+        $(this).removeClass('btn-outline-primary btn-outline-info').addClass('btn-primary');
+
+        var filter = $(this).data('filter');
+        if (filter === 'all') {
+            $('.user-row').show();
+        } else {
+            $('.user-row').each(function() {
+                var type = $(this).data('user-type');
+                if (type === filter) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+    });
+
+    // Toggle doctor extra fields on new user modal based on radio
+    $('input[name="user_type"]').on('change', function() {
+        if ($('#newTypeDoctor').is(':checked')) {
             $('#doctorExtraFields').removeClass('d-none');
+            $('#newRoleDoctor').prop('checked', true);
         } else {
             $('#doctorExtraFields').addClass('d-none');
+            if ($('#newRoleDoctor').is(':checked') && !$('#newRoleReceptionist').is(':checked') && !$('#newRoleAccountant').is(':checked') && !$('#newRoleAdmin').is(':checked')) {
+                $('#newRoleDoctor').prop('checked', false);
+                $('#newRoleReceptionist').prop('checked', true);
+            }
+        }
+    });
+
+    // Toggle doctor extra fields on edit user modal
+    $('.edit-user-type-radio').on('change', function() {
+        var target = $(this).data('target');
+        if ($(this).val() === 'doctor') {
+            $(target).removeClass('d-none');
+        } else {
+            $(target).addClass('d-none');
         }
     });
 });

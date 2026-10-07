@@ -23,6 +23,8 @@ class UserController extends Controller
 
         $stats = [
             'total' => $users->count(),
+            'doctors_type' => $users->filter(fn ($u) => $u->user_type === 'doctor')->count(),
+            'administrative_type' => $users->filter(fn ($u) => $u->user_type === 'administrative')->count(),
             'admins' => $users->filter(fn ($u) => $u->isAdmin())->count(),
             'doctors' => $users->filter(fn ($u) => $u->isDoctor())->count(),
             'receptionists' => $users->filter(fn ($u) => $u->isReceptionist())->count(),
@@ -92,9 +94,19 @@ class UserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if (! $request->has('user_type')) {
+            $roles = (array) $request->input('roles', []);
+            if ($request->input('role') === 'doctor' || in_array('doctor', $roles, true)) {
+                $request->merge(['user_type' => 'doctor']);
+            } else {
+                $request->merge(['user_type' => 'administrative']);
+            }
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'user_type' => ['required', 'in:doctor,administrative'],
             'roles' => ['nullable', 'array', 'min:1'],
             'roles.*' => [new Enum(UserRole::class)],
             'role' => ['nullable', new Enum(UserRole::class)],
@@ -103,33 +115,39 @@ class UserController extends Controller
             'speciality' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $roles = $validated['roles'] ?? (isset($validated['role']) ? [$validated['role']] : ['receptionist']);
+        $defaultRole = $validated['user_type'] === 'doctor' ? 'doctor' : 'receptionist';
+        $roles = $validated['roles'] ?? (isset($validated['role']) ? [$validated['role']] : [$defaultRole]);
 
         $user = new User([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'user_type' => $validated['user_type'],
+            'phone' => $validated['phone'] ?? null,
+            'speciality' => $validated['speciality'] ?? null,
             'is_active' => true,
         ]);
         $user->roles = $roles;
         $user->save();
 
-        // If newly created user has Doctor role, link or create Doctor profile if requested
-        if ($user->isDoctor() && ! empty($validated['speciality'])) {
+        // If user is a Doctor type, link or create Doctor profile
+        if ($user->user_type === 'doctor') {
             Doctor::create([
+                'user_id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $validated['phone'] ?? '0500000000',
-                'speciality' => $validated['speciality'],
+                'speciality' => $validated['speciality'] ?? 'طبيب أسنان عام',
                 'commission_rate' => 30.00,
                 'is_active' => true,
             ]);
         }
 
         $labels = $user->getRoleLabelsString();
+        $typeLabel = $user->getUserTypeLabel();
 
         return redirect()->route('clinic.users.index')
-            ->with('success', "تم إضافة المستخدم '{$user->name}' بنجاح وتعيينه للمجموعات: ({$labels}).");
+            ->with('success', "تم إضافة المستخدم '{$user->name}' بنجاح كـ ({$typeLabel}) وتعيينه للمجموعات: ({$labels}).");
     }
 
     /**
@@ -146,6 +164,11 @@ class UserController extends Controller
         $user->is_active = ! $user->is_active;
         $user->save();
 
+        // Synchronize linked Doctor profile status
+        Doctor::where('user_id', $user->id)->update([
+            'is_active' => $user->is_active,
+        ]);
+
         $statusText = $user->is_active ? 'تنشيط' : 'تعطيل وتجميد وصول';
 
         return redirect()->route('clinic.users.index')
@@ -157,13 +180,20 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user): RedirectResponse
     {
+        if (! $request->has('user_type')) {
+            $request->merge(['user_type' => $user->user_type ?? 'administrative']);
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
+            'user_type' => ['required', 'in:doctor,administrative'],
             'roles' => ['nullable', 'array', 'min:1'],
             'roles.*' => [new Enum(UserRole::class)],
             'role' => ['nullable', new Enum(UserRole::class)],
             'password' => ['nullable', 'string', Password::min(8)],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'speciality' => ['nullable', 'string', 'max:255'],
         ]);
 
         $roles = $validated['roles'] ?? (isset($validated['role']) ? [$validated['role']] : $user->getRolesArray());
@@ -176,6 +206,9 @@ class UserController extends Controller
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
+        $user->user_type = $validated['user_type'];
+        $user->phone = $validated['phone'] ?? $user->phone;
+        $user->speciality = $validated['speciality'] ?? $user->speciality;
         $user->roles = $roles;
 
         if (! empty($validated['password'])) {
@@ -184,9 +217,39 @@ class UserController extends Controller
 
         $user->save();
 
+        // Synchronize Doctor profile
+        if ($user->user_type === 'doctor') {
+            $doctor = Doctor::where('user_id', $user->id)->first();
+            if ($doctor) {
+                $doctor->update([
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone ?? $doctor->phone,
+                    'speciality' => $user->speciality ?? $doctor->speciality,
+                    'is_active' => $user->is_active,
+                ]);
+            } else {
+                Doctor::create([
+                    'user_id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone ?? '0500000000',
+                    'speciality' => $user->speciality ?? 'طبيب أسنان عام',
+                    'commission_rate' => 30.00,
+                    'is_active' => $user->is_active,
+                ]);
+            }
+        } else {
+            // If converted to administrative, deactivate doctor profile so they don't appear in treating doctors
+            Doctor::where('user_id', $user->id)->update([
+                'is_active' => false,
+            ]);
+        }
+
         $labels = $user->getRoleLabelsString();
+        $typeLabel = $user->getUserTypeLabel();
 
         return redirect()->route('clinic.users.index')
-            ->with('success', "تم تحديث بيانات وصلاحيات '{$user->name}' وتعيين المجموعات: ({$labels}).");
+            ->with('success', "تم تحديث بيانات وصلاحيات '{$user->name}' كـ ({$typeLabel}) وتعيين المجموعات: ({$labels}).");
     }
 }
