@@ -60,24 +60,24 @@
 </div>
 
 <!-- EMR Tabs Navigation -->
-<ul class="nav nav-pills clinic-card p-2 mb-4 d-flex gap-2 border-0" id="emrTabs" role="tablist">
-    <li class="nav-item flex-fill text-center" role="presentation">
-        <button class="nav-link active w-100 rounded-pill fw-semibold py-2" id="odontogram-tab" data-bs-toggle="pill" data-bs-target="#tab-odontogram" type="button" role="tab">
+<ul class="nav nav-pills clinic-card p-2 mb-4 d-flex flex-nowrap overflow-auto gap-2 border-0" id="emrTabs" role="tablist" style="-webkit-overflow-scrolling: touch;">
+    <li class="nav-item flex-shrink-0 flex-md-fill text-center" role="presentation">
+        <button class="nav-link active w-100 rounded-pill fw-semibold py-2 text-nowrap" id="odontogram-tab" data-bs-toggle="pill" data-bs-target="#tab-odontogram" type="button" role="tab">
             <i class="bi bi-grid-3x3-gap-fill me-1"></i> مخطط الأسنان التفاعلي (Odontogram)
         </button>
     </li>
-    <li class="nav-item flex-fill text-center" role="presentation">
-        <button class="nav-link w-100 rounded-pill fw-semibold py-2" id="appointments-tab" data-bs-toggle="pill" data-bs-target="#tab-appointments" type="button" role="tab">
+    <li class="nav-item flex-shrink-0 flex-md-fill text-center" role="presentation">
+        <button class="nav-link w-100 rounded-pill fw-semibold py-2 text-nowrap" id="appointments-tab" data-bs-toggle="pill" data-bs-target="#tab-appointments" type="button" role="tab">
             <i class="bi bi-calendar2-week-fill me-1"></i> سجل المواعيد والجلسات ({{ $patient->appointments->count() }})
         </button>
     </li>
-    <li class="nav-item flex-fill text-center" role="presentation">
-        <button class="nav-link w-100 rounded-pill fw-semibold py-2" id="billing-tab" data-bs-toggle="pill" data-bs-target="#tab-billing" type="button" role="tab">
+    <li class="nav-item flex-shrink-0 flex-md-fill text-center" role="presentation">
+        <button class="nav-link w-100 rounded-pill fw-semibold py-2 text-nowrap" id="billing-tab" data-bs-toggle="pill" data-bs-target="#tab-billing" type="button" role="tab">
             <i class="bi bi-receipt-cutoff me-1"></i> الفواتير والحسابات
         </button>
     </li>
-    <li class="nav-item flex-fill text-center" role="presentation">
-        <button class="nav-link w-100 rounded-pill fw-semibold py-2" id="labs-tab" data-bs-toggle="pill" data-bs-target="#tab-labs" type="button" role="tab">
+    <li class="nav-item flex-shrink-0 flex-md-fill text-center" role="presentation">
+        <button class="nav-link w-100 rounded-pill fw-semibold py-2 text-nowrap" id="labs-tab" data-bs-toggle="pill" data-bs-target="#tab-labs" type="button" role="tab">
             <i class="bi bi-box-seam-fill me-1"></i> طلبيات المعامل ({{ $patient->labOrders->count() }})
         </button>
     </li>
@@ -289,7 +289,14 @@
         </div>
 
         <div class="clinic-card p-4">
-            <h5 class="fw-bold text-dark mb-3">فواتير وسندات القبض الصادرة</h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-dark mb-0">فواتير وسندات القبض الصادرة</h5>
+                @if(auth()->user()->isAdmin() || auth()->user()->isAccountant() || auth()->user()->isReceptionist())
+                    <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newPatientInvoiceModal">
+                        <i class="bi bi-receipt me-1"></i> إصدار فاتورة جديدة
+                    </button>
+                @endif
+            </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light small">
@@ -299,8 +306,10 @@
                             <th>الطبيب</th>
                             <th>الإجمالي</th>
                             <th>المدفوع</th>
+                            <th>المتبقي</th>
                             <th>طريقة الدفع</th>
                             <th>حالة السداد</th>
+                            <th class="text-center">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -311,20 +320,187 @@
                             <td>{{ $inv->doctor ? $inv->doctor->name : '-' }}</td>
                             <td class="fw-bold">{{ number_format($inv->total, 2) }} ر.س</td>
                             <td class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ر.س</td>
-                            <td><span class="badge bg-light text-dark border">{{ $inv->payment_method }}</span></td>
+                            <td>
+                                @if($inv->remaining_amount > 0)
+                                    <span class="text-danger fw-bold font-monospace">{{ number_format($inv->remaining_amount, 2) }} ر.س</span>
+                                @else
+                                    <span class="text-muted small">0.00 ر.س</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($inv->payment_method === 'card') <span class="badge bg-light text-dark border"><i class="bi bi-credit-card me-1"></i> مدى / بطاقة</span>
+                                @elseif($inv->payment_method === 'cash') <span class="badge bg-light text-dark border"><i class="bi bi-cash me-1"></i> نقدي</span>
+                                @elseif($inv->payment_method === 'installments') <span class="badge bg-warning-subtle text-dark"><i class="bi bi-calendar3 me-1"></i> أقساط</span>
+                                @else <span class="badge bg-light text-dark border">تحويل بنكي</span> @endif
+                            </td>
                             <td>
                                 @if($inv->status === 'paid') <span class="badge bg-success">مدفوعة بالكامل</span>
                                 @elseif($inv->status === 'partially_paid') <span class="badge bg-warning text-dark">دفع جزئي</span>
                                 @else <span class="badge bg-danger">غير مدفوعة</span> @endif
                             </td>
+                            <td class="text-center">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    @if($inv->remaining_amount > 0 && (auth()->user()->isAdmin() || auth()->user()->isAccountant() || auth()->user()->isReceptionist()))
+                                        <button class="btn btn-sm btn-success rounded-pill px-3 shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#payInvoiceModal-{{ $inv->id }}" title="سداد الفاتورة">
+                                            <i class="bi bi-cash-stack me-1"></i> سداد / دفع
+                                        </button>
+                                    @endif
+                                    <a href="{{ route('clinic.billing.show', $inv) }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-2" title="طباعة الفاتورة">
+                                        <i class="bi bi-printer"></i>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="text-center py-4 text-muted">لا توجد فواتير مسجلة للمريض حالياً</td>
+                            <td colspan="9" class="text-center py-4 text-muted">لا توجد فواتير مسجلة للمريض حالياً</td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        {{-- Modals for each Invoice Payment --}}
+        @foreach($patient->invoices as $inv)
+            @if($inv->remaining_amount > 0)
+            <div class="modal fade" id="payInvoiceModal-{{ $inv->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title fw-bold">
+                                <i class="bi bi-cash-coin me-2"></i> تسجيل سند سداد / دفعة مالية
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('clinic.billing.payment', $inv) }}" method="POST">
+                            @csrf
+                            <div class="modal-body p-4">
+                                <!-- Summary Info Box -->
+                                <div class="bg-light p-3 rounded-3 mb-3 border">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small">رقم الفاتورة:</span>
+                                        <span class="fw-bold font-monospace text-primary">#{{ $inv->invoice_number }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small">المريض:</span>
+                                        <span class="fw-bold text-dark">{{ $patient->name }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small">إجمالي قيمة الفاتورة:</span>
+                                        <span class="fw-bold">{{ number_format($inv->total, 2) }} ر.س</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small">المدفوع مسبقاً:</span>
+                                        <span class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ر.س</span>
+                                    </div>
+                                    <hr class="my-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold text-danger">المبلغ المتبقي المطلوب سداده:</span>
+                                        <span class="fw-bold text-danger fs-5 font-monospace">{{ number_format($inv->remaining_amount, 2) }} ر.س</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">مبلغ السداد الحالي (ر.س) <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="number" step="0.01" min="0.01" max="{{ $inv->remaining_amount }}" name="payment_amount" class="form-control fw-bold fs-5 text-center text-success" value="{{ $inv->remaining_amount }}" required>
+                                        <span class="input-group-text bg-light fw-bold">ر.س</span>
+                                    </div>
+                                    <small class="text-muted d-block mt-1">يمكنك إبقاء المبلغ كاملاً لإتمام السداد، أو تعديله لتسجيل دفعة جزئية.</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">طريقة الدفع <span class="text-danger">*</span></label>
+                                    <select name="payment_method" class="form-select" required>
+                                        <option value="card" selected>💳 مدى / بطاقة بنكية (POS)</option>
+                                        <option value="cash">💵 نقدي (كاش)</option>
+                                        <option value="bank_transfer">🏦 تحويل بنكي</option>
+                                        <option value="installments">📅 أقساط / دفعات</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-0">
+                                    <label class="form-label small fw-bold">ملاحظات / رقم المرجع (اختياري)</label>
+                                    <input type="text" name="notes" class="form-control" placeholder="رقم عملية مدى، اسم المحول، أو أي ملاحظة...">
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light">
+                                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">إلغاء</button>
+                                <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm">
+                                    <i class="bi bi-check2-circle me-1"></i> تأكيد السداد وحفظ السند
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @endif
+        @endforeach
+
+        {{-- Modal for New Invoice --}}
+        <div class="modal fade" id="newPatientInvoiceModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-bold">
+                            <i class="bi bi-receipt me-2"></i> إصدار فاتورة جديدة للمريض
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('clinic.billing.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="patient_id" value="{{ $patient->id }}">
+                        <div class="modal-body p-4">
+                            <div class="alert alert-info py-2 small mb-3">
+                                <i class="bi bi-person-fill me-1"></i> المريض: <strong>{{ $patient->name }}</strong> (#{{ $patient->file_number }})
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">الطبيب المعالج</label>
+                                <select name="doctor_id" class="form-select">
+                                    <option value="">عيادة عامة / بدون تحديد</option>
+                                    @foreach($doctors as $doc)
+                                        <option value="{{ $doc->id }}">{{ $doc->name }} - {{ $doc->speciality }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">المبلغ الفرعي (تكلفة العلاج) <span class="text-danger">*</span></label>
+                                <input type="number" step="0.01" min="0" name="subtotal" class="form-control" placeholder="0.00" required>
+                            </div>
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold">الخصم (ر.س)</label>
+                                    <input type="number" step="0.01" min="0" name="discount" class="form-control" value="0.00">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-bold">ضريبة القيمة المضافة</label>
+                                    <input type="number" step="0.01" min="0" name="tax" class="form-control" value="0.00">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">المبلغ المدفوع حالياً عند الإصدار</label>
+                                <input type="number" step="0.01" min="0" name="paid_amount" class="form-control" value="0.00" required>
+                                <small class="text-muted">اتركه 0.00 إذا كانت الفاتورة آجلة أو لم يسدد المريض بعد.</small>
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label small fw-bold">طريقة الدفع</label>
+                                <select name="payment_method" class="form-select" required>
+                                    <option value="card">💳 مدى / بطاقة</option>
+                                    <option value="cash" selected>💵 نقدي (كاش)</option>
+                                    <option value="bank_transfer">🏦 تحويل بنكي</option>
+                                    <option value="installments">📅 أقساط</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">إلغاء</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                                <i class="bi bi-check-lg me-1"></i> إصدار الفاتورة
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

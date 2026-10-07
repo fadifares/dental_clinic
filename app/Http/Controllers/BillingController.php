@@ -95,4 +95,41 @@ class BillingController extends Controller
 
         return view('clinic.billing.show', compact('invoice'));
     }
+
+    /**
+     * Record a payment / settlement on an existing invoice.
+     */
+    public function recordPayment(Request $request, Invoice $invoice): RedirectResponse
+    {
+        if ($invoice->remaining_amount <= 0) {
+            return back()->with('error', 'هذه الفاتورة مسددة بالكامل بالفعل.');
+        }
+
+        $validated = $request->validate([
+            'payment_amount' => 'required|numeric|min:0.01|max:'.$invoice->remaining_amount,
+            'payment_method' => 'required|in:cash,card,bank_transfer,installments',
+            'notes' => 'nullable|string|max:500',
+        ], [
+            'payment_amount.required' => 'يرجى إدخال مبلغ السداد.',
+            'payment_amount.numeric' => 'المبلغ يجب أن يكون رقماً صحيحاً.',
+            'payment_amount.min' => 'أقل مبلغ للسداد هو 0.01 ر.س.',
+            'payment_amount.max' => 'مبلغ السداد لا يمكن أن يتجاوز المبلغ المتبقي (:max ر.س).',
+            'payment_method.required' => 'يرجى تحديد طريقة الدفع.',
+        ]);
+
+        $paymentAmount = (float) $validated['payment_amount'];
+        $newPaid = round((float) $invoice->paid_amount + $paymentAmount, 2);
+        $newRemaining = max(0, round((float) $invoice->total - $newPaid, 2));
+
+        $status = ($newRemaining <= 0) ? 'paid' : 'partially_paid';
+
+        $invoice->update([
+            'paid_amount' => $newPaid,
+            'remaining_amount' => $newRemaining,
+            'payment_method' => $validated['payment_method'],
+            'status' => $status,
+        ]);
+
+        return back()->with('success', 'تم تسجيل سداد مبلغ '.number_format($paymentAmount, 2)." ر.س بنجاح للفاتورة #{$invoice->invoice_number}.");
+    }
 }

@@ -5,21 +5,21 @@
 @section('content')
 
 <!-- Header & Role Identity -->
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
     <div>
-        <div class="d-flex align-items-center gap-2">
-            <h3 class="fw-bold text-dark mb-0">لوحة القيادة والتشغيل اليومي 🩺</h3>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <h3 class="fw-bold text-dark mb-0 fs-4 fs-md-3">لوحة القيادة والتشغيل اليومي 🩺</h3>
             <span class="badge bg-primary-subtle text-primary border px-3 py-1 rounded-pill">
                 {{ auth()->user()->getRoleLabelsString() }}
             </span>
         </div>
         <p class="text-muted small mb-0 mt-1">مرحباً بك، <strong class="text-dark">{{ auth()->user()->name }}</strong> • البيانات معروضة خصيصاً وفق مهامك ومسؤولياتك</p>
     </div>
-    <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="window.location.reload();">
+    <div class="d-flex flex-wrap gap-2 w-100 w-md-auto">
+        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 flex-fill flex-md-grow-0" onclick="window.location.reload();">
             <i class="bi bi-arrow-clockwise me-1"></i> تحديث
         </button>
-        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newAppointmentModal">
+        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm flex-fill flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#newAppointmentModal">
             <i class="bi bi-calendar-plus me-1"></i> حجز موعد سريع
         </button>
     </div>
@@ -28,9 +28,9 @@
 <!-- Admin Role-Preview Switcher (Executive Privilege) -->
 @if(auth()->user()->isAdmin())
 <div class="clinic-card p-3 mb-4 bg-white border border-info-subtle rounded-4 shadow-sm">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between gap-3">
         <div class="d-flex align-items-center gap-2">
-            <span class="badge bg-info text-white p-2 rounded-circle">
+            <span class="badge bg-info text-white p-2 rounded-circle flex-shrink-0">
                 <i class="bi bi-eye-fill"></i>
             </span>
             <div>
@@ -38,21 +38,21 @@
                 <span class="text-muted" style="font-size: 0.75rem;">بصفتك مدير النظام، يمكنك معاينة وتجربة لوحة القيادة المخصصة لكل دور وظيفي:</span>
             </div>
         </div>
-        <div class="btn-group rounded-pill p-1 bg-light border shadow-sm" role="group">
+        <div class="d-flex flex-wrap gap-1 p-1 bg-light border rounded-4 shadow-sm w-100 w-lg-auto" role="group">
             <a href="{{ route('clinic.dashboard', ['role_preview' => 'admin']) }}" 
-               class="btn btn-sm rounded-pill px-3 fw-bold {{ $effectiveRole === 'admin' ? 'btn-danger shadow-sm' : 'btn-light text-muted' }}">
+               class="btn btn-sm rounded-pill px-3 py-1 fw-bold flex-fill text-center {{ $effectiveRole === 'admin' ? 'btn-danger shadow-sm' : 'btn-light text-muted' }}">
                 <i class="bi bi-shield-shaded me-1"></i> الإدارة (Admin)
             </a>
             <a href="{{ route('clinic.dashboard', ['role_preview' => 'doctor']) }}" 
-               class="btn btn-sm rounded-pill px-3 fw-bold {{ $effectiveRole === 'doctor' ? 'btn-primary shadow-sm' : 'btn-light text-muted' }}">
+               class="btn btn-sm rounded-pill px-3 py-1 fw-bold flex-fill text-center {{ $effectiveRole === 'doctor' ? 'btn-primary shadow-sm' : 'btn-light text-muted' }}">
                 <i class="bi bi-heart-pulse me-1"></i> طبيب الأسنان (Doctor)
             </a>
             <a href="{{ route('clinic.dashboard', ['role_preview' => 'receptionist']) }}" 
-               class="btn btn-sm rounded-pill px-3 fw-bold {{ $effectiveRole === 'receptionist' ? 'btn-warning text-dark shadow-sm' : 'btn-light text-muted' }}">
+               class="btn btn-sm rounded-pill px-3 py-1 fw-bold flex-fill text-center {{ $effectiveRole === 'receptionist' ? 'btn-warning text-dark shadow-sm' : 'btn-light text-muted' }}">
                 <i class="bi bi-headset me-1"></i> الاستقبال (Receptionist)
             </a>
             <a href="{{ route('clinic.dashboard', ['role_preview' => 'accountant']) }}" 
-               class="btn btn-sm rounded-pill px-3 fw-bold {{ $effectiveRole === 'accountant' ? 'btn-success shadow-sm' : 'btn-light text-muted' }}">
+               class="btn btn-sm rounded-pill px-3 py-1 fw-bold flex-fill text-center {{ $effectiveRole === 'accountant' ? 'btn-success shadow-sm' : 'btn-light text-muted' }}">
                 <i class="bi bi-wallet2 me-1"></i> المحاسب (Accountant)
             </a>
         </div>
@@ -63,9 +63,9 @@
 <!-- Multi-Role Switcher for Dual-Role Staff (e.g. Receptionist + Accountant) -->
 @if(!auth()->user()->isAdmin() && count($userRoles) > 1)
 <div class="clinic-card p-3 mb-4 bg-white border border-warning-subtle rounded-4 shadow-sm">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between gap-3">
         <div class="d-flex align-items-center gap-2">
-            <span class="badge bg-warning text-dark p-2 rounded-circle">
+            <span class="badge bg-warning text-dark p-2 rounded-circle flex-shrink-0">
                 <i class="bi bi-layers-fill"></i>
             </span>
             <div>
@@ -73,10 +73,10 @@
                 <span class="text-muted" style="font-size: 0.75rem;">يمكنك التبديل الفوري بين واجهات مهامك اليومية:</span>
             </div>
         </div>
-        <div class="btn-group rounded-pill p-1 bg-light border shadow-sm" role="group">
+        <div class="d-flex flex-wrap gap-1 p-1 bg-light border rounded-4 shadow-sm w-100 w-lg-auto" role="group">
             @foreach(auth()->user()->getRoleInstances() as $roleInstance)
                 <a href="{{ route('clinic.dashboard', ['role_view' => $roleInstance->value]) }}" 
-                   class="btn btn-sm rounded-pill px-3 fw-bold {{ $effectiveRole === $roleInstance->value ? 'btn-primary shadow-sm' : 'btn-light text-muted' }}">
+                   class="btn btn-sm rounded-pill px-3 py-1 fw-bold flex-fill text-center {{ $effectiveRole === $roleInstance->value ? 'btn-primary shadow-sm' : 'btn-light text-muted' }}">
                     <i class="bi bi-check2-circle me-1"></i> لوحة {{ $roleInstance->label() }}
                 </a>
             @endforeach

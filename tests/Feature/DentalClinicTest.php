@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\UserRole;
 use App\Models\DentalChart;
 use App\Models\Doctor;
+use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -360,5 +361,63 @@ class DentalClinicTest extends TestCase
         $responseDocDashboard->assertSee('data-status="caries"', false);
         $responseDocDashboard->assertSee('data-tooth-id="21"', false);
         $responseDocDashboard->assertSee('data-status="filled"', false);
+    }
+
+    /**
+     * Test authorized staff can settle an invoice in full or record partial payment.
+     */
+    public function test_invoice_settlement_and_partial_payment(): void
+    {
+        $accountant = User::create([
+            'name' => 'طارق المحاسب',
+            'email' => 'tariq.acc@dentalcare.com',
+            'role' => UserRole::Accountant,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $patient = Patient::create([
+            'name' => 'ريان الغامدي',
+            'file_number' => 'PT-TEST-004',
+            'phone' => '0540001122',
+        ]);
+
+        $invoice = Invoice::create([
+            'invoice_number' => 'INV-2026-TEST',
+            'patient_id' => $patient->id,
+            'subtotal' => 450.00,
+            'discount' => 0.00,
+            'tax' => 0.00,
+            'total' => 450.00,
+            'paid_amount' => 0.00,
+            'remaining_amount' => 450.00,
+            'payment_method' => 'cash',
+            'status' => 'unpaid',
+        ]);
+
+        // 1. Partial payment: 200 SAR
+        $responsePartial = $this->actingAs($accountant)->post("/clinic/billing/{$invoice->id}/payment", [
+            'payment_amount' => 200.00,
+            'payment_method' => 'card',
+        ]);
+
+        $responsePartial->assertSessionHas('success');
+        $invoice->refresh();
+        $this->assertEquals(200.00, $invoice->paid_amount);
+        $this->assertEquals(250.00, $invoice->remaining_amount);
+        $this->assertEquals('partially_paid', $invoice->status);
+        $this->assertEquals('card', $invoice->payment_method);
+
+        // 2. Final settlement: remaining 250 SAR
+        $responseFull = $this->actingAs($accountant)->post("/clinic/billing/{$invoice->id}/payment", [
+            'payment_amount' => 250.00,
+            'payment_method' => 'cash',
+        ]);
+
+        $responseFull->assertSessionHas('success');
+        $invoice->refresh();
+        $this->assertEquals(450.00, $invoice->paid_amount);
+        $this->assertEquals(0.00, $invoice->remaining_amount);
+        $this->assertEquals('paid', $invoice->status);
     }
 }

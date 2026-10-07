@@ -50,11 +50,15 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth'])->group(function (
         ->middleware(['role:admin,doctor'])
         ->name('tooth.update');
 
-    // 5. Billing, Invoices & Installments (Accountant & Admin only)
+    // 5. Billing, Invoices & Installments (Accountant & Admin only for overview, receptionists can record payments/invoices)
     Route::middleware(['role:admin,accountant'])->group(function () {
         Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
-        Route::post('/billing', [BillingController::class, 'store'])->name('billing.store');
         Route::get('/billing/{invoice}', [BillingController::class, 'show'])->name('billing.show');
+    });
+
+    Route::middleware(['role:admin,accountant,receptionist'])->group(function () {
+        Route::post('/billing', [BillingController::class, 'store'])->name('billing.store');
+        Route::post('/billing/{invoice}/payment', [BillingController::class, 'recordPayment'])->name('billing.payment');
     });
 
     // 6. Dental Lab Orders & Prosthetics (Doctor & Admin only)

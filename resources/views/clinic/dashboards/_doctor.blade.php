@@ -15,11 +15,11 @@
             </div>
         </div>
         <div class="col-md-4 text-md-end mt-3 mt-md-0">
-            <div class="d-inline-flex gap-2 bg-white bg-opacity-25 p-2 rounded-pill backdrop-blur">
-                <span class="badge bg-white text-primary px-3 py-2 rounded-pill fw-bold">
+            <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-md-end">
+                <span class="badge bg-white text-primary px-3 py-2 rounded-pill fw-bold shadow-sm">
                     <i class="bi bi-check2-all me-1"></i> {{ $doctorData['completedCasesCount'] }} حالات منجزة هذا الشهر
                 </span>
-                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold">
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold shadow-sm">
                     <i class="bi bi-cash me-1"></i> عمولة تقريبية: {{ number_format($doctorData['estimatedCommission'], 2) }} ر.س
                 </span>
             </div>
@@ -106,7 +106,10 @@
             </div>
 
             <!-- Adult Teeth Chart FDI (11..48) -->
-            <div class="odontogram-container p-3 rounded-4 bg-white border">
+            <div class="odontogram-container p-2 p-md-3 rounded-4 bg-white border position-relative overflow-auto">
+                <div class="d-flex d-md-none justify-content-center align-items-center text-muted small mb-2 bg-light p-1 rounded-pill">
+                    <i class="bi bi-arrows-expand me-1 text-primary"></i> اسحب أفقياً لتصفح كامل الأسنان (32 سناً)
+                </div>
                 <!-- Upper Arch (Maxilla) -->
                 <div class="text-center mb-4">
                     <div class="small fw-bold text-muted mb-2">الفك العلوي (Upper Arch - Maxilla)</div>

@@ -21,8 +21,45 @@
             min-height: 100vh;
             background: #0f172a;
             color: #94a3b8;
-            transition: all 0.3s;
-            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1055;
+            position: sticky;
+            top: 0;
+            max-height: 100vh;
+            overflow-y: auto;
+        }
+        @media (max-width: 991.98px) {
+            .clinic-sidebar {
+                position: fixed !important;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                width: 280px;
+                max-width: 85vw;
+                height: 100vh;
+                transform: translateX(100%);
+                box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+            }
+            .clinic-sidebar.show {
+                transform: translateX(0);
+            }
+            .sidebar-backdrop {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(15, 23, 42, 0.65);
+                backdrop-filter: blur(3px);
+                z-index: 1050;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+            .sidebar-backdrop.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
         }
         .clinic-sidebar .nav-link {
             color: #94a3b8;
@@ -48,13 +85,16 @@
         }
         .clinic-content-wrapper {
             flex: 1;
+            min-width: 0;
+            width: 100%;
             min-height: 100vh;
             background: #f8fafc;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
         .clinic-topbar {
-            height: 70px;
+            min-height: 65px;
             background: #ffffff;
             border-bottom: 1px solid #e2e8f0;
         }
@@ -71,15 +111,21 @@
             max-height: 320px;
             overflow-y: auto;
         }
+        body.overflow-hidden-mobile {
+            overflow: hidden !important;
+        }
     </style>
     @stack('styles')
 </head>
 <body class="bg-light">
 
-<div class="d-flex">
+<!-- Mobile Sidebar Backdrop -->
+<div class="sidebar-backdrop d-lg-none" id="sidebarBackdrop"></div>
+
+<div class="d-flex w-100 position-relative">
     <!-- Sidebar -->
     <aside class="clinic-sidebar d-flex flex-column flex-shrink-0 shadow">
-        <!-- Logo -->
+        <!-- Logo & Mobile Close Button -->
         <div class="p-3 border-bottom border-secondary d-flex align-items-center justify-content-between">
             <a href="{{ route('clinic.dashboard') }}" class="d-flex align-items-center gap-2 text-white text-decoration-none">
                 <span class="clinic-stat-icon bg-primary text-white" style="width: 42px; height: 42px;">
@@ -90,6 +136,9 @@
                     <span class="small text-secondary" style="font-size: 0.75rem;">نظام إدارة العيادات الشامل</span>
                 </div>
             </a>
+            <button type="button" class="btn btn-sm btn-outline-secondary text-white rounded-circle d-lg-none p-1" id="closeSidebar" aria-label="إغلاق القائمة">
+                <i class="bi bi-x-lg fs-6"></i>
+            </button>
         </div>
 
         <!-- Navigation Links -->
@@ -182,17 +231,17 @@
     <!-- Main Content Area -->
     <div class="clinic-content-wrapper">
         <!-- Topbar -->
-        <header class="clinic-topbar px-4 d-flex align-items-center justify-content-between sticky-top">
-            <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-light d-md-none" id="toggleSidebar">
+        <header class="clinic-topbar px-3 px-md-4 py-2 d-flex align-items-center justify-content-between sticky-top">
+            <div class="d-flex align-items-center gap-2 gap-md-3 flex-grow-1 flex-md-grow-0" style="max-width: 420px;">
+                <button class="btn btn-light border d-lg-none shadow-sm px-2 py-1" id="toggleSidebar" aria-label="فتح القائمة الجانبية">
                     <i class="bi bi-list fs-4"></i>
                 </button>
 
                 <!-- Live Patient Search Box -->
-                <div class="position-relative" style="width: 340px;">
+                <div class="position-relative flex-grow-1">
                     <div class="input-group">
                         <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" id="topbarPatientSearch" class="form-control bg-light border-0" placeholder="بحث سريع عن مريض بالاسم أو الجوال..." autocomplete="off">
+                        <input type="text" id="topbarPatientSearch" class="form-control bg-light border-0 small" placeholder="بحث عن مريض..." autocomplete="off">
                     </div>
                     <div id="searchResultsDropdown" class="d-none p-2 shadow">
                         <div id="searchResultsList" class="list-group list-group-flush small"></div>
@@ -200,16 +249,18 @@
                 </div>
             </div>
 
-            <div class="d-flex align-items-center gap-2">
-                <button class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newPatientGlobalModal">
-                    <i class="bi bi-person-plus-fill me-1"></i> مريض جديد
+            <div class="d-flex align-items-center gap-1 gap-sm-2 ms-2">
+                <button class="btn btn-outline-primary btn-sm rounded-pill px-2 px-md-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newPatientGlobalModal" title="فتح ملف مريض جديد">
+                    <i class="bi bi-person-plus-fill"></i>
+                    <span class="d-none d-sm-inline ms-1">مريض جديد</span>
                 </button>
-                <a href="{{ route('clinic.appointments.index') }}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
-                    <i class="bi bi-calendar-plus me-1"></i> المواعيد
+                <a href="{{ route('clinic.appointments.index') }}" class="btn btn-primary btn-sm rounded-pill px-2 px-md-3 shadow-sm" title="المواعيد والاستقبال">
+                    <i class="bi bi-calendar-plus"></i>
+                    <span class="d-none d-sm-inline ms-1">المواعيد</span>
                 </a>
                 
-                <div class="dropdown ms-2">
-                    <button class="btn btn-light position-relative rounded-circle p-2" type="button" data-bs-toggle="dropdown">
+                <div class="dropdown ms-1">
+                    <button class="btn btn-light position-relative rounded-circle p-2 shadow-sm border" type="button" data-bs-toggle="dropdown" aria-label="التنبيهات">
                         <i class="bi bi-bell fs-5"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
                             3
@@ -360,6 +411,46 @@
         $(document).on('click', function (e) {
             if (!$(e.target).closest('#topbarPatientSearch, #searchResultsDropdown').length) {
                 $('#searchResultsDropdown').addClass('d-none');
+            }
+        });
+
+        // Responsive Mobile Sidebar Toggle & Backdrop
+        function openSidebar() {
+            $('.clinic-sidebar').addClass('show');
+            $('#sidebarBackdrop').addClass('show');
+            $('body').addClass('overflow-hidden-mobile');
+        }
+
+        function closeSidebar() {
+            $('.clinic-sidebar').removeClass('show');
+            $('#sidebarBackdrop').removeClass('show');
+            $('body').removeClass('overflow-hidden-mobile');
+        }
+
+        $('#toggleSidebar').on('click', function (e) {
+            e.stopPropagation();
+            if ($('.clinic-sidebar').hasClass('show')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
+        $('#closeSidebar, #sidebarBackdrop').on('click', function () {
+            closeSidebar();
+        });
+
+        // Auto close on small screens when a navigation link is clicked
+        $('.clinic-sidebar .nav-link').on('click', function () {
+            if ($(window).width() < 992) {
+                closeSidebar();
+            }
+        });
+
+        // Close on ESC key
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Escape' && $('.clinic-sidebar').hasClass('show')) {
+                closeSidebar();
             }
         });
     });

@@ -29,7 +29,7 @@
             </div>
             <div class="d-flex gap-3 align-items-center">
                 <a href="tel:+966500000000" class="text-white text-decoration-none">
-                    <i class="bi bi-telephone-fill text-success me-1"></i> 920001234
+                    <i class="bi bi-telephone-fill text-success me-1"></i> +966500000000
                 </a>
                 <span class="text-muted">|</span>
                 @auth
@@ -113,33 +113,33 @@
                         <span class="clinic-stat-icon bg-primary text-white">
                             <i class="bi bi-heart-pulse-fill"></i>
                         </span>
-                        <h4 class="fw-bold mb-0">مركز دنتال<span class="text-primary">كير</span></h4>
+                        <h4 class="fw-bold mb-0 text-white">مركز دنتال<span class="text-primary">كير</span></h4>
                     </div>
-                    <p class="text-secondary small leading-relaxed">
+                    <p class="text-light text-opacity-75 small leading-relaxed" style="color: #cbd5e1 !important;">
                         نقدم أرقى معايير طب الأسنان العلاجي والتجميلي باستخدام أحدث أجهزة المسح ثلاثي الأبعاد وتقنيات زراعة الأسنان الفورية وتصميم الابتسامة الرقمية (Digital Smile Design).
                     </p>
                     <div class="d-flex gap-2 text-white fs-5 mt-3">
-                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-whatsapp"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-circle"><i class="bi bi-whatsapp"></i></a>
                     </div>
                 </div>
 
                 <div class="col-6 col-lg-2">
                     <h6 class="fw-bold text-white mb-3">روابط سريعة</h6>
                     <ul class="list-unstyled small d-flex flex-column gap-2">
-                        <li><a href="{{ url('/') }}" class="text-secondary text-decoration-none hover-light">الرئيسية</a></li>
-                        <li><a href="#services" class="text-secondary text-decoration-none hover-light">الخدمات</a></li>
-                        <li><a href="#doctors" class="text-secondary text-decoration-none hover-light">الأطباء</a></li>
-                        <li><a href="#booking-section" class="text-secondary text-decoration-none hover-light">حجز المواعيد</a></li>
-                        <li><a href="{{ route('clinic.dashboard') }}" class="text-secondary text-decoration-none hover-light">بوابة الموظفين</a></li>
+                        <li><a href="{{ url('/') }}" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">الرئيسية</a></li>
+                        <li><a href="#services" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">الخدمات</a></li>
+                        <li><a href="#doctors" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">الأطباء</a></li>
+                        <li><a href="#booking-section" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">حجز المواعيد</a></li>
+                        <li><a href="{{ route('clinic.dashboard') }}" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">بوابة الموظفين</a></li>
                     </ul>
                 </div>
 
                 <div class="col-6 col-lg-3">
                     <h6 class="fw-bold text-white mb-3">الخدمات المتميزة</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2 text-secondary">
+                    <ul class="list-unstyled small d-flex flex-column gap-2" style="color: #cbd5e1 !important;">
                         <li>زراعة الأسنان الألمانية الفورية</li>
                         <li>ابتسامة هوليود وفينير إيماكس</li>
                         <li>تقويم الأسنان الشفاف (Invisalign)</li>
@@ -150,21 +150,21 @@
 
                 <div class="col-lg-3">
                     <h6 class="fw-bold text-white mb-3">اتصل بنا</h6>
-                    <p class="small text-secondary mb-2"><i class="bi bi-geo-alt text-primary me-2"></i> الرياض - طريق الملك فهد</p>
-                    <p class="small text-secondary mb-2"><i class="bi bi-telephone text-primary me-2"></i> 920001234 / 0500000000</p>
-                    <p class="small text-secondary mb-3"><i class="bi bi-envelope text-primary me-2"></i> info@dentalcare-clinic.com</p>
-                    <a href="https://wa.me/966500000000" target="_blank" class="btn btn-success btn-sm w-100 rounded-pill">
+                    <p class="small mb-2" style="color: #f1f5f9 !important;"><i class="bi bi-geo-alt-fill text-info me-2"></i> الرياض - طريق الملك فهد</p>
+                    <p class="small mb-2" style="color: #f1f5f9 !important;"><i class="bi bi-telephone-fill text-info me-2"></i> 920001234 / 0500000000</p>
+                    <p class="small mb-3" style="color: #f1f5f9 !important;"><i class="bi bi-envelope-fill text-info me-2"></i> info@dentalcare-clinic.com</p>
+                    <a href="https://wa.me/966500000000" target="_blank" class="btn btn-success btn-sm w-100 rounded-pill shadow-sm">
                         <i class="bi bi-whatsapp me-1"></i> تواصل فوري عبر واتساب
                     </a>
                 </div>
             </div>
 
-            <hr class="border-secondary my-4">
+            <hr class="border-secondary my-4" style="opacity: 0.25;">
 
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-secondary">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small" style="color: #94a3b8 !important;">
                 <div>جميع الحقوق محفوظة © {{ date('Y') }} - نظام ومركز دنتال كير الطبي.</div>
                 <div class="mt-2 mt-md-0">
-                    <span class="text-light">بني بأحدث معايير الويب: Laravel 11 • Bootstrap 5 • jQuery</span>
+                    <!-- <span class="text-white-50">بني بأحدث معايير الويب: Laravel 11 • Bootstrap 5 • jQuery</span> -->
                 </div>
             </div>
         </div>

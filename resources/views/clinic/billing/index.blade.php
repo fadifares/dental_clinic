@@ -99,7 +99,7 @@
                     <th>طريقة الدفع</th>
                     <th>الحالة</th>
                     <th>التاريخ</th>
-                    <th class="text-center">معاينة / طباعة</th>
+                    <th class="text-center">الإجراءات</th>
                 </tr>
             </thead>
             <tbody>
@@ -145,9 +145,16 @@
                     </td>
                     <td class="text-muted small">{{ $inv->created_at->format('Y-m-d') }}</td>
                     <td class="text-center">
-                        <a href="{{ route('clinic.billing.show', $inv) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3" title="معاينة وطباعة الفاتورة">
-                            <i class="bi bi-printer me-1"></i> طباعة
-                        </a>
+                        <div class="d-flex gap-1 justify-content-center">
+                            @if($inv->remaining_amount > 0)
+                                <button class="btn btn-sm btn-success rounded-pill px-3 shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#payInvoiceModal-billing-{{ $inv->id }}" title="سداد الفاتورة">
+                                    <i class="bi bi-cash-stack me-1"></i> سداد
+                                </button>
+                            @endif
+                            <a href="{{ route('clinic.billing.show', $inv) }}" class="btn btn-sm btn-outline-primary rounded-pill px-2" title="معاينة وطباعة الفاتورة">
+                                <i class="bi bi-printer"></i>
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 @empty
@@ -161,6 +168,83 @@
             </tbody>
         </table>
     </div>
+
+    {{-- Modals for Invoices Payment --}}
+    @foreach($invoices as $inv)
+        @if($inv->remaining_amount > 0)
+        <div class="modal fade" id="payInvoiceModal-billing-{{ $inv->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title fw-bold">
+                            <i class="bi bi-cash-coin me-2"></i> تسجيل سند سداد / دفعة مالية
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('clinic.billing.payment', $inv) }}" method="POST">
+                        @csrf
+                        <div class="modal-body p-4 text-start">
+                            <!-- Summary Info Box -->
+                            <div class="bg-light p-3 rounded-3 mb-3 border">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">رقم الفاتورة:</span>
+                                    <span class="fw-bold font-monospace text-primary">#{{ $inv->invoice_number }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">المريض:</span>
+                                    <span class="fw-bold text-dark">{{ $inv->patient->name }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">إجمالي قيمة الفاتورة:</span>
+                                    <span class="fw-bold">{{ number_format($inv->total, 2) }} ر.س</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">المدفوع مسبقاً:</span>
+                                    <span class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ر.س</span>
+                                </div>
+                                <hr class="my-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold text-danger">المبلغ المتبقي المطلوب سداده:</span>
+                                    <span class="fw-bold text-danger fs-5 font-monospace">{{ number_format($inv->remaining_amount, 2) }} ر.س</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">مبلغ السداد الحالي (ر.س) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="number" step="0.01" min="0.01" max="{{ $inv->remaining_amount }}" name="payment_amount" class="form-control fw-bold fs-5 text-center text-success" value="{{ $inv->remaining_amount }}" required>
+                                    <span class="input-group-text bg-light fw-bold">ر.س</span>
+                                </div>
+                                <small class="text-muted d-block mt-1">يمكنك إبقاء المبلغ كاملاً لإتمام السداد، أو تعديله لتسجيل دفعة جزئية.</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">طريقة الدفع <span class="text-danger">*</span></label>
+                                <select name="payment_method" class="form-select" required>
+                                    <option value="card" selected>💳 مدى / بطاقة بنكية (POS)</option>
+                                    <option value="cash">💵 نقدي (كاش)</option>
+                                    <option value="bank_transfer">🏦 تحويل بنكي</option>
+                                    <option value="installments">📅 أقساط / دفعات</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-0">
+                                <label class="form-label small fw-bold">ملاحظات / رقم المرجع (اختياري)</label>
+                                <input type="text" name="notes" class="form-control" placeholder="رقم عملية مدى، اسم المحول، أو أي ملاحظة...">
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">إلغاء</button>
+                            <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm">
+                                <i class="bi bi-check2-circle me-1"></i> تأكيد السداد وحفظ السند
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endif
+    @endforeach
 
     @if($invoices->hasPages())
     <div class="mt-4 d-flex justify-content-center">
