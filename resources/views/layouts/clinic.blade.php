@@ -270,12 +270,6 @@
 
                 @if(auth()->user()->isAdmin() || auth()->user()->isDoctor())
                 <li class="nav-item">
-                    <a href="{{ route('clinic.dashboard') }}#odontogram-section" class="nav-link">
-                        <i class="bi bi-grid-3x3-gap-fill fs-5 text-warning"></i>
-                        <span class="fw-bold text-white">مخطط الأسنان (Odontogram)</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="{{ route('clinic.labs.index') }}" class="nav-link {{ request()->routeIs('clinic.labs.*') ? 'active' : '' }}">
                         <i class="bi bi-box-seam fs-5"></i>
                         <span>طلبيات المعامل والتركيبات</span>
