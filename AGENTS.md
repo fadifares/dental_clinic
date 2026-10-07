@@ -152,4 +152,11 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Rerun a test after each change to it.
 - Run `vendor/bin/phpunit` to call the test runner directly. It accepts the same file path and `--filter=testName` arguments.
 
+=== deployment / sync rules ===
+
+# Auto Git and FTP Sync Rule
+- After EVERY edit, you MUST proactively:
+  1. Commit and push changes to Git: `git add -A`, `git commit -m "..."`, `git push origin main`.
+  2. Upload all modified files directly to Hostinger FTP server on `/dental/` using the credentials in `.vscode/sftp.json`.
+
 </laravel-boost-guidelines>
