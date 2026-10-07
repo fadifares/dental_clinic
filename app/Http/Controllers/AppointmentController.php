@@ -34,7 +34,7 @@ class AppointmentController extends Controller
         }
 
         $appointments = $query->get();
-        $doctors = Doctor::activeDoctors()->get();
+        $doctors = Doctor::where('is_active', true)->get();
         $patients = Patient::select('id', 'name', 'phone', 'file_number')->latest()->get();
 
         $stats = [

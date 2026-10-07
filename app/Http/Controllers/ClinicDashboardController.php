@@ -37,7 +37,7 @@ class ClinicDashboardController extends Controller
         }
 
         // Shared baseline data
-        $allDoctors = Doctor::activeDoctors()->get();
+        $allDoctors = Doctor::where('is_active', true)->get();
         $todayAppointments = Appointment::with(['patient', 'doctor'])
             ->whereDate('appointment_date', $today)
             ->orderBy('appointment_time')

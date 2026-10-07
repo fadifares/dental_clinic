@@ -368,20 +368,6 @@
                     <span class="d-none d-sm-inline ms-1">المواعيد</span>
                 </a>
                 
-                <!-- Notification Bell -->
-                <div class="dropdown ms-1">
-                    <button class="btn btn-light position-relative rounded-circle p-2 shadow-sm border" type="button" data-bs-toggle="dropdown" aria-label="التنبيهات">
-                        <i class="bi bi-bell fs-5"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
-                            3
-                        </span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-start shadow border-0 p-2" style="width: 280px;">
-                        <li><h6 class="dropdown-header">تنبيهات العيادة</h6></li>
-                        <li><a class="dropdown-item small py-2 rounded" href="{{ route('clinic.dashboard') }}">🦷 مريض في الانتظار (فهد العتيبي)</a></li>
-                        <li><a class="dropdown-item small py-2 rounded" href="{{ route('clinic.dashboard') }}">📦 استلام تركيبة زيركون من معمل النخبة</a></li>
-                    </ul>
-                </div>
 
                 <!-- Dark / Light Mode Toggle Button -->
                 <button class="btn btn-light rounded-circle p-2 shadow-sm border ms-1 d-flex align-items-center justify-content-center" id="themeToggleBtn" type="button" title="تبديل الوضع الليلي والنهاري" aria-label="الوضع الليلي والنهاري" style="width: 38px; height: 38px;">

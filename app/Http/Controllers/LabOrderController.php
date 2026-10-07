@@ -26,7 +26,7 @@ class LabOrderController extends Controller
 
         $labOrders = $query->paginate(15)->withQueryString();
         $patients = Patient::select('id', 'name', 'phone', 'file_number')->latest()->get();
-        $doctors = Doctor::activeDoctors()->get();
+        $doctors = Doctor::where('is_active', true)->get();
 
         $stats = [
             'total' => LabOrder::count(),

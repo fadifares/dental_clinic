@@ -7,11 +7,10 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'phone', 'password', 'role', 'roles', 'user_type', 'speciality', 'is_active'])]
+#[Fillable(['name', 'email', 'password', 'role', 'roles', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -143,47 +142,5 @@ class User extends Authenticatable
         }
 
         return false;
-    }
-
-    /**
-     * Doctor profile associated with this user.
-     */
-    public function doctorProfile(): HasOne
-    {
-        return $this->hasOne(Doctor::class);
-    }
-
-    /**
-     * Check if user is of type Doctor (كادر طبي).
-     */
-    public function isDoctorType(): bool
-    {
-        return $this->user_type === 'doctor';
-    }
-
-    /**
-     * Check if user is of type Administrative (كادر إداري).
-     */
-    public function isAdministrativeType(): bool
-    {
-        return $this->user_type === 'administrative';
-    }
-
-    /**
-     * Get user-friendly Arabic label for the user type.
-     */
-    public function getUserTypeLabel(): string
-    {
-        return $this->user_type === 'doctor' ? 'طبيب (كادر طبي)' : 'إداري (كادر إداري)';
-    }
-
-    /**
-     * Get badge CSS classes for user type.
-     */
-    public function getUserTypeBadgeClass(): string
-    {
-        return $this->user_type === 'doctor'
-            ? 'bg-primary-subtle text-primary border border-primary-subtle'
-            : 'bg-secondary-subtle text-dark border border-secondary-subtle';
     }
 }

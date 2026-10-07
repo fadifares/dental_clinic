@@ -77,7 +77,7 @@ class PatientController extends Controller
             'invoices.doctor',
         ]);
 
-        $doctors = Doctor::activeDoctors()->get();
+        $doctors = Doctor::where('is_active', true)->get();
 
         // Map existing dental conditions by tooth number (FDI 11..48)
         $patientToothConditions = [];
