@@ -243,21 +243,41 @@
                                                 <label class="form-label small fw-bold">مجموعات الصلاحيات الممنوحة (يمكن اختيار أكثر من مجموعة) <span class="text-danger">*</span></label>
                                                 <div class="row g-2">
                                                     @foreach(\App\Enums\UserRole::cases() as $role)
-                                                    <div class="col-6">
-                                                        <div class="form-check p-2 border rounded-3 bg-light">
-                                                            <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->value }}" id="editRole{{ $u->id }}_{{ $role->value }}"
-                                                                   {{ $u->hasRole($role) ? 'checked' : '' }}
-                                                                   {{ ($u->id === auth()->id() && $role === \App\Enums\UserRole::Admin) ? 'checked disabled' : '' }}>
-                                                            <label class="form-check-label small fw-bold text-dark" for="editRole{{ $u->id }}_{{ $role->value }}">
-                                                                {{ $role->label() }}
-                                                            </label>
-                                                        </div>
+                                                    @php
+                                                        $isRoleChecked = $u->hasRole($role) || ($u->id === auth()->id() && $role === \App\Enums\UserRole::Admin);
+                                                        $isRoleDisabled = ($u->id === auth()->id() && $role === \App\Enums\UserRole::Admin);
+                                                    @endphp
+                                                    <div class="col-12 col-sm-6">
+                                                        <label class="role-select-card {{ $isRoleChecked ? 'is-selected' : '' }} {{ $isRoleDisabled ? 'is-disabled' : '' }}" 
+                                                               for="editRole{{ $u->id }}_{{ $role->value }}">
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <div class="role-icon-box bg-{{ $role->colorClass() }}-subtle text-{{ $role->colorClass() }}">
+                                                                    <i class="bi {{ $role->icon() }}"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="fw-bold text-dark role-title">{{ $role->title() }}</div>
+                                                                    <div class="text-muted role-subtitle">{{ $role->subtitle() }}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex align-items-center gap-1">
+                                                                @if($isRoleDisabled)
+                                                                    <i class="bi bi-lock-fill text-muted me-1" style="font-size: 0.85rem;" title="محمي"></i>
+                                                                @endif
+                                                                <input class="form-check-input role-check-input" type="checkbox" name="roles[]" 
+                                                                       value="{{ $role->value }}" id="editRole{{ $u->id }}_{{ $role->value }}"
+                                                                       {{ $isRoleChecked ? 'checked' : '' }}
+                                                                       {{ $isRoleDisabled ? 'disabled' : '' }}>
+                                                            </div>
+                                                        </label>
                                                     </div>
                                                     @endforeach
                                                 </div>
                                                 @if($u->id === auth()->id())
                                                     <input type="hidden" name="roles[]" value="admin">
-                                                    <span class="text-muted small" style="font-size: 0.75rem;">لا يمكنك إزالة صلاحية المدير عن حسابك الخاص لمنع قفل النظام.</span>
+                                                    <div class="alert alert-info py-1 px-2 mt-2 mb-0 d-flex align-items-center gap-2 small" style="font-size: 0.75rem;">
+                                                        <i class="bi bi-info-circle-fill flex-shrink-0"></i>
+                                                        <span>لا يمكنك إزالة صلاحية المدير عن حسابك الخاص لضمان عدم إغلاق الوصول إلى لوحة الإدارة.</span>
+                                                    </div>
                                                 @endif
                                             </div>
 
@@ -450,38 +470,28 @@
                         <label class="form-label small fw-bold">مجموعات الصلاحيات الممنوحة (يمكنك اختيار أكثر من مجموعة) <span class="text-danger">*</span></label>
                         <p class="text-muted small mb-2" style="font-size: 0.75rem;">يمكنك تحديد أكثر من دور معاً لنفس الموظف (مثال: الجمع بين موظف استقبال ومحاسب مالي):</p>
                         <div class="row g-2">
-                            <div class="col-6">
-                                <div class="form-check p-2 border rounded-3 bg-light">
-                                    <input class="form-check-input role-group-check" type="checkbox" name="roles[]" value="receptionist" id="newRoleReceptionist" checked>
-                                    <label class="form-check-label small fw-bold text-dark" for="newRoleReceptionist">
-                                        <i class="bi bi-headset text-warning me-1"></i> موظف استقبال
-                                    </label>
-                                </div>
+                            @foreach(\App\Enums\UserRole::cases() as $role)
+                            @php
+                                $isDefaultChecked = ($role === \App\Enums\UserRole::Receptionist);
+                            @endphp
+                            <div class="col-12 col-sm-6">
+                                <label class="role-select-card {{ $isDefaultChecked ? 'is-selected' : '' }}" 
+                                       for="newRole{{ ucfirst($role->value) }}">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="role-icon-box bg-{{ $role->colorClass() }}-subtle text-{{ $role->colorClass() }}">
+                                            <i class="bi {{ $role->icon() }}"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark role-title">{{ $role->title() }}</div>
+                                            <div class="text-muted role-subtitle">{{ $role->subtitle() }}</div>
+                                        </div>
+                                    </div>
+                                    <input class="form-check-input role-check-input role-group-check" type="checkbox" name="roles[]" 
+                                           value="{{ $role->value }}" id="newRole{{ ucfirst($role->value) }}"
+                                           {{ $isDefaultChecked ? 'checked' : '' }}>
+                                </label>
                             </div>
-                            <div class="col-6">
-                                <div class="form-check p-2 border rounded-3 bg-light">
-                                    <input class="form-check-input role-group-check" type="checkbox" name="roles[]" value="accountant" id="newRoleAccountant">
-                                    <label class="form-check-label small fw-bold text-dark" for="newRoleAccountant">
-                                        <i class="bi bi-cash-coin text-success me-1"></i> محاسب مالي
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check p-2 border rounded-3 bg-light">
-                                    <input class="form-check-input role-group-check" type="checkbox" name="roles[]" value="doctor" id="newRoleDoctor">
-                                    <label class="form-check-label small fw-bold text-dark" for="newRoleDoctor">
-                                        <i class="bi bi-heart-pulse text-primary me-1"></i> طبيب أسنان
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check p-2 border rounded-3 bg-light">
-                                    <input class="form-check-input role-group-check" type="checkbox" name="roles[]" value="admin" id="newRoleAdmin">
-                                    <label class="form-check-label small fw-bold text-dark" for="newRoleAdmin">
-                                        <i class="bi bi-shield-shaded text-danger me-1"></i> مدير النظام
-                                    </label>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -511,9 +521,142 @@
     </div>
 </div>
 
+@push('styles')
+<style>
+.role-select-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.85rem;
+    background-color: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    margin-bottom: 0;
+    width: 100%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.role-select-card:hover {
+    border-color: #94a3b8;
+    background-color: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.role-select-card.is-selected,
+.role-select-card:has(.role-check-input:checked) {
+    border-color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.04);
+    box-shadow: 0 3px 10px rgba(13, 110, 253, 0.12);
+}
+
+.role-select-card.is-disabled,
+.role-select-card:has(.role-check-input:disabled) {
+    opacity: 0.75;
+    cursor: not-allowed;
+    background-color: #f1f5f9;
+}
+
+.role-select-card .role-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.role-select-card .role-title {
+    font-size: 0.85rem;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+.role-select-card .role-subtitle {
+    font-size: 0.72rem;
+    line-height: 1.2;
+}
+
+.role-select-card .role-check-input {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    margin: 0 !important;
+    float: none !important;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 0.35rem;
+}
+
+.role-select-card.is-selected .role-check-input,
+.role-select-card:has(.role-check-input:checked) .role-check-input {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Dark Mode support */
+body.dark-mode .role-select-card {
+    background-color: #1e293b;
+    border-color: #334155;
+    box-shadow: none;
+}
+
+body.dark-mode .role-select-card:hover {
+    background-color: #27354a;
+    border-color: #475569;
+}
+
+body.dark-mode .role-select-card.is-selected,
+body.dark-mode .role-select-card:has(.role-check-input:checked) {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.12);
+    box-shadow: 0 3px 10px rgba(59, 130, 246, 0.2);
+}
+
+body.dark-mode .role-select-card.is-disabled,
+body.dark-mode .role-select-card:has(.role-check-input:disabled) {
+    background-color: #172033;
+    opacity: 0.65;
+}
+
+body.dark-mode .role-select-card .role-title {
+    color: #f8fafc !important;
+}
+
+body.dark-mode .role-select-card .role-subtitle {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .role-select-card .role-check-input {
+    border-color: #475569;
+    background-color: #0f172a;
+}
+
+body.dark-mode .role-select-card.is-selected .role-check-input,
+body.dark-mode .role-select-card:has(.role-check-input:checked) .role-check-input {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+</style>
+@endpush
+
 @push('scripts')
 <script>
 $(document).ready(function() {
+    $(document).on('change', '.role-check-input', function() {
+        var $card = $(this).closest('.role-select-card');
+        if ($(this).is(':checked')) {
+            $card.addClass('is-selected');
+        } else {
+            $card.removeClass('is-selected');
+        }
+    });
+
     $('#newRoleDoctor').on('change', function() {
         if ($(this).is(':checked')) {
             $('#doctorExtraFields').removeClass('d-none');
