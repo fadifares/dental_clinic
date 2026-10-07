@@ -17,16 +17,19 @@
 
     <style>
         .clinic-sidebar {
-            width: 270px;
-            min-height: 100vh;
+            width: 275px;
+            height: 100vh;
+            height: 100dvh;
+            max-height: 100dvh;
             background: #0f172a;
             color: #94a3b8;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1055;
             position: sticky;
             top: 0;
-            max-height: 100vh;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden !important;
         }
         @media (max-width: 991.98px) {
             .clinic-sidebar {
@@ -34,11 +37,13 @@
                 top: 0;
                 bottom: 0;
                 right: 0;
-                width: 280px;
+                width: 285px;
                 max-width: 85vw;
                 height: 100vh;
+                height: 100dvh;
+                max-height: 100dvh;
                 transform: translateX(100%);
-                box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+                box-shadow: -5px 0 30px rgba(0,0,0,0.5);
             }
             .clinic-sidebar.show {
                 transform: translateX(0);
@@ -83,6 +88,18 @@
             background: #0284c7;
             border-right: none;
         }
+        .sidebar-menu-scroll {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+        .sidebar-footer {
+            flex-shrink: 0;
+            background: #0b1329;
+            z-index: 10;
+        }
         .clinic-content-wrapper {
             flex: 1;
             min-width: 0;
@@ -124,9 +141,9 @@
 
 <div class="d-flex w-100 position-relative">
     <!-- Sidebar -->
-    <aside class="clinic-sidebar d-flex flex-column flex-shrink-0 shadow">
+    <aside class="clinic-sidebar shadow">
         <!-- Logo & Mobile Close Button -->
-        <div class="p-3 border-bottom border-secondary d-flex align-items-center justify-content-between">
+        <div class="p-3 border-bottom border-secondary d-flex align-items-center justify-content-between flex-shrink-0">
             <a href="{{ route('clinic.dashboard') }}" class="d-flex align-items-center gap-2 text-white text-decoration-none">
                 <span class="clinic-stat-icon bg-primary text-white" style="width: 42px; height: 42px;">
                     <i class="bi bi-heart-pulse-fill"></i>
@@ -141,69 +158,71 @@
             </button>
         </div>
 
-        <!-- Navigation Links -->
-        <ul class="nav nav-pills flex-column mb-auto py-3">
-            <li class="nav-item">
-                <a href="{{ route('clinic.dashboard') }}" class="nav-link {{ request()->routeIs('clinic.dashboard') ? 'active' : '' }}">
-                    <i class="bi bi-speedometer2 fs-5"></i>
-                    <span>لوحة القيادة الرئيسية</span>
-                </a>
-            </li>
+        <!-- Scrollable Navigation Links -->
+        <div class="sidebar-menu-scroll">
+            <ul class="nav nav-pills flex-column py-2">
+                <li class="nav-item">
+                    <a href="{{ route('clinic.dashboard') }}" class="nav-link {{ request()->routeIs('clinic.dashboard') ? 'active' : '' }}">
+                        <i class="bi bi-speedometer2 fs-5"></i>
+                        <span>لوحة القيادة الرئيسية</span>
+                    </a>
+                </li>
 
-            @if(auth()->user()->isAdmin() || auth()->user()->isReceptionist() || auth()->user()->isDoctor())
-            <li class="nav-item">
-                <a href="{{ route('clinic.appointments.index') }}" class="nav-link {{ request()->routeIs('clinic.appointments.*') ? 'active' : '' }}">
-                    <i class="bi bi-calendar2-week fs-5"></i>
-                    <span>المواعيد والاستقبال</span>
-                </a>
-            </li>
-            @endif
+                @if(auth()->user()->isAdmin() || auth()->user()->isReceptionist() || auth()->user()->isDoctor())
+                <li class="nav-item">
+                    <a href="{{ route('clinic.appointments.index') }}" class="nav-link {{ request()->routeIs('clinic.appointments.*') ? 'active' : '' }}">
+                        <i class="bi bi-calendar2-week fs-5"></i>
+                        <span>المواعيد والاستقبال</span>
+                    </a>
+                </li>
+                @endif
 
-            <li class="nav-item">
-                <a href="{{ route('clinic.patients.index') }}" class="nav-link {{ request()->routeIs('clinic.patients.*') ? 'active' : '' }}">
-                    <i class="bi bi-people-fill fs-5"></i>
-                    <span>سجل المرضى (EMR)</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ route('clinic.patients.index') }}" class="nav-link {{ request()->routeIs('clinic.patients.*') ? 'active' : '' }}">
+                        <i class="bi bi-people-fill fs-5"></i>
+                        <span>سجل المرضى (EMR)</span>
+                    </a>
+                </li>
 
-            @if(auth()->user()->isAdmin() || auth()->user()->isDoctor())
-            <li class="nav-item">
-                <a href="{{ route('clinic.dashboard') }}#odontogram-section" class="nav-link">
-                    <i class="bi bi-grid-3x3-gap-fill fs-5 text-warning"></i>
-                    <span class="fw-bold text-white">مخطط الأسنان (Odontogram)</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('clinic.labs.index') }}" class="nav-link {{ request()->routeIs('clinic.labs.*') ? 'active' : '' }}">
-                    <i class="bi bi-box-seam fs-5"></i>
-                    <span>طلبيات المعامل والتركيبات</span>
-                </a>
-            </li>
-            @endif
+                @if(auth()->user()->isAdmin() || auth()->user()->isDoctor())
+                <li class="nav-item">
+                    <a href="{{ route('clinic.dashboard') }}#odontogram-section" class="nav-link">
+                        <i class="bi bi-grid-3x3-gap-fill fs-5 text-warning"></i>
+                        <span class="fw-bold text-white">مخطط الأسنان (Odontogram)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('clinic.labs.index') }}" class="nav-link {{ request()->routeIs('clinic.labs.*') ? 'active' : '' }}">
+                        <i class="bi bi-box-seam fs-5"></i>
+                        <span>طلبيات المعامل والتركيبات</span>
+                    </a>
+                </li>
+                @endif
 
-            @if(auth()->user()->isAdmin() || auth()->user()->isAccountant())
-            <li class="nav-item">
-                <a href="{{ route('clinic.billing.index') }}" class="nav-link {{ request()->routeIs('clinic.billing.*') ? 'active' : '' }}">
-                    <i class="bi bi-receipt-cutoff fs-5"></i>
-                    <span>الفواتير والأقساط</span>
-                </a>
-            </li>
-            @endif
+                @if(auth()->user()->isAdmin() || auth()->user()->isAccountant())
+                <li class="nav-item">
+                    <a href="{{ route('clinic.billing.index') }}" class="nav-link {{ request()->routeIs('clinic.billing.*') ? 'active' : '' }}">
+                        <i class="bi bi-receipt-cutoff fs-5"></i>
+                        <span>الفواتير والأقساط</span>
+                    </a>
+                </li>
+                @endif
 
-            @if(auth()->user()->isAdmin())
-            <li class="nav-item">
-                <a href="{{ route('clinic.users.index') }}" class="nav-link {{ request()->routeIs('clinic.users.*') ? 'active' : '' }}">
-                    <i class="bi bi-shield-lock-fill fs-5 text-warning"></i>
-                    <span class="fw-bold">المستخدمين والأمان (RBAC)</span>
-                </a>
-            </li>
-            @endif
-        </ul>
+                @if(auth()->user()->isAdmin())
+                <li class="nav-item">
+                    <a href="{{ route('clinic.users.index') }}" class="nav-link {{ request()->routeIs('clinic.users.*') ? 'active' : '' }}">
+                        <i class="bi bi-shield-lock-fill fs-5 text-warning"></i>
+                        <span class="fw-bold">المستخدمين والأمان (RBAC)</span>
+                    </a>
+                </li>
+                @endif
+            </ul>
+        </div>
 
-        <!-- Bottom Link to Public Web & User Profile -->
-        <div class="p-3 border-top border-secondary">
+        <!-- Permanently Visible Bottom User Profile & Logout Section -->
+        <div class="sidebar-footer p-3 border-top border-secondary">
             <div class="d-flex align-items-center gap-2 text-white mb-2">
-                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px;">
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm flex-shrink-0" style="width: 38px; height: 38px;">
                     <i class="bi bi-person-badge-fill"></i>
                 </div>
                 <div class="overflow-hidden">
@@ -218,9 +237,9 @@
                 <a href="{{ url('/') }}" target="_blank" class="btn btn-outline-info btn-sm flex-fill rounded-pill">
                     <i class="bi bi-globe me-1"></i> الموقع
                 </a>
-                <form action="{{ route('logout') }}" method="POST" class="flex-fill">
+                <form action="{{ route('logout') }}" method="POST" class="flex-fill mb-0">
                     @csrf
-                    <button type="submit" class="btn btn-outline-danger btn-sm w-100 rounded-pill">
+                    <button type="submit" class="btn btn-danger btn-sm w-100 rounded-pill shadow-sm fw-bold">
                         <i class="bi bi-box-arrow-right me-1"></i> خروج
                     </button>
                 </form>
@@ -259,6 +278,7 @@
                     <span class="d-none d-sm-inline ms-1">المواعيد</span>
                 </a>
                 
+                <!-- Notification Bell -->
                 <div class="dropdown ms-1">
                     <button class="btn btn-light position-relative rounded-circle p-2 shadow-sm border" type="button" data-bs-toggle="dropdown" aria-label="التنبيهات">
                         <i class="bi bi-bell fs-5"></i>
@@ -270,6 +290,35 @@
                         <li><h6 class="dropdown-header">تنبيهات العيادة</h6></li>
                         <li><a class="dropdown-item small py-2 rounded" href="{{ route('clinic.dashboard') }}">🦷 مريض في الانتظار (فهد العتيبي)</a></li>
                         <li><a class="dropdown-item small py-2 rounded" href="{{ route('clinic.dashboard') }}">📦 استلام تركيبة زيركون من معمل النخبة</a></li>
+                    </ul>
+                </div>
+
+                <!-- Direct Topbar User Profile & Logout Dropdown -->
+                <div class="dropdown ms-1">
+                    <button class="btn btn-light rounded-circle p-1 shadow-sm border d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;" type="button" data-bs-toggle="dropdown" aria-label="حساب المستخدم">
+                        <span class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 30px; height: 30px; font-size: 0.85rem;">
+                            {{ mb_substr(auth()->user()->name, 0, 1) }}
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-start shadow border-0 p-2" style="min-width: 220px;">
+                        <li class="px-2 py-1 border-bottom mb-2">
+                            <span class="fw-bold d-block text-dark small text-truncate">{{ auth()->user()->name }}</span>
+                            <span class="badge bg-secondary-subtle text-dark" style="font-size: 0.7rem;">{{ auth()->user()->getRoleLabelsString() }}</span>
+                        </li>
+                        <li>
+                            <a class="dropdown-item small py-2 rounded" href="{{ url('/') }}" target="_blank">
+                                <i class="bi bi-globe me-2 text-info"></i> زيارة الموقع الخارجي
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider my-1"></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" class="mb-0">
+                                @csrf
+                                <button type="submit" class="dropdown-item small py-2 rounded text-danger fw-bold">
+                                    <i class="bi bi-box-arrow-right me-2"></i> تسجيل الخروج
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>
