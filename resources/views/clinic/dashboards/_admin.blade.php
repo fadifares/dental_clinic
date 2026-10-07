@@ -35,8 +35,8 @@
         <div class="clinic-card p-3 h-100 d-flex align-items-center justify-content-between">
             <div>
                 <span class="text-muted small d-block mb-1">التحصيل المالي لليوم</span>
-                <h3 class="fw-bold text-success mb-0">{{ number_format($adminData['todayCollection'], 2) }} <span class="fs-6 fw-normal text-muted">ر.س</span></h3>
-                <span class="text-muted" style="font-size: 0.75rem;">إجمالي الشهر: {{ number_format($adminData['monthCollection'], 2) }} ر.س</span>
+                <h3 class="fw-bold text-success mb-0">{{ number_format($adminData['todayCollection'], 2) }} <span class="fs-6 fw-normal text-muted">ج.م</span></h3>
+                <span class="text-muted" style="font-size: 0.75rem;">إجمالي الشهر: {{ number_format($adminData['monthCollection'], 2) }} ج.م</span>
             </div>
             <div class="clinic-stat-icon bg-success-subtle text-success">
                 <i class="bi bi-cash-stack fs-4"></i>
@@ -172,7 +172,7 @@
                     <div class="small text-muted mb-2">{{ $perf['doctor']->speciality }}</div>
                     <div class="d-flex justify-content-between text-muted small pt-2 border-top">
                         <span>مواعيد اليوم: <strong class="text-dark">{{ $perf['today_appointments'] }}</strong></span>
-                        <span>دخل الشهر: <strong class="text-success">{{ number_format($perf['monthly_revenue'], 2) }} ر.س</strong></span>
+                        <span>دخل الشهر: <strong class="text-success">{{ number_format($perf['monthly_revenue'], 2) }} ج.م</strong></span>
                     </div>
                 </div>
                 @endforeach
@@ -212,7 +212,7 @@
                         <tr>
                             <td class="font-monospace fw-bold text-dark">{{ $inv->invoice_number }}</td>
                             <td>{{ $inv->patient->name }}</td>
-                            <td class="fw-bold text-success">{{ number_format($inv->total, 2) }} ر.س</td>
+                            <td class="fw-bold text-success">{{ number_format($inv->total, 2) }} ج.م</td>
                             <td>
                                 @if($inv->status === 'paid')
                                     <span class="badge bg-success-subtle text-success">مسددة بالكامل</span>
@@ -259,7 +259,7 @@
                         <div class="fw-bold text-dark">{{ $order->item_type }} @if($order->tooth_numbers) (سن #{{ $order->tooth_numbers }}) @endif</div>
                         <div class="small text-muted">المريض: {{ $order->patient->name }} • {{ $order->lab_name }}</div>
                         <div class="small text-secondary mt-1">
-                            <i class="bi bi-palette text-primary me-1"></i> درجة اللون: {{ $order->shade ?? 'N/A' }} • التكلفة: {{ number_format($order->cost, 2) }} ر.س
+                            <i class="bi bi-palette text-primary me-1"></i> درجة اللون: {{ $order->shade ?? 'N/A' }} • التكلفة: {{ number_format($order->cost, 2) }} ج.م
                         </div>
                     </div>
                     <div>

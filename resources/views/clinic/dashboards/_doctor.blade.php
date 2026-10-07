@@ -20,7 +20,7 @@
                     <i class="bi bi-check2-all me-1"></i> {{ $doctorData['completedCasesCount'] }} حالات منجزة هذا الشهر
                 </span>
                 <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold shadow-sm">
-                    <i class="bi bi-cash me-1"></i> عمولة تقريبية: {{ number_format($doctorData['estimatedCommission'], 2) }} ر.س
+                    <i class="bi bi-cash me-1"></i> عمولة تقريبية: {{ number_format($doctorData['estimatedCommission'], 2) }} ج.م
                 </span>
             </div>
         </div>

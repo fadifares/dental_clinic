@@ -271,19 +271,19 @@
             <div class="col-md-4">
                 <div class="clinic-card p-3">
                     <span class="text-muted small d-block mb-1">إجمالي الفواتير الصادرة</span>
-                    <h4 class="fw-bold text-dark mb-0">{{ number_format($totalInvoiced, 2) }} ر.س</h4>
+                    <h4 class="fw-bold text-dark mb-0">{{ number_format($totalInvoiced, 2) }} ج.م</h4>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="clinic-card p-3">
                     <span class="text-muted small d-block mb-1">إجمالي المبالغ المدفوعة</span>
-                    <h4 class="fw-bold text-success mb-0">{{ number_format($totalPaid, 2) }} ر.س</h4>
+                    <h4 class="fw-bold text-success mb-0">{{ number_format($totalPaid, 2) }} ج.م</h4>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="clinic-card p-3">
                     <span class="text-muted small d-block mb-1">المبلغ المتبقي / المستحق</span>
-                    <h4 class="fw-bold text-danger mb-0">{{ number_format($totalRemaining, 2) }} ر.س</h4>
+                    <h4 class="fw-bold text-danger mb-0">{{ number_format($totalRemaining, 2) }} ج.م</h4>
                 </div>
             </div>
         </div>
@@ -318,13 +318,13 @@
                             <td class="fw-bold text-primary font-monospace">#{{ $inv->invoice_number }}</td>
                             <td>{{ $inv->created_at->format('Y-m-d') }}</td>
                             <td>{{ $inv->doctor ? $inv->doctor->name : '-' }}</td>
-                            <td class="fw-bold">{{ number_format($inv->total, 2) }} ر.س</td>
-                            <td class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ر.س</td>
+                            <td class="fw-bold">{{ number_format($inv->total, 2) }} ج.م</td>
+                            <td class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ج.م</td>
                             <td>
                                 @if($inv->remaining_amount > 0)
-                                    <span class="text-danger fw-bold font-monospace">{{ number_format($inv->remaining_amount, 2) }} ر.س</span>
+                                    <span class="text-danger fw-bold font-monospace">{{ number_format($inv->remaining_amount, 2) }} ج.م</span>
                                 @else
-                                    <span class="text-muted small">0.00 ر.س</span>
+                                    <span class="text-muted small">0.00 ج.م</span>
                                 @endif
                             </td>
                             <td>
@@ -388,24 +388,24 @@
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="text-muted small">إجمالي قيمة الفاتورة:</span>
-                                        <span class="fw-bold">{{ number_format($inv->total, 2) }} ر.س</span>
+                                        <span class="fw-bold">{{ number_format($inv->total, 2) }} ج.م</span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="text-muted small">المدفوع مسبقاً:</span>
-                                        <span class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ر.س</span>
+                                        <span class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ج.م</span>
                                     </div>
                                     <hr class="my-2">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span class="fw-bold text-danger">المبلغ المتبقي المطلوب سداده:</span>
-                                        <span class="fw-bold text-danger fs-5 font-monospace">{{ number_format($inv->remaining_amount, 2) }} ر.س</span>
+                                        <span class="fw-bold text-danger fs-5 font-monospace">{{ number_format($inv->remaining_amount, 2) }} ج.م</span>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label small fw-bold">مبلغ السداد الحالي (ر.س) <span class="text-danger">*</span></label>
+                                    <label class="form-label small fw-bold">مبلغ السداد الحالي (ج.م) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="number" step="0.01" min="0.01" max="{{ $inv->remaining_amount }}" name="payment_amount" class="form-control fw-bold fs-5 text-center text-success" value="{{ $inv->remaining_amount }}" required>
-                                        <span class="input-group-text bg-light fw-bold">ر.س</span>
+                                        <span class="input-group-text bg-light fw-bold">ج.م</span>
                                     </div>
                                     <small class="text-muted d-block mt-1">يمكنك إبقاء المبلغ كاملاً لإتمام السداد، أو تعديله لتسجيل دفعة جزئية.</small>
                                 </div>
@@ -470,7 +470,7 @@
                             </div>
                             <div class="row g-2 mb-3">
                                 <div class="col-6">
-                                    <label class="form-label small fw-bold">الخصم (ر.س)</label>
+                                    <label class="form-label small fw-bold">الخصم (ج.م)</label>
                                     <input type="number" step="0.01" min="0" name="discount" class="form-control" value="0.00">
                                 </div>
                                 <div class="col-6">
@@ -529,7 +529,7 @@
                             <td>{{ $order->lab_name }}</td>
                             <td>سن #{{ $order->tooth_numbers ?? '-' }}</td>
                             <td><span class="badge bg-light text-dark border">{{ $order->shade ?? 'N/A' }}</span></td>
-                            <td>{{ number_format($order->cost, 2) }} ر.س</td>
+                            <td>{{ number_format($order->cost, 2) }} ج.م</td>
                             <td>{{ $order->expected_delivery_date ? $order->expected_delivery_date->format('Y-m-d') : '-' }}</td>
                             <td>
                                 @if($order->status === 'ready') <span class="badge bg-success">جاهز للاستلام</span>

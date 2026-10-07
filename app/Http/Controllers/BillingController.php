@@ -112,8 +112,8 @@ class BillingController extends Controller
         ], [
             'payment_amount.required' => 'يرجى إدخال مبلغ السداد.',
             'payment_amount.numeric' => 'المبلغ يجب أن يكون رقماً صحيحاً.',
-            'payment_amount.min' => 'أقل مبلغ للسداد هو 0.01 ر.س.',
-            'payment_amount.max' => 'مبلغ السداد لا يمكن أن يتجاوز المبلغ المتبقي (:max ر.س).',
+            'payment_amount.min' => 'أقل مبلغ للسداد هو 0.01 ج.م.',
+            'payment_amount.max' => 'مبلغ السداد لا يمكن أن يتجاوز المبلغ المتبقي (:max ج.م).',
             'payment_method.required' => 'يرجى تحديد طريقة الدفع.',
         ]);
 
@@ -130,6 +130,6 @@ class BillingController extends Controller
             'status' => $status,
         ]);
 
-        return back()->with('success', 'تم تسجيل سداد مبلغ '.number_format($paymentAmount, 2)." ر.س بنجاح للفاتورة #{$invoice->invoice_number}.");
+        return back()->with('success', 'تم تسجيل سداد مبلغ '.number_format($paymentAmount, 2)." ج.م بنجاح للفاتورة #{$invoice->invoice_number}.");
     }
 }

@@ -26,7 +26,7 @@
         <div class="clinic-card p-3 h-100 d-flex align-items-center justify-content-between border-success-subtle">
             <div>
                 <span class="text-muted small d-block mb-1">التحصيل المالي لليوم</span>
-                <h3 class="fw-bold text-success mb-0">{{ number_format($accountantData['todayCollection'], 2) }} <span class="fs-6 fw-normal text-muted">ر.س</span></h3>
+                <h3 class="fw-bold text-success mb-0">{{ number_format($accountantData['todayCollection'], 2) }} <span class="fs-6 fw-normal text-muted">ج.م</span></h3>
                 <span class="text-muted" style="font-size: 0.75rem;">سندات قبض اليوم المسجلة</span>
             </div>
             <div class="clinic-stat-icon bg-success-subtle text-success">
@@ -39,7 +39,7 @@
         <div class="clinic-card p-3 h-100 d-flex align-items-center justify-content-between">
             <div>
                 <span class="text-muted small d-block mb-1">إجمالي إيراد الشهر الحالي</span>
-                <h3 class="fw-bold text-primary mb-0">{{ number_format($accountantData['monthCollection'], 2) }} <span class="fs-6 fw-normal text-muted">ر.س</span></h3>
+                <h3 class="fw-bold text-primary mb-0">{{ number_format($accountantData['monthCollection'], 2) }} <span class="fs-6 fw-normal text-muted">ج.م</span></h3>
                 <span class="text-muted" style="font-size: 0.75rem;">إجمالي فواتير الشهر: {{ $accountantData['totalInvoicesMonth'] }}</span>
             </div>
             <div class="clinic-stat-icon bg-primary-subtle text-primary">
@@ -52,7 +52,7 @@
         <div class="clinic-card p-3 h-100 d-flex align-items-center justify-content-between border-danger-subtle">
             <div>
                 <span class="text-muted small d-block mb-1">الذمم المدينة المتبقية (أقساط)</span>
-                <h3 class="fw-bold text-danger mb-0">{{ number_format($accountantData['outstandingDebt'], 2) }} <span class="fs-6 fw-normal text-muted">ر.س</span></h3>
+                <h3 class="fw-bold text-danger mb-0">{{ number_format($accountantData['outstandingDebt'], 2) }} <span class="fs-6 fw-normal text-muted">ج.م</span></h3>
                 <span class="text-danger" style="font-size: 0.75rem;">مبالغ مستحقة على المرضى</span>
             </div>
             <div class="clinic-stat-icon bg-danger-subtle text-danger">
@@ -65,8 +65,8 @@
         <div class="clinic-card p-3 h-100 d-flex align-items-center justify-content-between">
             <div>
                 <span class="text-muted small d-block mb-1">المدفوعات الإلكترونية (مدى)</span>
-                <h3 class="fw-bold text-info mb-0">{{ number_format($accountantData['cardTotal'], 2) }} <span class="fs-6 fw-normal text-muted">ر.س</span></h3>
-                <span class="text-muted" style="font-size: 0.75rem;">نقداً (كاش): {{ number_format($accountantData['cashTotal'], 2) }} ر.س</span>
+                <h3 class="fw-bold text-info mb-0">{{ number_format($accountantData['cardTotal'], 2) }} <span class="fs-6 fw-normal text-muted">ج.م</span></h3>
+                <span class="text-muted" style="font-size: 0.75rem;">نقداً (كاش): {{ number_format($accountantData['cashTotal'], 2) }} ج.م</span>
             </div>
             <div class="clinic-stat-icon bg-info-subtle text-info">
                 <i class="bi bi-credit-card-2-front-fill fs-4"></i>
@@ -85,7 +85,7 @@
             <div class="p-3 bg-light rounded-3 border mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <span class="small fw-bold text-dark"><i class="bi bi-credit-card text-primary me-1"></i> مدى وبطاقات بنكية</span>
-                    <span class="small fw-bold text-primary">{{ number_format($accountantData['cardTotal'], 2) }} ر.س</span>
+                    <span class="small fw-bold text-primary">{{ number_format($accountantData['cardTotal'], 2) }} ج.م</span>
                 </div>
                 @php
                     $totalPaid = max(1, $accountantData['cardTotal'] + $accountantData['cashTotal']);
@@ -101,7 +101,7 @@
             <div class="p-3 bg-light rounded-3 border">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <span class="small fw-bold text-dark"><i class="bi bi-cash-coin text-success me-1"></i> نقداً (كاش في الصندوق)</span>
-                    <span class="small fw-bold text-success">{{ number_format($accountantData['cashTotal'], 2) }} ر.س</span>
+                    <span class="small fw-bold text-success">{{ number_format($accountantData['cashTotal'], 2) }} ج.م</span>
                 </div>
                 <div class="progress" style="height: 8px;">
                     <div class="progress-bar bg-success" role="progressbar" style="width: {{ $cashPct }}%"></div>
@@ -146,9 +146,9 @@
                                 <div class="text-muted small">{{ $unpaid->patient->phone }}</div>
                             </td>
                             <td><span class="badge bg-light text-dark border">{{ $unpaid->doctor->name }}</span></td>
-                            <td>{{ number_format($unpaid->total, 2) }} ر.س</td>
-                            <td class="text-success">{{ number_format($unpaid->paid_amount, 2) }} ر.س</td>
-                            <td class="fw-bold text-danger">{{ number_format($unpaid->remaining_amount, 2) }} ر.س</td>
+                            <td>{{ number_format($unpaid->total, 2) }} ج.م</td>
+                            <td class="text-success">{{ number_format($unpaid->paid_amount, 2) }} ج.م</td>
+                            <td class="fw-bold text-danger">{{ number_format($unpaid->remaining_amount, 2) }} ج.م</td>
                             <td class="text-end">
                                 <a href="{{ route('clinic.billing.show', $unpaid) }}" class="btn btn-sm btn-outline-primary rounded-pill">
                                     تحصيل <i class="bi bi-cash-coin ms-1"></i>
@@ -214,10 +214,10 @@
                             <span class="badge bg-secondary-subtle text-dark">تحويل</span>
                         @endif
                     </td>
-                    <td class="fw-bold text-dark">{{ number_format($inv->total, 2) }} ر.س</td>
-                    <td class="text-success fw-semibold">{{ number_format($inv->paid_amount, 2) }} ر.س</td>
+                    <td class="fw-bold text-dark">{{ number_format($inv->total, 2) }} ج.م</td>
+                    <td class="text-success fw-semibold">{{ number_format($inv->paid_amount, 2) }} ج.م</td>
                     <td class="{{ $inv->remaining_amount > 0 ? 'text-danger fw-bold' : 'text-muted' }}">
-                        {{ number_format($inv->remaining_amount, 2) }} ر.س
+                        {{ number_format($inv->remaining_amount, 2) }} ج.م
                     </td>
                     <td>
                         @if($inv->status === 'paid')

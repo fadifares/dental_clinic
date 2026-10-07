@@ -23,7 +23,7 @@
         <div class="clinic-card p-3 d-flex align-items-center justify-content-between">
             <div>
                 <span class="text-muted small d-block mb-1">إجمالي الفواتير الصادرة</span>
-                <h3 class="fw-bold text-dark mb-0">{{ number_format($stats['total_invoiced'], 2) }} <small class="fs-6 text-muted">ر.س</small></h3>
+                <h3 class="fw-bold text-dark mb-0">{{ number_format($stats['total_invoiced'], 2) }} <small class="fs-6 text-muted">ج.م</small></h3>
             </div>
             <div class="clinic-stat-icon bg-primary-subtle text-primary">
                 <i class="bi bi-receipt-cutoff fs-4"></i>
@@ -34,7 +34,7 @@
         <div class="clinic-card p-3 d-flex align-items-center justify-content-between">
             <div>
                 <span class="text-muted small d-block mb-1">المبالغ المحصلة (نقدي/شبكة)</span>
-                <h3 class="fw-bold text-success mb-0">{{ number_format($stats['total_collected'], 2) }} <small class="fs-6 text-muted">ر.س</small></h3>
+                <h3 class="fw-bold text-success mb-0">{{ number_format($stats['total_collected'], 2) }} <small class="fs-6 text-muted">ج.م</small></h3>
             </div>
             <div class="clinic-stat-icon bg-success-subtle text-success">
                 <i class="bi bi-cash-stack fs-4"></i>
@@ -45,7 +45,7 @@
         <div class="clinic-card p-3 d-flex align-items-center justify-content-between">
             <div>
                 <span class="text-muted small d-block mb-1">المبالغ المستحقة (الأقساط)</span>
-                <h3 class="fw-bold text-danger mb-0">{{ number_format($stats['total_outstanding'], 2) }} <small class="fs-6 text-muted">ر.س</small></h3>
+                <h3 class="fw-bold text-danger mb-0">{{ number_format($stats['total_outstanding'], 2) }} <small class="fs-6 text-muted">ج.م</small></h3>
             </div>
             <div class="clinic-stat-icon bg-danger-subtle text-danger">
                 <i class="bi bi-clock-history fs-4"></i>
@@ -119,13 +119,13 @@
                         </div>
                     </td>
                     <td>{{ $inv->doctor ? $inv->doctor->name : 'عيادة عامة' }}</td>
-                    <td class="fw-bold text-dark">{{ number_format($inv->total, 2) }} ر.س</td>
-                    <td class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ر.س</td>
+                    <td class="fw-bold text-dark">{{ number_format($inv->total, 2) }} ج.م</td>
+                    <td class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ج.م</td>
                     <td>
                         @if($inv->remaining_amount > 0)
-                            <span class="text-danger fw-bold font-monospace">{{ number_format($inv->remaining_amount, 2) }} ر.س</span>
+                            <span class="text-danger fw-bold font-monospace">{{ number_format($inv->remaining_amount, 2) }} ج.م</span>
                         @else
-                            <span class="text-muted small">0.00 ر.س</span>
+                            <span class="text-muted small">0.00 ج.م</span>
                         @endif
                     </td>
                     <td>
@@ -196,24 +196,24 @@
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted small">إجمالي قيمة الفاتورة:</span>
-                                    <span class="fw-bold">{{ number_format($inv->total, 2) }} ر.س</span>
+                                    <span class="fw-bold">{{ number_format($inv->total, 2) }} ج.م</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted small">المدفوع مسبقاً:</span>
-                                    <span class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ر.س</span>
+                                    <span class="text-success fw-bold">{{ number_format($inv->paid_amount, 2) }} ج.م</span>
                                 </div>
                                 <hr class="my-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="fw-bold text-danger">المبلغ المتبقي المطلوب سداده:</span>
-                                    <span class="fw-bold text-danger fs-5 font-monospace">{{ number_format($inv->remaining_amount, 2) }} ر.س</span>
+                                    <span class="fw-bold text-danger fs-5 font-monospace">{{ number_format($inv->remaining_amount, 2) }} ج.م</span>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">مبلغ السداد الحالي (ر.س) <span class="text-danger">*</span></label>
+                                <label class="form-label small fw-bold">مبلغ السداد الحالي (ج.م) <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="number" step="0.01" min="0.01" max="{{ $inv->remaining_amount }}" name="payment_amount" class="form-control fw-bold fs-5 text-center text-success" value="{{ $inv->remaining_amount }}" required>
-                                    <span class="input-group-text bg-light fw-bold">ر.س</span>
+                                    <span class="input-group-text bg-light fw-bold">ج.م</span>
                                 </div>
                                 <small class="text-muted d-block mt-1">يمكنك إبقاء المبلغ كاملاً لإتمام السداد، أو تعديله لتسجيل دفعة جزئية.</small>
                             </div>
@@ -286,11 +286,11 @@
                     </div>
                     <div class="row g-2 mb-3">
                         <div class="col-6">
-                            <label class="form-label small fw-semibold">قيمة الإجراء الطبي (ر.س) <span class="text-danger">*</span></label>
+                            <label class="form-label small fw-semibold">قيمة الإجراء الطبي (ج.م) <span class="text-danger">*</span></label>
                             <input type="number" step="0.01" name="subtotal" id="inputSubtotal" class="form-control" placeholder="0.00" required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label small fw-semibold">الخصم الممنوح (ر.س)</label>
+                            <label class="form-label small fw-semibold">الخصم الممنوح (ج.م)</label>
                             <input type="number" step="0.01" name="discount" id="inputDiscount" class="form-control" placeholder="0.00" value="0.00">
                         </div>
                     </div>
@@ -305,7 +305,7 @@
                             </select>
                         </div>
                         <div class="col-6">
-                            <label class="form-label small fw-semibold">المبلغ المسدد الآن (ر.س) <span class="text-danger">*</span></label>
+                            <label class="form-label small fw-semibold">المبلغ المسدد الآن (ج.م) <span class="text-danger">*</span></label>
                             <input type="number" step="0.01" name="paid_amount" id="inputPaid" class="form-control" placeholder="0.00" required>
                         </div>
                     </div>

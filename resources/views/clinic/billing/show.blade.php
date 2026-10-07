@@ -80,8 +80,8 @@
                     <small class="text-muted">موجب السجل الطبي لجلسة التاريخ: {{ $invoice->created_at->format('Y-m-d') }}</small>
                 </td>
                 <td class="text-center font-monospace">1</td>
-                <td class="text-end font-monospace">{{ number_format($invoice->subtotal, 2) }} ر.س</td>
-                <td class="text-end fw-bold font-monospace">{{ number_format($invoice->subtotal, 2) }} ر.س</td>
+                <td class="text-end font-monospace">{{ number_format($invoice->subtotal, 2) }} ج.م</td>
+                <td class="text-end fw-bold font-monospace">{{ number_format($invoice->subtotal, 2) }} ج.م</td>
             </tr>
         </tbody>
     </table>
@@ -104,26 +104,26 @@
         <div class="col-6">
             <div class="d-flex justify-content-between py-1 small border-bottom">
                 <span class="text-muted">المجموع الفرعي:</span>
-                <span class="font-monospace fw-semibold">{{ number_format($invoice->subtotal, 2) }} ر.س</span>
+                <span class="font-monospace fw-semibold">{{ number_format($invoice->subtotal, 2) }} ج.م</span>
             </div>
             @if($invoice->discount > 0)
             <div class="d-flex justify-content-between py-1 small border-bottom text-danger">
                 <span>الخصم الممنوح:</span>
-                <span class="font-monospace">- {{ number_format($invoice->discount, 2) }} ر.س</span>
+                <span class="font-monospace">- {{ number_format($invoice->discount, 2) }} ج.م</span>
             </div>
             @endif
             <div class="d-flex justify-content-between py-2 fs-5 fw-bold border-bottom text-dark">
                 <span>الإجمالي الكلي:</span>
-                <span class="text-primary font-monospace">{{ number_format($invoice->total, 2) }} ر.س</span>
+                <span class="text-primary font-monospace">{{ number_format($invoice->total, 2) }} ج.م</span>
             </div>
             <div class="d-flex justify-content-between py-1 small border-bottom text-success fw-bold">
                 <span>المبلغ المدفوع ({{ $invoice->payment_method }}):</span>
-                <span class="font-monospace">{{ number_format($invoice->paid_amount, 2) }} ر.س</span>
+                <span class="font-monospace">{{ number_format($invoice->paid_amount, 2) }} ج.م</span>
             </div>
             @if($invoice->remaining_amount > 0)
             <div class="d-flex justify-content-between py-1 small text-danger fw-bold">
                 <span>المتبقي (أقساط):</span>
-                <span class="font-monospace">{{ number_format($invoice->remaining_amount, 2) }} ر.س</span>
+                <span class="font-monospace">{{ number_format($invoice->remaining_amount, 2) }} ج.م</span>
             </div>
             @endif
         </div>

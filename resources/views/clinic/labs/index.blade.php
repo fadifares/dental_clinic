@@ -136,7 +136,7 @@
                             <span class="text-muted">-</span>
                         @endif
                     </td>
-                    <td class="font-monospace fw-semibold">{{ number_format($order->cost, 2) }} ر.س</td>
+                    <td class="font-monospace fw-semibold">{{ number_format($order->cost, 2) }} ج.م</td>
                     <td>
                         {{ $order->expected_delivery_date ? $order->expected_delivery_date->format('Y-m-d') : '-' }}
                     </td>
@@ -231,7 +231,7 @@
                     </div>
                     <div class="row g-2 mb-3">
                         <div class="col-6">
-                            <label class="form-label small fw-semibold">تكلفة المعمل (ر.س) <span class="text-danger">*</span></label>
+                            <label class="form-label small fw-semibold">تكلفة المعمل (ج.م) <span class="text-danger">*</span></label>
                             <input type="number" step="0.01" name="cost" class="form-control" placeholder="0.00" required>
                         </div>
                         <div class="col-6">
