@@ -525,4 +525,81 @@ class DentalClinicTest extends TestCase
         $responseDelete->assertSessionHas('success');
         $this->assertDatabaseMissing('expenses', ['id' => $expense->id]);
     }
+
+    /**
+     * Test doctor's name in doctors table is synchronized when their user name is updated.
+     */
+    public function test_doctor_name_is_synchronized_when_user_name_changes(): void
+    {
+        $admin = User::create([
+            'name' => 'مدير النظام الرئيسي',
+            'email' => 'admin.sync@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $doctorUser = User::create([
+            'name' => 'د. محمد المهدي القديم',
+            'email' => 'dr.mahdi@dentalcare.com',
+            'role' => UserRole::Doctor,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $doctor = Doctor::create([
+            'user_id' => $doctorUser->id,
+            'name' => 'د. محمد المهدي القديم',
+            'email' => 'dr.mahdi@dentalcare.com',
+            'speciality' => 'علاج الجذور والعصب',
+            'commission_rate' => 30.00,
+            'is_active' => true,
+        ]);
+
+        // 1. Update user via HTTP request in UserController
+        $response = $this->actingAs($admin)->put("/clinic/users/{$doctorUser->id}", [
+            'name' => 'د. محمد المهدي البروفيسور',
+            'email' => 'dr.mahdi@dentalcare.com',
+            'roles' => ['doctor'],
+        ]);
+
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('users', [
+            'id' => $doctorUser->id,
+            'name' => 'د. محمد المهدي البروفيسور',
+        ]);
+        $this->assertDatabaseHas('doctors', [
+            'id' => $doctor->id,
+            'name' => 'د. محمد المهدي البروفيسور',
+        ]);
+
+        // 2. Direct Eloquent update triggers model event sync
+        $doctorUser->refresh();
+        $doctorUser->name = 'د. محمد المهدي الاستشاري';
+        $doctorUser->save();
+
+        $this->assertEquals('د. محمد المهدي الاستشاري', $doctor->fresh()->name);
+
+        // 3. Test unlinked legacy doctor matching by email gets updated and linked
+        $legacyUser = User::create([
+            'name' => 'د. سمير القديم',
+            'email' => 'dr.samir@dentalcare.com',
+            'role' => UserRole::Doctor,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $legacyDoctor = Doctor::create([
+            'user_id' => null,
+            'name' => 'د. سمير القديم',
+            'email' => 'dr.samir@dentalcare.com',
+            'speciality' => 'تقويم أسنان',
+            'commission_rate' => 25.00,
+            'is_active' => true,
+        ]);
+
+        $legacyUser->update(['name' => 'د. سمير الجديد']);
+        $this->assertEquals('د. سمير الجديد', $legacyDoctor->fresh()->name);
+        $this->assertEquals($legacyUser->id, $legacyDoctor->fresh()->user_id);
+    }
 }

@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -142,5 +143,49 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    /**
+     * Get the doctor profile associated with the user.
+     */
+    public function doctor(): HasOne
+    {
+        return $this->hasOne(Doctor::class);
+    }
+
+    /**
+     * The "booted" method of the model.
+     * Automatically keeps doctor records synchronized when user name or email changes.
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (User $user): void {
+            if ($user->wasChanged('name')) {
+                // 1. Direct update for any doctor record linked by user_id
+                $updatedCount = Doctor::where('user_id', $user->id)->update([
+                    'name' => $user->name,
+                ]);
+
+                // 2. If no record was updated by user_id, search by email or previous name to link and update
+                if ($updatedCount === 0) {
+                    Doctor::whereNull('user_id')
+                        ->where(function ($query) use ($user) {
+                            $query->where('email', $user->email)
+                                ->orWhere('email', $user->getOriginal('email'))
+                                ->orWhere('name', $user->getOriginal('name'));
+                        })
+                        ->update([
+                            'name' => $user->name,
+                            'user_id' => $user->id,
+                        ]);
+                }
+            }
+
+            if ($user->wasChanged('email')) {
+                Doctor::where('user_id', $user->id)->update([
+                    'email' => $user->email,
+                ]);
+            }
+        });
     }
 }

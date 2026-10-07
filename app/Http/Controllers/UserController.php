@@ -117,6 +117,7 @@ class UserController extends Controller
         // If newly created user has Doctor role, link or create Doctor profile if requested
         if ($user->isDoctor() && ! empty($validated['speciality'])) {
             Doctor::create([
+                'user_id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $validated['phone'] ?? '0500000000',
@@ -183,6 +184,18 @@ class UserController extends Controller
         }
 
         $user->save();
+
+        // Synchronize doctor profile name in doctors table
+        Doctor::where('user_id', $user->id)
+            ->orWhere(function ($query) use ($user) {
+                $query->whereNull('user_id')
+                    ->where('email', $user->email);
+            })
+            ->update([
+                'name' => $user->name,
+                'email' => $user->email,
+                'user_id' => $user->id,
+            ]);
 
         $labels = $user->getRoleLabelsString();
 

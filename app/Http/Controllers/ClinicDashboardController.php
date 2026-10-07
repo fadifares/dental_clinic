@@ -73,7 +73,8 @@ class ClinicDashboardController extends Controller
         // 2. Doctor Dashboard Data
         $doctorData = [];
         if ($effectiveRole === 'doctor' || $user->isAdmin()) {
-            $currentDoctor = Doctor::where('name', $user->name)
+            $currentDoctor = Doctor::where('user_id', $user->id)
+                ->orWhere('name', $user->name)
                 ->orWhere('email', $user->email)
                 ->first() ?? Doctor::first();
 

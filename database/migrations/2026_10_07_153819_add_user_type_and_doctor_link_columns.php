@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -9,7 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        if (Schema::hasTable('users') && ! Schema::hasColumn('users', 'user_type')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('user_type')->nullable()->after('role');
+            });
+        }
+
+        if (Schema::hasTable('doctors') && ! Schema::hasColumn('doctors', 'user_id')) {
+            Schema::table('doctors', function (Blueprint $table) {
+                $table->foreignId('user_id')->nullable()->after('id')->constrained('users')->nullOnDelete();
+            });
+        }
     }
 
     /**
@@ -17,6 +29,16 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        if (Schema::hasTable('doctors') && Schema::hasColumn('doctors', 'user_id')) {
+            Schema::table('doctors', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('user_id');
+            });
+        }
+
+        if (Schema::hasTable('users') && Schema::hasColumn('users', 'user_type')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('user_type');
+            });
+        }
     }
 };
