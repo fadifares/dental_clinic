@@ -133,6 +133,59 @@ class ExpenseController extends Controller
     }
 
     /**
+     * Update the specified expense in storage.
+     */
+    public function update(Request $request, Expense $expense): RedirectResponse
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|in:materials,rent,utilities,maintenance,salaries,marketing,other',
+            'amount' => 'required|numeric|min:0.01',
+            'expense_date' => 'required|date',
+            'payment_method' => ['required', Rule::in(array_keys(Setting::paymentMethods()))],
+            'invoice_reference' => 'nullable|string|max:100',
+            'receipt_image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif,bmp|max:10240',
+            'notes' => 'nullable|string|max:1000',
+        ], [
+            'title.required' => 'يرجى كتابة عنوان أو بيان المصروف.',
+            'category.required' => 'يرجى اختيار تصنيف المصروف.',
+            'amount.required' => 'يرجى إدخال مبلغ المصروف.',
+            'amount.numeric' => 'المبلغ يجب أن يكون رقماً صحيحاً.',
+            'amount.min' => 'أقل مبلغ للمصروف هو 0.01 ج.م.',
+            'expense_date.required' => 'يرجى تحديد تاريخ الصرف.',
+            'payment_method.required' => 'يرجى تحديد طريقة السداد.',
+            'receipt_image.image' => 'يجب أن يكون الملف المرفق صورة صالحة (JPG, PNG, WEBP).',
+            'receipt_image.max' => 'أقصى حجم مسموح به لصورة الفاتورة هو 10 ميجابايت.',
+        ]);
+
+        $data = [
+            'title' => $validated['title'],
+            'category' => $validated['category'],
+            'amount' => $validated['amount'],
+            'expense_date' => $validated['expense_date'],
+            'payment_method' => $validated['payment_method'],
+            'invoice_reference' => $validated['invoice_reference'] ?? null,
+            'notes' => $validated['notes'] ?? null,
+        ];
+
+        if ($request->hasFile('receipt_image')) {
+            if ($expense->receipt_image) {
+                ImageUploadService::delete($expense->receipt_image);
+            }
+
+            $compressed = ImageUploadService::uploadReceipt(
+                file: $request->file('receipt_image'),
+                directory: 'receipts/expenses'
+            );
+            $data['receipt_image'] = $compressed->path;
+        }
+
+        $expense->update($data);
+
+        return back()->with('success', 'تم تعديل وتحديث بيانات سند المصروف بنجاح.');
+    }
+
+    /**
      * Remove the specified expense from storage.
      */
     public function destroy(Expense $expense): RedirectResponse

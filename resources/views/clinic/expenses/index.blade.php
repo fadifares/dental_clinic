@@ -200,7 +200,10 @@
                     <td class="small text-muted">
                         {{ $exp->user ? $exp->user->name : '-' }}
                     </td>
-                    <td class="text-center">
+                    <td class="text-center text-nowrap">
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded-circle p-1 me-1" data-bs-toggle="modal" data-bs-target="#editExpenseModal-{{ $exp->id }}" title="تعديل المصروف" style="width: 32px; height: 32px;">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
                         <form action="{{ route('clinic.expenses.destroy', $exp) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف سند المصروف هذا؟');" class="d-inline mb-0">
                             @csrf
                             @method('DELETE')
@@ -248,6 +251,103 @@
                     </div>
                 </div>
                 @endif
+
+                <!-- Modal Edit Expense -->
+                <div class="modal fade" id="editExpenseModal-{{ $exp->id }}" tabindex="-1" aria-labelledby="editExpenseModalLabel-{{ $exp->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content rounded-4 border-0 shadow">
+                            <div class="modal-header border-bottom d-flex justify-content-between align-items-center">
+                                <h5 class="modal-title fw-bold text-dark mb-0">
+                                    <i class="bi bi-pencil-square text-primary me-2"></i> تعديل سند المصروف #{{ $exp->id }}
+                                </h5>
+                                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="{{ route('clinic.expenses.update', $exp) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-body p-4 text-start">
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-semibold">عنوان / بيان المصروف <span class="text-danger">*</span></label>
+                                        <input type="text" name="title" class="form-control" value="{{ $exp->title }}" required>
+                                    </div>
+
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold">تصنيف المصروف <span class="text-danger">*</span></label>
+                                            <select name="category" class="form-select" required>
+                                                <option value="materials" {{ $exp->category === 'materials' ? 'selected' : '' }}>مواد ومستهلكات طبية</option>
+                                                <option value="rent" {{ $exp->category === 'rent' ? 'selected' : '' }}>إيجار العيادة</option>
+                                                <option value="utilities" {{ $exp->category === 'utilities' ? 'selected' : '' }}>فواتير وكهرباء ومياه</option>
+                                                <option value="maintenance" {{ $exp->category === 'maintenance' ? 'selected' : '' }}>صيانة أجهزة ومعدات</option>
+                                                <option value="salaries" {{ $exp->category === 'salaries' ? 'selected' : '' }}>رواتب ومستحقات</option>
+                                                <option value="marketing" {{ $exp->category === 'marketing' ? 'selected' : '' }}>تسويق وإعلانات</option>
+                                                <option value="other" {{ $exp->category === 'other' ? 'selected' : '' }}>نثريات ومصاريف أخرى</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold">المبلغ (ج.م) <span class="text-danger">*</span></label>
+                                            <input type="number" step="0.01" min="0.01" name="amount" class="form-control fw-bold" value="{{ $exp->amount }}" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold">تاريخ الصرف <span class="text-danger">*</span></label>
+                                            <input type="date" name="expense_date" class="form-control" value="{{ $exp->expense_date->format('Y-m-d') }}" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold">طريقة الدفع <span class="text-danger">*</span></label>
+                                            <select name="payment_method" class="form-select" required>
+                                                @foreach(\App\Models\Setting::enabledPaymentMethods() as $key => $method)
+                                                    <option value="{{ $key }}" {{ $exp->payment_method === $key ? 'selected' : '' }}>
+                                                        {{ $method['name'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-semibold">رقم الفاتورة أو إيصال الشراء المرجعي</label>
+                                        <input type="text" name="invoice_reference" class="form-control" value="{{ $exp->invoice_reference }}">
+                                    </div>
+
+                                    <!-- Receipt Image Field -->
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-semibold d-flex align-items-center justify-content-between">
+                                            <span><i class="bi bi-paperclip text-primary me-1"></i> صورة الفاتورة أو الإيصال</span>
+                                            <span class="badge bg-light text-muted border">اختياري</span>
+                                        </label>
+                                        @if($exp->hasReceiptImage())
+                                            <div class="mb-2 p-2 bg-light rounded-3 border d-flex align-items-center gap-2">
+                                                <img src="{{ $exp->getReceiptImageUrl() }}" alt="الفاتورة الحالية" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                                <div class="small">
+                                                    <div class="fw-semibold text-dark">يوجد إيصال مرفق حالياً</div>
+                                                    <div class="text-muted" style="font-size: 0.75rem;">اترك الحقل فارغاً للإبقاء عليه، أو اختر صورة جديدة لاستبدالها.</div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <input type="file" name="receipt_image" class="form-control" accept="image/jpeg,image/png,image/webp,image/jpg">
+                                        <div class="form-text text-muted small mt-1">
+                                            <i class="bi bi-info-circle me-1 text-primary"></i> يدعم صور الفواتير الورقية وسكرين شوت إنستاباي / البنوك (يتم الضغط تلقائياً للحفاظ على الجودة).
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-semibold">ملاحظات إضافية</label>
+                                        <textarea name="notes" class="form-control" rows="2">{{ $exp->notes }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-top bg-light rounded-bottom-4">
+                                    <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">إلغاء</button>
+                                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">
+                                        <i class="bi bi-check2-circle me-1"></i> حفظ التعديلات
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 @empty
                 <tr>
                     <td colspan="9" class="text-center py-5">

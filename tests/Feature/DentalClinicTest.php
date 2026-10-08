@@ -10,6 +10,7 @@ use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Setting;
 use App\Models\User;
+use App\Services\ImageUploadService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -868,5 +869,65 @@ class DentalClinicTest extends TestCase
         $deleteResponse->assertSessionHas('success');
         $this->assertDatabaseMissing('expenses', ['id' => $expense->id]);
         $this->assertFalse(Storage::disk('public')->exists($expense->receipt_image));
+    }
+
+    /**
+     * Test updating and editing an expense record including image replacement.
+     */
+    public function test_expense_updating_and_editing_functionality(): void
+    {
+        Storage::fake('public');
+
+        $admin = User::create([
+            'name' => 'المحاسب المالي',
+            'email' => 'accountant.edit@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $initialImage = UploadedFile::fake()->image('bill_v1.jpg', 800, 600);
+        $expense = Expense::create([
+            'title' => 'إيجار العيادة القديم',
+            'category' => 'rent',
+            'amount' => 5000.00,
+            'expense_date' => '2026-10-01',
+            'payment_method' => 'cash',
+            'invoice_reference' => 'RENT-101',
+            'receipt_image' => ImageUploadService::uploadReceipt($initialImage)->path,
+            'notes' => 'ملاحظة أولية',
+            'user_id' => $admin->id,
+        ]);
+
+        $oldImagePath = $expense->receipt_image;
+        $this->assertTrue(Storage::disk('public')->exists($oldImagePath));
+
+        // Update expense title, amount, and replace receipt image
+        $newImage = UploadedFile::fake()->image('bill_v2.png', 1200, 900);
+        $response = $this->actingAs($admin)->put('/clinic/expenses/'.$expense->id, [
+            'title' => 'إيجار العيادة المحدث',
+            'category' => 'rent',
+            'amount' => 5500.00,
+            'expense_date' => '2026-10-05',
+            'payment_method' => 'bank_transfer',
+            'invoice_reference' => 'RENT-102',
+            'receipt_image' => $newImage,
+            'notes' => 'تم التحديث بنجاح',
+        ]);
+
+        $response->assertSessionHas('success');
+
+        $expense->refresh();
+        $this->assertSame('إيجار العيادة المحدث', $expense->title);
+        $this->assertEquals(5500.00, $expense->amount);
+        $this->assertSame('bank_transfer', $expense->payment_method);
+        $this->assertNotSame($oldImagePath, $expense->receipt_image);
+        $this->assertFalse(Storage::disk('public')->exists($oldImagePath)); // Old image deleted
+        $this->assertTrue(Storage::disk('public')->exists($expense->receipt_image)); // New image exists
+
+        // Verify edit modal is rendered in view
+        $viewResponse = $this->actingAs($admin)->get('/clinic/expenses');
+        $viewResponse->assertStatus(200);
+        $viewResponse->assertSee('editExpenseModal-'.$expense->id);
     }
 }
