@@ -181,16 +181,18 @@
                         </span>
                     </td>
                     <td>
-                        @if($exp->payment_method === 'cash')
-                            <span class="badge bg-light text-dark border"><i class="bi bi-cash me-1 text-success"></i> نقداً</span>
-                        @elseif($exp->payment_method === 'card')
-                            <span class="badge bg-light text-dark border"><i class="bi bi-credit-card me-1 text-primary"></i> بطاقة</span>
-                        @else
-                            <span class="badge bg-light text-dark border"><i class="bi bi-bank me-1 text-info"></i> تحويل</span>
-                        @endif
+                        <span class="badge bg-light text-dark border">
+                            <i class="bi {{ \App\Models\Setting::paymentMethodIcon($exp->payment_method) }} me-1 text-primary"></i>
+                            {{ $exp->getPaymentMethodLabel() }}
+                        </span>
                     </td>
-                    <td class="font-monospace text-muted small">
-                        {{ $exp->invoice_reference ?? '-' }}
+                    <td>
+                        <div class="font-monospace text-muted small">{{ $exp->invoice_reference ?? '-' }}</div>
+                        @if($exp->hasReceiptImage())
+                            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill py-0 px-2 mt-1 fw-bold" style="font-size: 0.72rem;" data-bs-toggle="modal" data-bs-target="#viewReceiptModal-{{ $exp->id }}">
+                                <i class="bi bi-receipt me-1"></i> عرض الفاتورة
+                            </button>
+                        @endif
                     </td>
                     <td class="fw-bold text-danger font-monospace fs-6">
                         - {{ number_format($exp->amount, 2) }} ج.م
@@ -208,6 +210,44 @@
                         </form>
                     </td>
                 </tr>
+
+                @if($exp->hasReceiptImage())
+                <!-- Modal View Receipt Image -->
+                <div class="modal fade" id="viewReceiptModal-{{ $exp->id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content rounded-4 border-0 shadow">
+                            <div class="modal-header border-bottom d-flex justify-content-between align-items-center">
+                                <h5 class="modal-title fw-bold text-dark mb-0">
+                                    <i class="bi bi-receipt text-primary me-2"></i> صورة الفاتورة / الإيصال: {{ $exp->title }}
+                                </h5>
+                                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4 text-center bg-light">
+                                <div class="mb-3 d-flex flex-wrap justify-content-between align-items-center bg-white p-3 rounded-3 border">
+                                    <span class="small text-muted"><i class="bi bi-calendar3 me-1"></i> {{ $exp->expense_date->format('Y-m-d') }}</span>
+                                    <span class="fw-bold text-danger font-monospace fs-5">- {{ number_format($exp->amount, 2) }} ج.م</span>
+                                    <span class="small text-muted">
+                                        <i class="bi {{ \App\Models\Setting::paymentMethodIcon($exp->payment_method) }} me-1"></i>
+                                        {{ $exp->getPaymentMethodLabel() }}
+                                    </span>
+                                    @if($exp->invoice_reference)
+                                        <span class="badge bg-light text-dark border font-monospace">مرجع: {{ $exp->invoice_reference }}</span>
+                                    @endif
+                                </div>
+                                <div class="p-2 bg-white rounded-3 border shadow-sm d-inline-block w-100">
+                                    <img src="{{ $exp->getReceiptImageUrl() }}" alt="فاتورة {{ $exp->title }}" class="img-fluid rounded-2 shadow-sm" style="max-height: 520px; object-fit: contain;">
+                                </div>
+                            </div>
+                            <div class="modal-footer border-top bg-light rounded-bottom-4 d-flex justify-content-between">
+                                <a href="{{ $exp->getReceiptImageUrl() }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold">
+                                    <i class="bi bi-box-arrow-up-right me-1"></i> فتح الصورة بالحجم الكامل
+                                </a>
+                                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">إغلاق</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
                 @empty
                 <tr>
                     <td colspan="9" class="text-center py-5">
@@ -231,15 +271,15 @@
 
 <!-- MODAL: Add New Expense -->
 <div class="modal fade" id="newExpenseModal" tabindex="-1" aria-labelledby="newExpenseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content rounded-4 border-0 shadow">
-            <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-bold text-dark">
+            <div class="modal-header border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="modal-title fw-bold text-dark mb-0">
                     <i class="bi bi-wallet-fill text-warning me-2"></i> تسجيل سند مصروف جديد
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('clinic.expenses.store') }}" method="POST">
+            <form action="{{ route('clinic.expenses.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body p-4">
                     <div class="mb-3">
@@ -274,9 +314,11 @@
                         <div class="col-6">
                             <label class="form-label small fw-semibold">طريقة الدفع <span class="text-danger">*</span></label>
                             <select name="payment_method" class="form-select" required>
-                                <option value="cash" selected>نقداً (كاش)</option>
-                                <option value="card">مدى / بطاقة بنكية</option>
-                                <option value="bank_transfer">تحويل بنكي</option>
+                                @foreach(\App\Models\Setting::enabledPaymentMethods() as $key => $method)
+                                    <option value="{{ $key }}" {{ $key === \App\Models\Setting::get('default_payment_method', 'cash') ? 'selected' : '' }}>
+                                        {{ $method['name'] }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -286,13 +328,29 @@
                         <input type="text" name="invoice_reference" class="form-control" placeholder="مثال: BILL-8894 أو رقم سند المورد...">
                     </div>
 
+                    <!-- Invoice / Receipt Image Upload Field -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold d-flex align-items-center justify-content-between">
+                            <span><i class="bi bi-paperclip text-primary me-1"></i> صورة الفاتورة أو إيصال الدفع / التحويل (إنستاباي / بنك)</span>
+                            <span class="badge bg-light text-muted border">اختياري</span>
+                        </label>
+                        <input type="file" name="receipt_image" id="receipt_image_input" class="form-control" accept="image/jpeg,image/png,image/webp,image/jpg" onchange="previewReceiptImage(this)">
+                        <div class="form-text text-muted small mt-1">
+                            <i class="bi bi-info-circle me-1 text-primary"></i> يدعم صور الفواتير الورقية، إيصالات الشراء، وسكرين شوت تحويلات إنستاباي / البنك (يتم ضغط الصورة تلقائياً للحفاظ على جودتها وسرعتها).
+                        </div>
+                        <div id="receipt_preview_box" class="mt-2 p-2 bg-light rounded-3 border text-center d-none">
+                            <img id="receipt_preview_tag" src="#" alt="معاينة الفاتورة" class="img-thumbnail rounded shadow-sm" style="max-height: 160px; object-fit: contain;">
+                            <div class="small text-muted mt-1 font-monospace" id="receipt_preview_info"></div>
+                        </div>
+                    </div>
+
                     <div class="mb-2">
                         <label class="form-label small fw-semibold">ملاحظات إضافية</label>
                         <textarea name="notes" class="form-control" rows="2" placeholder="أي تفاصيل أو بنود حول عملية الصرف..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-top bg-light rounded-bottom-4">
-                    <button type="button" class="btn btn-secondary btn-sm rounded-pill" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">إلغاء</button>
                     <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">
                         <i class="bi bi-check2-circle me-1"></i> حفظ وتأكيد الصرف
                     </button>
@@ -301,5 +359,29 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+function previewReceiptImage(input) {
+    const previewBox = document.getElementById('receipt_preview_box');
+    const previewTag = document.getElementById('receipt_preview_tag');
+    const previewInfo = document.getElementById('receipt_preview_info');
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewTag.src = e.target.result;
+            previewInfo.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)';
+            previewBox.classList.remove('d-none');
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewBox.classList.add('d-none');
+        previewTag.src = '#';
+        previewInfo.textContent = '';
+    }
+}
+</script>
+@endpush
 
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ImageUploadService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -62,11 +63,26 @@ class Expense extends Model
      */
     public function getPaymentMethodLabel(): string
     {
-        return match ($this->payment_method) {
-            'cash' => 'نقداً (كاش)',
-            'card' => 'مدى / بطاقة بنكية',
-            'bank_transfer' => 'تحويل بنكي',
-            default => $this->payment_method,
-        };
+        return Setting::paymentMethodName($this->payment_method);
+    }
+
+    /**
+     * Determine if expense has an attached receipt/invoice image.
+     */
+    public function hasReceiptImage(): bool
+    {
+        return filled($this->receipt_image);
+    }
+
+    /**
+     * Get full public URL for the receipt image.
+     */
+    public function getReceiptImageUrl(): ?string
+    {
+        if (! $this->hasReceiptImage()) {
+            return null;
+        }
+
+        return ImageUploadService::url($this->receipt_image);
     }
 }

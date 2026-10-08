@@ -215,6 +215,25 @@
         body.dark-mode .border-top {
             border-color: #1e293b !important;
         }
+
+        /* RTL Modal & Alert Close Button Positioning */
+        [dir="rtl"] .modal-header,
+        html[dir="rtl"] .modal-header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+        }
+        [dir="rtl"] .modal-header .btn-close,
+        html[dir="rtl"] .modal-header .btn-close {
+            margin-right: auto !important;
+            margin-left: 0 !important;
+            float: left;
+        }
+        [dir="rtl"] .alert-dismissible .btn-close,
+        html[dir="rtl"] .alert-dismissible .btn-close {
+            right: auto !important;
+            left: 0 !important;
+        }
     </style>
     @stack('styles')
 </head>

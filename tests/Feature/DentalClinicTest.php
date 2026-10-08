@@ -11,6 +11,8 @@ use App\Models\Patient;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class DentalClinicTest extends TestCase
@@ -815,5 +817,56 @@ class DentalClinicTest extends TestCase
             'payment_method' => 'wallet',
             'total' => 750.00,
         ]);
+    }
+
+    /**
+     * Test recording an expense with a compressed invoice/receipt image upload.
+     */
+    public function test_expense_creation_with_compressed_receipt_image_and_deletion(): void
+    {
+        Storage::fake('public');
+
+        $admin = User::create([
+            'name' => 'مسؤول المصروفات',
+            'email' => 'expenses.admin@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $receiptImage = UploadedFile::fake()->image('supplier_bill.jpg', 2400, 1800);
+
+        // 1. Submit new expense with receipt image
+        $response = $this->actingAs($admin)->post('/clinic/expenses', [
+            'title' => 'شراء كمبوزيت ومواد حشو',
+            'category' => 'materials',
+            'amount' => 1250.00,
+            'expense_date' => date('Y-m-d'),
+            'payment_method' => 'cash',
+            'invoice_reference' => 'INV-SUP-9912',
+            'receipt_image' => $receiptImage,
+            'notes' => 'تم استلام الفاتورة ورفع صورتها مضغوطة',
+        ]);
+
+        $response->assertSessionHas('success');
+
+        $expense = Expense::where('title', 'شراء كمبوزيت ومواد حشو')->first();
+        $this->assertNotNull($expense);
+        $this->assertNotNull($expense->receipt_image);
+        $this->assertTrue(Storage::disk('public')->exists($expense->receipt_image));
+        $this->assertTrue($expense->hasReceiptImage());
+        $this->assertNotEmpty($expense->getReceiptImageUrl());
+
+        // 2. View expenses page to verify image modal and button rendered
+        $viewResponse = $this->actingAs($admin)->get('/clinic/expenses');
+        $viewResponse->assertStatus(200);
+        $viewResponse->assertSee('عرض الفاتورة');
+        $viewResponse->assertSee('viewReceiptModal-'.$expense->id);
+
+        // 3. Delete expense and verify that the stored compressed image file is removed
+        $deleteResponse = $this->actingAs($admin)->delete('/clinic/expenses/'.$expense->id);
+        $deleteResponse->assertSessionHas('success');
+        $this->assertDatabaseMissing('expenses', ['id' => $expense->id]);
+        $this->assertFalse(Storage::disk('public')->exists($expense->receipt_image));
     }
 }
