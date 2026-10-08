@@ -684,4 +684,66 @@ class DentalClinicTest extends TestCase
         $this->assertFalse($paymentMethods['installments']['enabled']);
         $this->assertEquals('مدى وبطاقات بنكية', $paymentMethods['card']['name']);
     }
+
+    /**
+     * Test invoice and receipt voucher printouts display dynamic clinic settings information.
+     */
+    public function test_invoice_and_receipt_voucher_display_clinic_settings_information(): void
+    {
+        Setting::set('clinic_name', 'مجمع النخبة التخصصي لطب الأسنان', 'clinic');
+        Setting::set('tax_number', '399999999900003', 'clinic');
+        Setting::set('clinic_phone', '+966 11 222 3333', 'clinic');
+        Setting::set('clinic_address', 'طريق الأمير محمد بن عبدالعزيز، الرياض', 'clinic');
+        Setting::set('currency_symbol', 'ر.س', 'financial');
+
+        $admin = User::create([
+            'name' => 'مدير الحسابات',
+            'email' => 'billing.test@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $patient = Patient::create([
+            'name' => 'سلطان بن عبدالعزيز',
+            'phone' => '0501112233',
+            'gender' => 'male',
+            'date_of_birth' => '1990-05-15',
+            'file_number' => 'PT-9988',
+        ]);
+
+        $invoice = Invoice::create([
+            'invoice_number' => 'INV-2026-9988',
+            'patient_id' => $patient->id,
+            'subtotal' => 1200.00,
+            'discount' => 0.00,
+            'tax' => 0.00,
+            'total' => 1200.00,
+            'paid_amount' => 1200.00,
+            'remaining_amount' => 0.00,
+            'payment_method' => 'card',
+            'status' => 'paid',
+        ]);
+
+        // 1. Official Tax Invoice View
+        $responseInvoice = $this->actingAs($admin)->get("/clinic/billing/{$invoice->id}");
+        $responseInvoice->assertStatus(200);
+        $responseInvoice->assertSee('مجمع النخبة التخصصي لطب الأسنان');
+        $responseInvoice->assertSee('399999999900003');
+        $responseInvoice->assertSee('+966 11 222 3333');
+        $responseInvoice->assertSee('طريق الأمير محمد بن عبدالعزيز، الرياض');
+        $responseInvoice->assertSee('فاتورة ضريبية رسمية');
+        $responseInvoice->assertSee('1,200.00 ر.س');
+
+        // 2. Official Receipt Voucher View
+        $responseReceipt = $this->actingAs($admin)->get("/clinic/billing/{$invoice->id}?type=receipt");
+        $responseReceipt->assertStatus(200);
+        $responseReceipt->assertSee('مجمع النخبة التخصصي لطب الأسنان');
+        $responseReceipt->assertSee('399999999900003');
+        $responseReceipt->assertSee('+966 11 222 3333');
+        $responseReceipt->assertSee('سند قـبـض مـالـي مـعـتـمـد');
+        $responseReceipt->assertSee('REC-2026-9988');
+        $responseReceipt->assertSee('سلطان بن عبدالعزيز');
+        $responseReceipt->assertSee('1,200.00');
+    }
 }

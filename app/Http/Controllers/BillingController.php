@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Doctor;
 use App\Models\Invoice;
 use App\Models\Patient;
+use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -87,13 +88,27 @@ class BillingController extends Controller
     }
 
     /**
-     * Display printable invoice receipt.
+     * Display printable invoice receipt or receipt voucher.
      */
-    public function show(Invoice $invoice): View
+    public function show(Request $request, Invoice $invoice): View
     {
         $invoice->load(['patient', 'doctor']);
 
-        return view('clinic.billing.show', compact('invoice'));
+        $settings = [
+            'clinic_name' => Setting::get('clinic_name', 'مجمع دنتال برو لطب وجراحة الأسنان'),
+            'clinic_phone' => Setting::get('clinic_phone', '+20 100 000 0000'),
+            'clinic_email' => Setting::get('clinic_email', 'info@dentalcare.com'),
+            'clinic_address' => Setting::get('clinic_address', 'شارع النصر، المعادي، القاهرة'),
+            'tax_number' => Setting::get('tax_number', '300123456789003'),
+            'tax_rate' => Setting::get('tax_rate', '0.00'),
+            'currency_symbol' => Setting::currencySymbol(),
+            'currency_position' => Setting::get('currency_position', 'after'),
+            'currency_name' => Setting::currencyName(),
+        ];
+
+        $viewType = $request->query('type', 'invoice');
+
+        return view('clinic.billing.show', compact('invoice', 'settings', 'viewType'));
     }
 
     /**

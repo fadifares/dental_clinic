@@ -348,6 +348,9 @@
                                     <a href="{{ route('clinic.billing.show', $inv) }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-2" title="طباعة الفاتورة">
                                         <i class="bi bi-printer"></i>
                                     </a>
+                                    <a href="{{ route('clinic.billing.show', [$inv, 'type' => 'receipt']) }}" target="_blank" class="btn btn-sm btn-outline-success rounded-pill px-2" title="طباعة سند القبض">
+                                        <i class="bi bi-receipt"></i>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
