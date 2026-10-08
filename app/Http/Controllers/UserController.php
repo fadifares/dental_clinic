@@ -114,14 +114,14 @@ class UserController extends Controller
         $user->roles = $roles;
         $user->save();
 
-        // If newly created user has Doctor role, link or create Doctor profile if requested
-        if ($user->isDoctor() && ! empty($validated['speciality'])) {
+        // If newly created user has Doctor role, link or create Doctor profile
+        if ($user->isDoctor()) {
             Doctor::create([
                 'user_id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $validated['phone'] ?? '0500000000',
-                'speciality' => $validated['speciality'],
+                'speciality' => ! empty($validated['speciality']) ? $validated['speciality'] : 'طب أسنان عام',
                 'commission_rate' => 30.00,
                 'is_active' => true,
             ]);
@@ -185,17 +185,33 @@ class UserController extends Controller
 
         $user->save();
 
-        // Synchronize doctor profile name in doctors table
-        Doctor::where('user_id', $user->id)
-            ->orWhere(function ($query) use ($user) {
-                $query->whereNull('user_id')
-                    ->where('email', $user->email);
-            })
-            ->update([
-                'name' => $user->name,
-                'email' => $user->email,
-                'user_id' => $user->id,
-            ]);
+        // Synchronize doctor profile in doctors table
+        if ($user->isDoctor()) {
+            $doctor = Doctor::where('user_id', $user->id)
+                ->orWhere(function ($query) use ($user) {
+                    $query->whereNull('user_id')
+                        ->where('email', $user->email);
+                })
+                ->first();
+
+            if (! $doctor) {
+                Doctor::create([
+                    'user_id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => '0500000000',
+                    'speciality' => 'طب أسنان عام',
+                    'commission_rate' => 30.00,
+                    'is_active' => true,
+                ]);
+            } else {
+                $doctor->update([
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'user_id' => $user->id,
+                ]);
+            }
+        }
 
         $labels = $user->getRoleLabelsString();
 
