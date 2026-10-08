@@ -8,6 +8,7 @@ use App\Models\Patient;
 use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class BillingController extends Controller
@@ -50,7 +51,7 @@ class BillingController extends Controller
             'discount' => 'nullable|numeric|min:0',
             'tax' => 'nullable|numeric|min:0',
             'paid_amount' => 'required|numeric|min:0',
-            'payment_method' => 'required|in:cash,card,bank_transfer,installments',
+            'payment_method' => ['required', 'string', Rule::in(array_keys(Setting::paymentMethods()))],
         ]);
 
         $subtotal = (float) $validated['subtotal'];
@@ -122,7 +123,7 @@ class BillingController extends Controller
 
         $validated = $request->validate([
             'payment_amount' => 'required|numeric|min:0.01|max:'.$invoice->remaining_amount,
-            'payment_method' => 'required|in:cash,card,bank_transfer,installments',
+            'payment_method' => ['required', 'string', Rule::in(array_keys(Setting::paymentMethods()))],
             'notes' => 'nullable|string|max:500',
         ], [
             'payment_amount.required' => 'يرجى إدخال مبلغ السداد.',

@@ -328,10 +328,9 @@
                                 @endif
                             </td>
                             <td>
-                                @if($inv->payment_method === 'card') <span class="badge bg-light text-dark border"><i class="bi bi-credit-card me-1"></i> مدى / بطاقة</span>
-                                @elseif($inv->payment_method === 'cash') <span class="badge bg-light text-dark border"><i class="bi bi-cash me-1"></i> نقدي</span>
-                                @elseif($inv->payment_method === 'installments') <span class="badge bg-warning-subtle text-dark"><i class="bi bi-calendar3 me-1"></i> أقساط</span>
-                                @else <span class="badge bg-light text-dark border">تحويل بنكي</span> @endif
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi {{ $inv->paymentMethodIcon() }} me-1"></i> {{ $inv->paymentMethodName() }}
+                                </span>
                             </td>
                             <td>
                                 @if($inv->status === 'paid') <span class="badge bg-success">مدفوعة بالكامل</span>
@@ -416,10 +415,11 @@
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold">طريقة الدفع <span class="text-danger">*</span></label>
                                     <select name="payment_method" class="form-select" required>
-                                        <option value="card" selected>💳 مدى / بطاقة بنكية (POS)</option>
-                                        <option value="cash">💵 نقدي (كاش)</option>
-                                        <option value="bank_transfer">🏦 تحويل بنكي</option>
-                                        <option value="installments">📅 أقساط / دفعات</option>
+                                        @foreach(\App\Models\Setting::enabledPaymentMethods() as $mKey => $m)
+                                            <option value="{{ $mKey }}" {{ $inv->payment_method === $mKey ? 'selected' : '' }}>
+                                                {{ $m['name'] }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -487,12 +487,13 @@
                                 <small class="text-muted">اتركه 0.00 إذا كانت الفاتورة آجلة أو لم يسدد المريض بعد.</small>
                             </div>
                             <div class="mb-0">
-                                <label class="form-label small fw-bold">طريقة الدفع</label>
+                                <label class="form-label small fw-bold">طريقة الدفع <span class="text-danger">*</span></label>
                                 <select name="payment_method" class="form-select" required>
-                                    <option value="card">💳 مدى / بطاقة</option>
-                                    <option value="cash" selected>💵 نقدي (كاش)</option>
-                                    <option value="bank_transfer">🏦 تحويل بنكي</option>
-                                    <option value="installments">📅 أقساط</option>
+                                    @foreach(\App\Models\Setting::enabledPaymentMethods() as $mKey => $m)
+                                        <option value="{{ $mKey }}" {{ $mKey === \App\Models\Setting::get('default_payment_method', 'card') ? 'selected' : '' }}>
+                                            {{ $m['name'] }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

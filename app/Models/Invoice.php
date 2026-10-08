@@ -33,4 +33,20 @@ class Invoice extends Model
     {
         return $this->belongsTo(Doctor::class);
     }
+
+    /**
+     * Get display name of invoice payment method.
+     */
+    public function paymentMethodName(): string
+    {
+        return Setting::paymentMethodName($this->payment_method);
+    }
+
+    /**
+     * Get icon class of invoice payment method.
+     */
+    public function paymentMethodIcon(): string
+    {
+        return Setting::paymentMethodIcon($this->payment_method);
+    }
 }

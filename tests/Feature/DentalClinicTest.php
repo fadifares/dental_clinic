@@ -746,4 +746,74 @@ class DentalClinicTest extends TestCase
         $responseReceipt->assertSee('سلطان بن عبدالعزيز');
         $responseReceipt->assertSee('1,200.00');
     }
+
+    /**
+     * Test billing screens and payment modals dynamically support all configured payment methods.
+     */
+    public function test_billing_screens_display_and_accept_all_configured_payment_methods(): void
+    {
+        $admin = User::create([
+            'name' => 'مسؤول المالية',
+            'email' => 'finance.admin@dentalcare.com',
+            'role' => UserRole::Admin,
+            'password' => bcrypt('Password123#'),
+            'is_active' => true,
+        ]);
+
+        $patient = Patient::create([
+            'name' => 'عبدالله السبيعي',
+            'phone' => '0509988776',
+            'gender' => 'male',
+            'date_of_birth' => '1988-10-20',
+            'file_number' => 'PT-5566',
+        ]);
+
+        // Enable insurance and wallet in settings
+        Setting::set('payment_methods', [
+            'cash' => ['name' => 'نقداً (كاش)', 'enabled' => true, 'is_default' => false, 'icon' => 'bi-cash-stack'],
+            'card' => ['name' => 'بطاقة بنكية / شبكة (POS)', 'enabled' => true, 'is_default' => true, 'icon' => 'bi-credit-card-2-front-fill'],
+            'bank_transfer' => ['name' => 'تحويل بنكي مباشر', 'enabled' => true, 'is_default' => false, 'icon' => 'bi-bank2'],
+            'installments' => ['name' => 'أقساط وخطة دفعات', 'enabled' => true, 'is_default' => false, 'icon' => 'bi-calendar-range-fill'],
+            'insurance' => ['name' => 'تأمين بوبا وتكافل الراجحي', 'enabled' => true, 'is_default' => false, 'icon' => 'bi-shield-check'],
+            'wallet' => ['name' => 'محفظة إلكترونية (إنستاباي / STC Pay)', 'enabled' => true, 'is_default' => false, 'icon' => 'bi-phone-fill'],
+        ], 'payments');
+
+        // 1. Verify billing index screen contains the newly enabled payment methods
+        $responseIndex = $this->actingAs($admin)->get('/clinic/billing');
+        $responseIndex->assertStatus(200);
+        $responseIndex->assertSee('تأمين بوبا وتكافل الراجحي');
+        $responseIndex->assertSee('محفظة إلكترونية (إنستاباي / STC Pay)');
+
+        // 2. Issue invoice with insurance payment method
+        $responseStoreInsurance = $this->actingAs($admin)->post('/clinic/billing', [
+            'patient_id' => $patient->id,
+            'subtotal' => 2500.00,
+            'discount' => 0.00,
+            'tax' => 0.00,
+            'paid_amount' => 2500.00,
+            'payment_method' => 'insurance',
+        ]);
+        $responseStoreInsurance->assertSessionHas('success');
+        $this->assertDatabaseHas('invoices', [
+            'patient_id' => $patient->id,
+            'payment_method' => 'insurance',
+            'total' => 2500.00,
+        ]);
+
+        // 3. Issue invoice with wallet payment method
+        $responseStoreWallet = $this->actingAs($admin)->post('/clinic/billing', [
+            'patient_id' => $patient->id,
+            'subtotal' => 750.00,
+            'discount' => 0.00,
+            'tax' => 0.00,
+            'paid_amount' => 750.00,
+            'payment_method' => 'wallet',
+        ]);
+        $responseStoreWallet->assertSessionHas('success');
+        $this->assertDatabaseHas('invoices', [
+            'patient_id' => $patient->id,
+            'payment_method' => 'wallet',
+            'total' => 750.00,
+        ]);
+    }
 }

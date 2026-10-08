@@ -234,4 +234,44 @@ class Setting extends Model
     {
         return array_filter(static::paymentMethods(), fn ($m) => ! empty($m['enabled']));
     }
+
+    /**
+     * Get user-friendly name for a payment method key.
+     */
+    public static function paymentMethodName(?string $key): string
+    {
+        if (! $key) {
+            return 'غير محدد';
+        }
+
+        $methods = static::paymentMethods();
+
+        return $methods[$key]['name'] ?? match ($key) {
+            'card' => 'بطاقة بنكية / شبكة (POS)',
+            'cash' => 'نقداً (كاش)',
+            'bank_transfer' => 'تحويل بنكي مباشر',
+            'installments' => 'أقساط مجدولة',
+            'insurance' => 'تأمين طبي',
+            'wallet' => 'محفظة إلكترونية',
+            default => $key,
+        };
+    }
+
+    /**
+     * Get Bootstrap icon class for a payment method key.
+     */
+    public static function paymentMethodIcon(?string $key): string
+    {
+        $methods = static::paymentMethods();
+
+        return $methods[$key]['icon'] ?? match ($key) {
+            'card' => 'bi-credit-card-2-front-fill',
+            'cash' => 'bi-cash-stack',
+            'bank_transfer' => 'bi-bank2',
+            'installments' => 'bi-calendar-range-fill',
+            'insurance' => 'bi-shield-check',
+            'wallet' => 'bi-phone-fill',
+            default => 'bi-credit-card',
+        };
+    }
 }
