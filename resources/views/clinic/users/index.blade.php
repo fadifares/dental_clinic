@@ -240,7 +240,7 @@
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label small fw-bold">مجموعات الصلاحيات الممنوحة (يمكن اختيار أكثر من مجموعة) <span class="text-danger">*</span></label>
+                                                <label class="form-label small fw-bold">مجموعات الصلاحيات الممنوحة (يمكن اختيار أكثر من دور)</label>
                                                 <div class="row g-2">
                                                     @foreach(\App\Enums\UserRole::cases() as $role)
                                                     @php
@@ -248,9 +248,8 @@
                                                         $isRoleDisabled = ($u->id === auth()->id() && $role === \App\Enums\UserRole::Admin);
                                                     @endphp
                                                     <div class="col-12 col-sm-6">
-                                                        <label class="role-select-card {{ $isRoleChecked ? 'is-selected' : '' }} {{ $isRoleDisabled ? 'is-disabled' : '' }}" 
-                                                               for="editRole{{ $u->id }}_{{ $role->value }}">
-                                                            <div class="d-flex align-items-center gap-2">
+                                                        <label class="role-select-card {{ $isRoleChecked ? 'is-selected' : '' }} {{ $isRoleDisabled ? 'is-disabled' : '' }}">
+                                                            <div class="d-flex align-items-center gap-2" style="pointer-events: none;">
                                                                 <div class="role-icon-box bg-{{ $role->colorClass() }}-subtle text-{{ $role->colorClass() }}">
                                                                     <i class="bi {{ $role->icon() }}"></i>
                                                                 </div>
@@ -272,6 +271,23 @@
                                                     </div>
                                                     @endforeach
                                                 </div>
+
+                                                <!-- Doctor Extra Fields for Edit Modal -->
+                                                <div id="editDoctorExtraFields{{ $u->id }}" class="{{ $u->isDoctor() ? '' : 'd-none' }} p-3 mt-3 rounded-3 border border-primary-subtle bg-primary-subtle bg-opacity-10 text-start">
+                                                    <div class="d-flex align-items-center gap-2 mb-2 text-primary">
+                                                        <i class="bi bi-heart-pulse-fill fs-5"></i>
+                                                        <h6 class="fw-bold mb-0">بيانات الطبيب المعالج الإضافية</h6>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-bold">التخصص الطبي</label>
+                                                        <input type="text" name="speciality" class="form-control bg-white" value="{{ $u->doctor?->speciality ?? 'طب أسنان عام' }}">
+                                                    </div>
+                                                    <div class="mb-0">
+                                                        <label class="form-label small fw-bold">رقم هاتف / جوال الطبيب</label>
+                                                        <input type="text" name="phone" class="form-control bg-white" value="{{ $u->doctor?->phone ?? '' }}">
+                                                    </div>
+                                                </div>
+
                                                 @if($u->id === auth()->id())
                                                     <input type="hidden" name="roles[]" value="admin">
                                                     <div class="alert alert-info py-1 px-2 mt-2 mb-0 d-flex align-items-center gap-2 small" style="font-size: 0.75rem;">
@@ -475,9 +491,8 @@
                                 $isDefaultChecked = ($role === \App\Enums\UserRole::Receptionist);
                             @endphp
                             <div class="col-12 col-sm-6">
-                                <label class="role-select-card {{ $isDefaultChecked ? 'is-selected' : '' }}" 
-                                       for="newRole{{ ucfirst($role->value) }}">
-                                    <div class="d-flex align-items-center gap-2">
+                                <label class="role-select-card {{ $isDefaultChecked ? 'is-selected' : '' }}">
+                                    <div class="d-flex align-items-center gap-2" style="pointer-events: none;">
                                         <div class="role-icon-box bg-{{ $role->colorClass() }}-subtle text-{{ $role->colorClass() }}">
                                             <i class="bi {{ $role->icon() }}"></i>
                                         </div>
@@ -495,14 +510,19 @@
                         </div>
                     </div>
 
-                    <div id="doctorExtraFields" class="d-none">
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">التخصص الطبي</label>
-                            <input type="text" name="speciality" class="form-control" placeholder="مثال: أخصائي علاج جذور وعصب">
+                    <!-- Doctor Extra Fields (Speciality & Phone) -->
+                    <div id="doctorExtraFields" class="d-none p-3 mb-3 rounded-3 border border-primary-subtle bg-primary-subtle bg-opacity-10">
+                        <div class="d-flex align-items-center gap-2 mb-2 text-primary">
+                            <i class="bi bi-heart-pulse-fill fs-5"></i>
+                            <h6 class="fw-bold mb-0">بيانات الطبيب المعالج الإضافية</h6>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">رقم هاتف الطبيب</label>
-                            <input type="text" name="phone" class="form-control" placeholder="05xxxxxxxx">
+                            <label class="form-label small fw-bold">التخصص الطبي <span class="text-danger">*</span></label>
+                            <input type="text" name="speciality" class="form-control bg-white" placeholder="مثال: جراحة وزراعة الأسنان، تقويم، علاج جذور، طب أسنان عام">
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label small fw-bold">رقم هاتف / جوال الطبيب</label>
+                            <input type="text" name="phone" class="form-control bg-white" placeholder="05xxxxxxxx">
                         </div>
                     </div>
 
@@ -648,6 +668,7 @@ body.dark-mode .role-select-card:has(.role-check-input:checked) .role-check-inpu
 @push('scripts')
 <script>
 $(document).ready(function() {
+    // 1. Highlight card on check
     $(document).on('change', '.role-check-input', function() {
         var $card = $(this).closest('.role-select-card');
         if ($(this).is(':checked')) {
@@ -657,11 +678,39 @@ $(document).ready(function() {
         }
     });
 
-    $('#newRoleDoctor').on('change', function() {
-        if ($(this).is(':checked')) {
-            $('#doctorExtraFields').removeClass('d-none');
+    // 2. Add New User - Doctor Fields visibility
+    function syncNewUserDoctorFields() {
+        var isDoctor = $('#newRoleDoctor').is(':checked');
+        var $fields = $('#doctorExtraFields');
+        if (isDoctor) {
+            $fields.removeClass('d-none').hide().slideDown(200);
         } else {
-            $('#doctorExtraFields').addClass('d-none');
+            $fields.slideUp(200, function() {
+                $(this).addClass('d-none');
+            });
+        }
+    }
+
+    $(document).on('change', '#newRoleDoctor', syncNewUserDoctorFields);
+    $('#newUserModal').on('shown.bs.modal', function() {
+        if ($('#newRoleDoctor').is(':checked')) {
+            $('#doctorExtraFields').removeClass('d-none').show();
+        } else {
+            $('#doctorExtraFields').addClass('d-none').hide();
+        }
+    });
+
+    // 3. Edit User - Doctor Fields visibility
+    $(document).on('change', 'input[id^="editRole"][value="doctor"]', function() {
+        var idAttr = $(this).attr('id');
+        var userId = idAttr.replace('editRole', '').replace('_doctor', '');
+        var $fields = $('#editDoctorExtraFields' + userId);
+        if ($(this).is(':checked')) {
+            $fields.removeClass('d-none').hide().slideDown(200);
+        } else {
+            $fields.slideUp(200, function() {
+                $(this).addClass('d-none');
+            });
         }
     });
 });
