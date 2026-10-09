@@ -516,7 +516,7 @@
                 </span>
                 <span class="d-none d-md-inline text-muted">•</span>
                 <span class="d-flex align-items-center gap-1">
-                    <i class="bi bi-whatsapp text-success fs-5"></i> تذكيرات واتساب مؤتمتة
+                    <i class="bi bi-envelope-check-fill text-primary fs-5"></i> تذكيرات إلكترونية مؤتمتة
                 </span>
                 <span class="d-none d-md-inline text-muted">•</span>
                 <span class="d-flex align-items-center gap-1">
@@ -543,11 +543,11 @@
                 <!-- Floating Glassmorphism Badge 2 (Bottom Right in RTL) -->
                 <div class="saas-floating-chip anim-float-2 d-none d-md-flex" style="bottom: 25px; right: -25px;">
                     <div class="rounded-circle bg-primary-subtle p-2 text-primary d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                        <i class="bi bi-whatsapp fs-5 text-success"></i>
+                        <i class="bi bi-envelope-check-fill fs-5 text-primary"></i>
                     </div>
                     <div>
                         <div class="fw-bold text-dark fs-6">96% نسبة حضور المواعيد</div>
-                        <div class="small text-muted" style="font-size: 0.75rem;">تذكير واتساب آلي قبل 24 ساعة</div>
+                        <div class="small text-muted" style="font-size: 0.75rem;">تذكير بريد آلي ومزامنة التقويم</div>
                     </div>
                 </div>
 
