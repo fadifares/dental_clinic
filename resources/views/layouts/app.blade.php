@@ -84,9 +84,6 @@
                         <a class="nav-link" href="#calculator">حاسبة التوفير</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#pricing">الباقات والأسعار</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#faq">الأسئلة الشائعة</a>
                     </li>
                 </ul>
@@ -157,7 +154,6 @@
                         <li><a href="#screens" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">شاشات البرنامج</a></li>
                         <li><a href="#workflow" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">رحلة المريض بالعيادة</a></li>
                         <li><a href="#calculator" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">حاسبة توفير العيادة</a></li>
-                        <li><a href="#pricing" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">باقات الاشتراك</a></li>
                         <li><a href="#faq" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">الأسئلة الشائعة</a></li>
                         <li><a href="{{ route('login') }}" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">بوابة الكادر الطبي</a></li>
                     </ul>
