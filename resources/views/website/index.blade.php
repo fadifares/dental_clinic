@@ -127,7 +127,7 @@
         background: #0b1329;
         border-radius: 1.25rem;
         border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 25px 60px -15px rgba(11, 19, 41, 0.35), 0 0 40px rgba(2, 132, 199, 0.15);
+        box-shadow: 0 25px 60px -15px rgba(11, 19, 41, 0.35), 0 10px 25px -5px rgba(0, 0, 0, 0.2);
         overflow: hidden;
         position: relative;
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
@@ -172,10 +172,14 @@
         overflow: hidden;
     }
 
-    .saas-hero-image {
+    .saas-hero-image,
+    #activeScreenImage {
         width: 100%;
         height: auto;
         display: block;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
         transition: transform 0.6s ease;
     }
 
