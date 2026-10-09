@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AppointmentReminderMail;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class AppointmentController extends Controller
@@ -110,5 +112,46 @@ class AppointmentController extends Controller
         $appointment->delete();
 
         return back()->with('success', 'تم إلغاء الموعد بنجاح.');
+    }
+
+    /**
+     * Send email reminder for an individual appointment on-demand.
+     */
+    public function sendReminder(Appointment $appointment): RedirectResponse|JsonResponse
+    {
+        $appointment->load(['patient', 'doctor']);
+        $patient = $appointment->patient;
+
+        if (! $patient || empty($patient->email)) {
+            $msg = 'المريض لا يملك بريداً إلكترونياً مسجلاً في ملفه الطبي لإرسال التذكير.';
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $msg], 422);
+            }
+
+            return back()->with('error', $msg);
+        }
+
+        try {
+            Mail::to($patient->email)->send(new AppointmentReminderMail($appointment));
+            $appointment->update(['reminder_sent_at' => now()]);
+
+            $msg = 'تم إرسال رسالة التذكير بالموعد بنجاح إلى البريد الإلكتروني: '.$patient->email;
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $msg,
+                    'reminder_sent_at' => now()->format('Y-m-d H:i'),
+                ]);
+            }
+
+            return back()->with('success', $msg);
+        } catch (\Throwable $e) {
+            $msg = 'تعذر إرسال البريد الإلكتروني: '.$e->getMessage();
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $msg], 500);
+            }
+
+            return back()->with('error', $msg);
+        }
     }
 }

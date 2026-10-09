@@ -24,6 +24,9 @@
                 </div>
                 <div class="d-flex flex-wrap gap-3 text-muted small mt-2">
                     <span><i class="bi bi-telephone-fill text-primary me-1"></i> <a href="tel:{{ $patient->phone }}" class="text-muted text-decoration-none font-monospace">{{ $patient->phone }}</a></span>
+                    @if($patient->email)
+                        <span><i class="bi bi-envelope-fill text-info me-1"></i> <a href="mailto:{{ $patient->email }}" class="text-muted text-decoration-none">{{ $patient->email }}</a></span>
+                    @endif
                     @if($patient->national_id)
                         <span><i class="bi bi-card-text text-muted me-1"></i> الهوية: {{ $patient->national_id }}</span>
                     @endif
@@ -645,11 +648,15 @@
                             <input type="tel" name="phone" class="form-control" value="{{ $patient->phone }}" required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label small fw-semibold">رقم الهوية</label>
-                            <input type="text" name="national_id" class="form-control" value="{{ $patient->national_id }}">
+                            <label class="form-label small fw-semibold">البريد الإلكتروني (لتذكيرات المواعيد)</label>
+                            <input type="email" name="email" class="form-control" value="{{ $patient->email }}" placeholder="patient@example.com">
                         </div>
                     </div>
                     <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold">رقم الهوية</label>
+                            <input type="text" name="national_id" class="form-control" value="{{ $patient->national_id }}">
+                        </div>
                         <div class="col-6">
                             <label class="form-label small fw-semibold">الجنس</label>
                             <select name="gender" class="form-select">
@@ -657,6 +664,7 @@
                                 <option value="female" {{ $patient->gender == 'female' ? 'selected' : '' }}>أنثى</option>
                             </select>
                         </div>
+                    </div>
                         <div class="col-6">
                             <label class="form-label small fw-semibold">تاريخ الميلاد</label>
                             <input type="date" name="date_of_birth" class="form-control" value="{{ $patient->date_of_birth ? $patient->date_of_birth->format('Y-m-d') : '' }}">

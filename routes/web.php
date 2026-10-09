@@ -45,6 +45,7 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth'])->group(function (
         Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
         Route::patch('/appointments/{appointment}/status', [AppointmentController::class, 'updateStatus'])->name('appointments.status');
         Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+        Route::post('/appointments/{appointment}/send-reminder', [AppointmentController::class, 'sendReminder'])->name('appointments.sendReminder');
     });
 
     // 4. Clinical Dental Chart (Odontogram Live Updates - Doctor & Admin only)

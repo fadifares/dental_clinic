@@ -120,6 +120,9 @@
                         </a>
                         <div class="text-muted small font-monospace" style="font-size:0.75rem;">
                             {{ $apt->patient->phone }} • #{{ $apt->patient->file_number }}
+                            @if($apt->patient->email)
+                                • <span class="text-secondary"><i class="bi bi-envelope me-1"></i>{{ $apt->patient->email }}</span>
+                            @endif
                         </div>
                     </td>
                     <td>
@@ -137,6 +140,14 @@
                             <span class="badge bg-info text-white status-badge">في الانتظار</span>
                         @else
                             <span class="badge bg-secondary status-badge">مؤكد</span>
+                        @endif
+
+                        @if($apt->reminder_sent_at)
+                            <div class="mt-1">
+                                <span class="badge bg-info-subtle text-info border small" style="font-size: 0.68rem;" title="تم إرسال تذكير بالبريد الإلكتروني في: {{ $apt->reminder_sent_at->format('Y-m-d H:i') }}">
+                                    <i class="bi bi-envelope-check-fill me-1"></i> تم التذكير
+                                </span>
+                            </div>
                         @endif
                     </td>
                     <td class="small text-muted">{{ $apt->notes ?? '-' }}</td>
@@ -157,6 +168,17 @@
                             @else
                                 <span class="badge bg-success-subtle text-success small"><i class="bi bi-check-circle-fill"></i> تمت</span>
                             @endif
+
+                            <!-- Email Reminder Button -->
+                            <form action="{{ route('clinic.appointments.sendReminder', $apt) }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" 
+                                        class="btn btn-sm {{ $apt->reminder_sent_at ? 'btn-light text-success border' : 'btn-outline-info' }} rounded-circle" 
+                                        title="{{ $apt->reminder_sent_at ? 'تم التذكير: ' . $apt->reminder_sent_at->format('Y-m-d H:i') . ' (انقر لإعادة الإرسال)' : ($apt->patient->email ? 'إرسال تذكير بالبريد الإلكتروني للمريض' : 'المريض لا يملك بريداً مسجلاً') }}"
+                                        {{ empty($apt->patient->email) ? 'disabled' : '' }}>
+                                    <i class="bi {{ $apt->reminder_sent_at ? 'bi-envelope-check-fill' : 'bi-envelope' }}"></i>
+                                </button>
+                            </form>
 
                             <a href="{{ route('clinic.patients.show', $apt->patient) }}" class="btn btn-sm btn-outline-secondary rounded-circle" title="فتح الملف الطبي">
                                 <i class="bi bi-folder2-open"></i>

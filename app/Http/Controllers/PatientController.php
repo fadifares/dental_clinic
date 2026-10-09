@@ -47,6 +47,7 @@ class PatientController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:30',
+            'email' => 'nullable|email|max:255',
             'national_id' => 'nullable|string|max:30',
             'gender' => 'required|in:male,female',
             'date_of_birth' => 'nullable|date',
@@ -107,6 +108,7 @@ class PatientController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:30',
+            'email' => 'nullable|email|max:255',
             'national_id' => 'nullable|string|max:30',
             'gender' => 'required|in:male,female',
             'date_of_birth' => 'nullable|date',

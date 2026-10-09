@@ -474,11 +474,15 @@
                             <input type="tel" name="phone" class="form-control" placeholder="05XXXXXXXX" required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label small fw-semibold">رقم الهوية / الإقامة</label>
-                            <input type="text" name="national_id" class="form-control" placeholder="10XXXXXXXX">
+                            <label class="form-label small fw-semibold">البريد الإلكتروني (لتذكيرات المواعيد)</label>
+                            <input type="email" name="email" class="form-control" placeholder="patient@example.com">
                         </div>
                     </div>
                     <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold">رقم الهوية / الإقامة</label>
+                            <input type="text" name="national_id" class="form-control" placeholder="10XXXXXXXX">
+                        </div>
                         <div class="col-6">
                             <label class="form-label small fw-semibold">الجنس</label>
                             <select name="gender" class="form-select">
@@ -486,10 +490,10 @@
                                 <option value="female">أنثى</option>
                             </select>
                         </div>
-                        <div class="col-6">
-                            <label class="form-label small fw-semibold">تاريخ الميلاد</label>
-                            <input type="date" name="date_of_birth" class="form-control">
-                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">تاريخ الميلاد</label>
+                        <input type="date" name="date_of_birth" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-danger">

@@ -489,7 +489,7 @@
                 <span class="saas-title-gradient">من السجل الرقمي والمخطط حتى الفوترة الضريبية</span>
             </h1>
             <p class="lead text-muted max-w-750 mx-auto fs-6 mb-4" style="max-width: 820px; line-height: 1.8;">
-                منظومة سحابية متكاملة مصممة خصيصاً لأطباء ومجمعات طب الأسنان. تشمل السجل الطبي الإلكتروني EMR، مخطط الأسنان الرقمي 32 سن (Odontogram)، الفوترة المعتمدة من ZATCA، تذكيرات واتساب الآلية، إدارة طلبيات المعامل والتركيبات، تتبع المصروفات والأرباح، وأدوار محكمة للطبيب، الاستقبال، والمحاسب.
+                منظومة سحابية متكاملة مصممة خصيصاً لأطباء ومجمعات طب الأسنان. تشمل السجل الطبي الإلكتروني EMR، مخطط الأسنان الرقمي 32 سن (Odontogram)، الفوترة المعتمدة من ZATCA، تذكيرات البريد الإلكتروني الذكية، إدارة طلبيات المعامل والتركيبات، تتبع المصروفات والأرباح، وأدوار محكمة للطبيب، الاستقبال، والمحاسب.
             </p>
 
             <!-- Action Buttons -->
@@ -1156,7 +1156,7 @@
                         </span>
                         <h3 class="fw-extrabold text-dark mb-3">ودّع تعارض المواعيد وفوضى الاستقبال</h3>
                         <p class="text-muted small leading-relaxed mb-4">
-                            جدول حجوزات ذكي يتيح لمكتب الاستقبال تنسيق مواعيد العيادات، تتبع فترات الانتظار، وإرسال تنبيهات تلقائية للمرضى عبر الواتساب.
+                            جدول حجوزات ذكي يتيح لمكتب الاستقبال تنسيق مواعيد العيادات، تتبع فترات الانتظار، وإرسال تنبيهات وتذكيرات تلقائية للمرضى عبر البريد الإلكتروني مع مزامنة التقويم.
                         </p>
                         <ul class="list-unstyled d-flex flex-column gap-3 mb-4">
                             <li class="d-flex align-items-start gap-2">
@@ -1387,7 +1387,7 @@
                         <li><i class="bi bi-check2 text-info me-1"></i> تسجيل وصول المريض بنقرة واحدة</li>
                         <li><i class="bi bi-check2 text-info me-1"></i> إدارة صالة الانتظار وتوزيع غرف الكشف</li>
                         <li><i class="bi bi-check2 text-info me-1"></i> حجز سريع للمواعيد الجديدة والمستعجلة</li>
-                        <li><i class="bi bi-check2 text-info me-1"></i> تذكير المرضى آلياً عبر الواتساب</li>
+                        <li><i class="bi bi-check2 text-info me-1"></i> تذكير المرضى آلياً عبر البريد الإلكتروني</li>
                         <li><i class="bi bi-check2 text-info me-1"></i> بحث فوري عن الملفات برقم الهاتف والاسم</li>
                     </ul>
                 </div>
@@ -1498,17 +1498,17 @@
                 </div>
             </div>
 
-            <!-- 4. WhatsApp Bot -->
+            <!-- 4. Email Reminders -->
             <div class="col-md-6 col-lg-3">
                 <div class="saas-feature-card">
-                    <div class="saas-feature-icon-box bg-warning-subtle text-warning">
-                        <i class="bi bi-whatsapp"></i>
+                    <div class="saas-feature-icon-box bg-primary-subtle text-primary">
+                        <i class="bi bi-envelope-check"></i>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">تذكيرات واتساب التلقائية</h5>
+                    <h5 class="fw-bold text-dark mb-2">تذكيرات البريد الإلكتروني المؤتمتة</h5>
                     <p class="text-muted small mb-3">
-                        إرسال رسائل تذكير آلية للمرضى قبل الموعد بـ 24 ساعة، مما يقلل حالات التخلف عن الحضور بنسبة تتجاوز 85%.
+                        إرسال رسائل تذكير آلية لبريد المرضى قبل الموعد بـ 24 ساعة، مع إمكانية إضافة الموعد لتقويم Google و Apple Calendar بنقرة واحدة.
                     </p>
-                    <span class="badge bg-light text-warning border small">توفير وقت الاستقبال</span>
+                    <span class="badge bg-light text-primary border small">مزامنة التقويم السحابي</span>
                 </div>
             </div>
 
@@ -1649,9 +1649,9 @@
             <div class="col-md-6 col-lg">
                 <div class="clinic-card p-4 h-100 text-center text-md-start">
                     <div class="badge bg-primary text-white fs-6 rounded-pill px-3 py-1 mb-3">الخطوة 1</div>
-                    <h5 class="fw-bold text-dark">الحجز الذكي وتأكيد الواتساب</h5>
+                    <h5 class="fw-bold text-dark">الحجز الذكي وتأكيد البريد الإلكتروني</h5>
                     <p class="text-muted small mb-0">
-                        تسجيل الموعد في ثوانٍ مع اختيار الطبيب والعيادة، وإرسال رسالة ترحيبية وتذكير فوري للمريض عبر الواتساب.
+                        تسجيل الموعد في ثوانٍ مع اختيار الطبيب والعيادة، وإرسال بطاقة حجز وتذكير فوري للمريض عبر البريد الإلكتروني.
                     </p>
                 </div>
             </div>
@@ -1750,7 +1750,7 @@
                         <li><i class="bi bi-check-circle-fill text-success me-1"></i> أجندة وجدول مخصص لكل طبيب</li>
                         <li><i class="bi bi-check-circle-fill text-success me-1"></i> إدارة طابور صالة الانتظار الحية</li>
                         <li><i class="bi bi-check-circle-fill text-success me-1"></i> حالات تدفق المريض (مجدول، حضر...)</li>
-                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> تذكيرات واتساب مؤتمتة للمرضى</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> تذكيرات البريد الإلكتروني ومزامنة التقويم</li>
                         <li><i class="bi bi-check-circle-fill text-success me-1"></i> بحث فوري بالاسم والجوال والهوية</li>
                         <li><i class="bi bi-check-circle-fill text-success me-1"></i> تقليل الغياب والتخلف بنسبة 85%</li>
                     </ul>
@@ -1954,7 +1954,7 @@
                         </li>
                         <li class="d-flex align-items-start gap-2">
                             <i class="bi bi-check-circle-fill text-success mt-1"></i>
-                            <span>تذكيرات آلية عبر الواتساب تقلل غياب المرضى إلى أقل من 4% فقط.</span>
+                            <span>تذكيرات آلية لبريد المريض تقلل غياب المواعيد إلى أقل من 4% فقط مع مزامنة التقويم.</span>
                         </li>
                         <li class="d-flex align-items-start gap-2">
                             <i class="bi bi-check-circle-fill text-success mt-1"></i>
@@ -2070,7 +2070,7 @@
                         </li>
                         <li class="d-flex align-items-center gap-2">
                             <i class="bi bi-check-circle-fill text-success"></i>
-                            <span>تذكيرات آلية مؤتمتة عبر الواتساب</span>
+                            <span>تذكيرات آلية مؤتمتة عبر البريد الإلكتروني</span>
                         </li>
                         <li class="d-flex align-items-center gap-2">
                             <i class="bi bi-check-circle-fill text-success"></i>
@@ -2237,7 +2237,7 @@
                             <i class="bi bi-star-fill"></i>
                         </div>
                         <p class="text-muted small leading-relaxed mb-4">
-                            "تذكيرات الواتساب التلقائية وحدها أنقذت مجمعنا من خسارة مواعيد بعشرات الآلاف شهرياً. نسبة حضور المرضى ارتفعت لأكثر من 95% وموظفو الاستقبال أصبحوا أكثر تركيزاً وراحة."
+                            "تذكيرات البريد الإلكتروني التلقائية وحدها أنقذت مجمعنا من خسارة مواعيد بعشرات الآلاف شهرياً. نسبة حضور المرضى ارتفعت لأكثر من 95% مع ميزة إضافة الموعد لتقويم الهاتف."
                         </p>
                     </div>
                     <div class="d-flex align-items-center gap-3 pt-3 border-top">

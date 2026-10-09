@@ -16,6 +16,7 @@ class Appointment extends Model
     {
         return [
             'appointment_date' => 'date',
+            'reminder_sent_at' => 'datetime',
         ];
     }
 
