@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dental Pro ERP | المنظومة السحابية الذكية لإدارة عيادات ومراكز طب الأسنان')
+@section('title', 'Dental Pro ERP | المنظومة السحابية المتكاملة لطب وجراحة الأسنان')
 
 @push('styles')
 <style>
@@ -28,7 +28,7 @@
         overflow-x: hidden;
     }
 
-    /* Shimmer & Glow Animations */
+    /* Keyframe Animations */
     @keyframes pulseGlow {
         0%, 100% {
             box-shadow: 0 0 25px rgba(2, 132, 199, 0.35);
@@ -61,17 +61,9 @@
         100% { transform: scale(1); }
     }
 
-    .anim-float-1 {
-        animation: floatBadge1 5s ease-in-out infinite;
-    }
-
-    .anim-float-2 {
-        animation: floatBadge2 6s ease-in-out infinite;
-    }
-
-    .anim-float-slow {
-        animation: floatSlow 7s ease-in-out infinite;
-    }
+    .anim-float-1 { animation: floatBadge1 5s ease-in-out infinite; }
+    .anim-float-2 { animation: floatBadge2 6s ease-in-out infinite; }
+    .anim-float-slow { animation: floatSlow 7s ease-in-out infinite; }
 
     /* Hero Background Mesh */
     .saas-hero-bg {
@@ -170,7 +162,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        max-width: 320px;
+        max-width: 340px;
         width: 100%;
     }
 
@@ -204,22 +196,23 @@
 
     /* Screen Showcase Tabs */
     .screen-tab-btn {
-        background: #f8fafc;
+        background: #ffffff;
         border: 1px solid #e2e8f0;
         color: #475569;
         font-weight: 700;
-        padding: 0.85rem 1.35rem;
-        border-radius: 0.85rem;
+        padding: 0.75rem 1.15rem;
+        border-radius: 0.75rem;
         transition: all 0.25s ease;
         display: inline-flex;
         align-items: center;
-        gap: 0.6rem;
+        gap: 0.5rem;
         cursor: pointer;
         text-align: right;
+        font-size: 0.88rem;
     }
 
     .screen-tab-btn:hover {
-        background: #f1f5f9;
+        background: #f8fafc;
         color: #0284c7;
         border-color: #cbd5e1;
     }
@@ -228,7 +221,7 @@
         background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
         color: #ffffff;
         border-color: #0284c7;
-        box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.4);
+        box-shadow: 0 8px 18px -4px rgba(2, 132, 199, 0.4);
     }
 
     .screen-tab-btn.active i {
@@ -358,7 +351,7 @@
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 1.25rem;
-        padding: 2rem;
+        padding: 1.75rem;
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         position: relative;
         overflow: hidden;
@@ -372,19 +365,35 @@
     }
 
     .saas-feature-icon-box {
-        width: 58px;
-        height: 58px;
+        width: 54px;
+        height: 54px;
         border-radius: 1rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         margin-bottom: 1.25rem;
         transition: transform 0.3s ease;
     }
 
     .saas-feature-card:hover .saas-feature-icon-box {
         transform: scale(1.1) rotate(-4deg);
+    }
+
+    /* Role Dashboard Cards */
+    .role-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 1.25rem;
+        padding: 1.75rem;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .role-card:hover {
+        border-color: #0284c7;
+        box-shadow: 0 15px 30px -10px rgba(2, 132, 199, 0.18);
+        transform: translateY(-4px);
     }
 
     /* Pricing Cards */
@@ -446,25 +455,13 @@
         border: 3px solid #ffffff;
     }
 
-    /* Comparison Table Card */
-    .compare-vs-badge {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #0b1329;
-        color: #ffffff;
-        font-weight: 800;
-        font-size: 0.9rem;
-    }
-
-    /* Lightbox Modal Image */
-    .lightbox-img {
-        max-height: 80vh;
-        object-fit: contain;
-        width: 100%;
+    /* Simulated UI Screen Container */
+    .simulated-ui-wrap {
+        background: #ffffff;
+        border-radius: 0.85rem;
+        padding: 1.25rem;
+        min-height: 420px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
     }
 </style>
 @endpush
@@ -480,15 +477,15 @@
         <div class="text-center mb-4">
             <div class="saas-pill-badge mb-2">
                 <span class="saas-pill-pulse"></span>
-                <span>المنظومة السحابية الذكية لعيادات ومراكز طب وجراحة الأسنان | Dental Pro ERP</span>
+                <span>المنظومة السحابية المتكاملة لطب وجراحة وتجميل الأسنان | Dental Pro ERP</span>
                 <span class="badge bg-primary text-white rounded-pill px-2 py-0 ms-1">V4.2</span>
             </div>
             <h1 class="display-4 fw-extrabold text-dark lh-base mt-2 mb-3">
                 أدر عيادتك لطب الأسنان بذكاء وسرعة <br class="d-none d-lg-block">
                 <span class="saas-title-gradient">من السجل الرقمي والمخطط حتى الفوترة الضريبية</span>
             </h1>
-            <p class="lead text-muted max-w-750 mx-auto fs-6 mb-4" style="max-width: 780px; line-height: 1.8;">
-                منظومة سحابية متكاملة مصممة خصيصاً لأطباء ومجمعات طب الأسنان. تجمع بين السجل الطبي الرقمي EMR، مخطط الأسنان ثلاثي الأبعاد التفاعلي، الفوترة المتوافقة 100% مع هيئة الزكاة (ZATCA)، تذكيرات واتساب الآلية، وإدارة طلبات المعامل وحسابات الأرباح.
+            <p class="lead text-muted max-w-750 mx-auto fs-6 mb-4" style="max-width: 820px; line-height: 1.8;">
+                منظومة سحابية متكاملة مصممة خصيصاً لأطباء ومجمعات طب الأسنان. تشمل السجل الطبي الإلكتروني EMR، مخطط الأسنان الرقمي 32 سن (Odontogram)، الفوترة المعتمدة من ZATCA، تذكيرات واتساب الآلية، إدارة طلبيات المعامل والتركيبات، تتبع المصروفات والأرباح، وأدوار محكمة للطبيب، الاستقبال، والمحاسب.
             </p>
 
             <!-- Action Buttons -->
@@ -511,11 +508,11 @@
                 </span>
                 <span class="d-none d-md-inline text-muted">•</span>
                 <span class="d-flex align-items-center gap-1">
-                    <i class="bi bi-lock-fill text-warning fs-5"></i> تشفير بيانات طبي 256-Bit HIPAA
+                    <i class="bi bi-lock-fill text-warning fs-5"></i> تشفير طبي 256-Bit HIPAA
                 </span>
                 <span class="d-none d-md-inline text-muted">•</span>
                 <span class="d-flex align-items-center gap-1">
-                    <i class="bi bi-whatsapp text-success fs-5"></i> إشعارات واتساب تلقائية للمرضى
+                    <i class="bi bi-whatsapp text-success fs-5"></i> تذكيرات واتساب مؤتمتة
                 </span>
                 <span class="d-none d-md-inline text-muted">•</span>
                 <span class="d-flex align-items-center gap-1">
@@ -605,7 +602,7 @@
                 <div class="p-3">
                     <div class="display-6 fw-extrabold text-primary mb-1">+350</div>
                     <div class="fw-bold text-dark">عيادة ومجمع أسنان نشط</div>
-                    <div class="small text-muted">في المملكة ودول الخليج</div>
+                    <div class="small text-muted">في المملكة ودول الخليج ومصر</div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
@@ -807,7 +804,7 @@
             </p>
         </div>
 
-        <!-- Screen Navigation Tabs -->
+        <!-- Screen Navigation Tabs (All 8 Modules!) -->
         <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="screenTourNav">
             <button class="screen-tab-btn active" data-target="#tab-dashboard" data-img="{{ asset('images/screenshots/dashboard.png') }}" data-title="لوحة التحكم والتحليلات اللحظية">
                 <i class="bi bi-speedometer2 text-primary fs-5"></i> لوحة التحكم والتحليلات
@@ -824,11 +821,20 @@
             <button class="screen-tab-btn" data-target="#tab-billing" data-img="{{ asset('images/screenshots/billing.png') }}" data-title="الفوترة ونظام الأقساط والربط مع ZATCA">
                 <i class="bi bi-receipt-cutoff text-danger fs-5"></i> الفوترة والأقساط و ZATCA
             </button>
+            <button class="screen-tab-btn" data-target="#tab-labs" data-title="طلبيات معامل الأسنان والتركيبات وتحديد الألوان">
+                <i class="bi bi-box-seam-fill text-teal fs-5" style="color: #0d9488;"></i> طلبيات المعامل والتركيبات
+            </button>
+            <button class="screen-tab-btn" data-target="#tab-expenses" data-title="سجل مصاريف ونفقات العيادة وصافي الأرباح">
+                <i class="bi bi-wallet2 text-warning fs-5"></i> المصروفات وصافي الأرباح
+            </button>
+            <button class="screen-tab-btn" data-target="#tab-users" data-title="إدارة المستخدمين وصلاحيات الوصول والأمان">
+                <i class="bi bi-shield-lock-fill text-secondary fs-5"></i> الصلاحيات والأمان
+            </button>
         </div>
 
         <!-- Screen Display Card Frame -->
         <div class="row g-4 align-items-center mt-2">
-            <!-- Screen Screenshot Container -->
+            <!-- Screen Screenshot / Interactive Preview Container -->
             <div class="col-lg-7">
                 <div class="saas-browser-frame shadow-lg">
                     <div class="saas-browser-header">
@@ -845,12 +851,190 @@
                         </button>
                     </div>
 
-                    <div class="position-relative overflow-hidden" style="min-height: 380px;">
+                    <!-- Screen Visual Container: Either real image or simulated rich UI card -->
+                    <div class="position-relative overflow-hidden" id="screenVisualHolder" style="min-height: 420px;">
+                        <!-- Image Container for Screenshots -->
                         <img id="activeScreenImage" 
                              src="{{ asset('images/screenshots/dashboard.png') }}" 
                              alt="شاشة نظام دنتال برو" 
                              class="img-fluid w-100" 
                              style="cursor: zoom-in; transition: opacity 0.3s ease;">
+
+                        <!-- Simulated UI for Labs (Shown when Tab Labs is active) -->
+                        <div id="simulatedLabsUi" class="simulated-ui-wrap d-none">
+                            <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-box-seam text-teal me-1" style="color: #0d9488;"></i> طلبيات معامل الأسنان والتركيبات (Dental Lab Orders)</h6>
+                                    <small class="text-muted">تتبع تصنيع التيجان، الجسور، ودرجات الألوان (Shades)</small>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">+ طلبية معمل جديدة</span>
+                            </div>
+                            <div class="table-responsive small">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>المريض والسن</th>
+                                            <th>المعمل الخارجي</th>
+                                            <th>نوع التركيبة</th>
+                                            <th>درجة اللون (Shade)</th>
+                                            <th>تاريخ التسليم</th>
+                                            <th>الحالة</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>محمد السالم</strong> <span class="badge bg-light text-dark">#16</span></td>
+                                            <td>معمل النخبة للأسنان</td>
+                                            <td>تاج زيركون (Zirconia)</td>
+                                            <td><span class="badge bg-secondary">A2</span></td>
+                                            <td>2026-10-12</td>
+                                            <td><span class="badge bg-warning text-dark"><i class="bi bi-tools me-1"></i> قيد التصنيع</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>سارة خالد</strong> <span class="badge bg-light text-dark">#11, #21</span></td>
+                                            <td>معمل رويال ديجيتال</td>
+                                            <td>فينير إيماكس (E-Max)</td>
+                                            <td><span class="badge bg-info text-white">BL1 (Bleach)</span></td>
+                                            <td>2026-10-10</td>
+                                            <td><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> جاهزة للاستلام</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>عبدالله الدوسري</strong> <span class="badge bg-light text-dark">#36</span></td>
+                                            <td>معمل سمايل كير</td>
+                                            <td>دعامة زراعة + تاج</td>
+                                            <td><span class="badge bg-secondary">A3</span></td>
+                                            <td>2026-10-08</td>
+                                            <td><span class="badge bg-secondary"><i class="bi bi-check2-all me-1"></i> تم التركيب</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-3 p-2 bg-light rounded-3 d-flex justify-content-between small text-muted">
+                                <span><i class="bi bi-cash-coin text-success me-1"></i> حساب تكلفة المعمل وهامش ربح العيادة آلياً</span>
+                                <span class="fw-bold text-teal" style="color: #0d9488;">تنبيه فوري بموعد وصول التركيبة قبل جلسة المريض</span>
+                            </div>
+                        </div>
+
+                        <!-- Simulated UI for Expenses (Shown when Tab Expenses is active) -->
+                        <div id="simulatedExpensesUi" class="simulated-ui-wrap d-none">
+                            <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-wallet2 text-warning me-1"></i> سجل مصاريف ونفقات العيادة (Clinic Expenses)</h6>
+                                    <small class="text-muted">متابعة النفقات التشغيلية، فواتير المشتريات، وصافي الأرباح</small>
+                                </div>
+                                <span class="badge bg-danger rounded-pill">+ تسجيل مصروف جديد</span>
+                            </div>
+                            <div class="row g-2 mb-3">
+                                <div class="col-4">
+                                    <div class="p-2 bg-danger-subtle rounded-2 text-center">
+                                        <small class="text-muted d-block">مصاريف الشهر</small>
+                                        <strong class="text-danger fs-6">14,250 ر.س</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="p-2 bg-success-subtle rounded-2 text-center">
+                                        <small class="text-muted d-block">إجمالي المقبوضات</small>
+                                        <strong class="text-success fs-6">68,500 ر.س</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="p-2 bg-primary-subtle rounded-2 text-center">
+                                        <small class="text-muted d-block">صافي الربح التقديري</small>
+                                        <strong class="text-primary fs-6">54,250 ر.س</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive small">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>البند والتصنيف</th>
+                                            <th>المبلغ</th>
+                                            <th>طريقة الدفع</th>
+                                            <th>المرفق (الإيصال)</th>
+                                            <th>التاريخ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>خامات كمبوزيت ومخدر</strong> <span class="badge bg-light text-dark">مستلزمات طبية</span></td>
+                                            <td class="fw-bold text-danger">3,400 ر.س</td>
+                                            <td>تحويل بنكي</td>
+                                            <td><span class="badge bg-info-subtle text-info"><i class="bi bi-image me-1"></i> إيصال مضغوط HD</span></td>
+                                            <td>2026-10-09</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>إيجار مقر العيادة (دفعة شهرية)</strong> <span class="badge bg-light text-dark">إيجار ومرافق</span></td>
+                                            <td class="fw-bold text-danger">8,000 ر.س</td>
+                                            <td>شيك بنكي</td>
+                                            <td><span class="badge bg-info-subtle text-info"><i class="bi bi-file-earmark-pdf me-1"></i> عقد وسند</span></td>
+                                            <td>2026-10-01</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>صيانة دورية لجهاز الأوتوكلاف</strong> <span class="badge bg-light text-dark">صيانة وتعقيم</span></td>
+                                            <td class="fw-bold text-danger">850 ر.س</td>
+                                            <td>نقدي</td>
+                                            <td><span class="badge bg-info-subtle text-info"><i class="bi bi-image me-1"></i> فاتورة فني</span></td>
+                                            <td>2026-10-04</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Simulated UI for Users & Security (Shown when Tab Users is active) -->
+                        <div id="simulatedUsersUi" class="simulated-ui-wrap d-none">
+                            <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-shield-lock text-primary me-1"></i> إدارة المستخدمين وصلاحيات الأمان (RBAC & Security)</h6>
+                                    <small class="text-muted">التحكم بكادر العمل، الصلاحيات الدقيقة، وعمولات الأطباء</small>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">+ إضافة مستخدم جديد</span>
+                            </div>
+                            <div class="table-responsive small">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>الاسم والكادر</th>
+                                            <th>الدور والصلاحية</th>
+                                            <th>التخصص / العمولة</th>
+                                            <th>الحالة</th>
+                                            <th>إجراءات الأمان</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>د. أحمد السالم</strong> <span class="text-muted d-block" style="font-size: 0.72rem;">ahmed@clinic.com</span></td>
+                                            <td><span class="badge bg-primary">طبيب أسنان (Doctor)</span></td>
+                                            <td>جراحة وزراعة <span class="badge bg-success-subtle text-success">عمولة 35%</span></td>
+                                            <td><span class="badge bg-success">نشط</span></td>
+                                            <td><span class="btn btn-sm btn-outline-secondary py-0">تعديل الصلاحية</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>م. ريم الشهري</strong> <span class="text-muted d-block" style="font-size: 0.72rem;">reem@clinic.com</span></td>
+                                            <td><span class="badge bg-info text-white">استقبال (Receptionist)</span></td>
+                                            <td>مكتب الاستقبال والمواعيد</td>
+                                            <td><span class="badge bg-success">نشط</span></td>
+                                            <td><span class="btn btn-sm btn-outline-secondary py-0">تعديل الصلاحية</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>أ. سامي المنصور</strong> <span class="text-muted d-block" style="font-size: 0.72rem;">sami@clinic.com</span></td>
+                                            <td><span class="badge bg-warning text-dark">محاسب (Accountant)</span></td>
+                                            <td>الفوترة والمصروفات والتقارير</td>
+                                            <td><span class="badge bg-success">نشط</span></td>
+                                            <td><span class="btn btn-sm btn-outline-secondary py-0">تعديل الصلاحية</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>د. فهد الغامدي</strong> <span class="text-muted d-block" style="font-size: 0.72rem;">fahad@clinic.com</span></td>
+                                            <td><span class="badge bg-secondary">مدير النظام (Admin)</span></td>
+                                            <td>تحكم كامل وإعدادات العيادة</td>
+                                            <td><span class="badge bg-success">نشط</span></td>
+                                            <td><span class="badge bg-light text-dark">حساب رئيسي</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1029,6 +1213,108 @@
                         </ul>
                     </div>
 
+                    <!-- Content for Tab: Labs -->
+                    <div class="screen-content-pane d-none" id="pane-labs">
+                        <span class="badge bg-teal-subtle text-teal px-3 py-1 rounded-pill fw-bold mb-3" style="background: #ccfbf1; color: #0d9488;">
+                            <i class="bi bi-box-seam me-1"></i> معامل الأسنان والتركيبات
+                        </span>
+                        <h3 class="fw-extrabold text-dark mb-3">تتبع كامل لتركيبات الأسنان ودرجات الألوان</h3>
+                        <p class="text-muted small leading-relaxed mb-4">
+                            إدارة متقدمة لطلبات التركيبات الخارجية مع المعامل؛ من توثيق نوع المادة (زيركون، إيماكس، بورسلين) ودرجة اللون (Shades) وحتى موعد التسليم للعيادة.
+                        </p>
+                        <ul class="list-unstyled d-flex flex-column gap-3 mb-4">
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-teal fs-5 mt-1" style="color: #0d9488;"></i>
+                                <div>
+                                    <strong class="text-dark d-block">تحديد درجات اللون بدقة (Shade Guide):</strong>
+                                    <span class="text-muted small">تسجيل كود اللون المطلوب (A1, A2, B1, BL1) ورقم السن المعني لتفادي أي أخطاء في التصنيع.</span>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-teal fs-5 mt-1" style="color: #0d9488;"></i>
+                                <div>
+                                    <strong class="text-dark d-block">تتبع المراحل مع المعمل لحظة بلحظة:</strong>
+                                    <span class="text-muted small">حالات فورية: قيد التصنيع بالمعمل، جاهز للاستلام، تم التركيب والتسليم للمريض.</span>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-teal fs-5 mt-1" style="color: #0d9488;"></i>
+                                <div>
+                                    <strong class="text-dark d-block">حساب تكاليف المعمل وهامش الربح:</strong>
+                                    <span class="text-muted small">حساب التكلفة الفعلية ومقارنتها بسعر البيع للمريض لحساب ربحية قسم التركيبات بدقة.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Content for Tab: Expenses -->
+                    <div class="screen-content-pane d-none" id="pane-expenses">
+                        <span class="badge bg-warning-subtle text-warning px-3 py-1 rounded-pill fw-bold mb-3">
+                            <i class="bi bi-wallet2 me-1"></i> المصروفات وصافي الأرباح
+                        </span>
+                        <h3 class="fw-extrabold text-dark mb-3">ضبط شامل لنفقات العيادة وإيصالات الدفع</h3>
+                        <p class="text-muted small leading-relaxed mb-4">
+                            توثيق كافة النفقات التشغيلية؛ من إيجارات ورواتب ومشتريات خامات طبية، مع تقنية الضغط الذكي لصور الفواتير لحفظ مساحة التخزين.
+                        </p>
+                        <ul class="list-unstyled d-flex flex-column gap-3 mb-4">
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-warning fs-5 mt-1"></i>
+                                <div>
+                                    <strong class="text-dark d-block">تصنيف دقيق للمصروفات:</strong>
+                                    <span class="text-muted small">تبويب النفقات (مستلزمات أسنان، صيانة وتعقيم، رواتب، إيجارات ومرافق، تسويق).</span>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-warning fs-5 mt-1"></i>
+                                <div>
+                                    <strong class="text-dark d-block">ضغط وحفظ صور الإيصالات آلياً:</strong>
+                                    <span class="text-muted small">رفع فواتير الموردين مع ضغط تلقائي ذكي يحافظ على جودة القراءة ويوفر سرعة تحميل هائلة.</span>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-warning fs-5 mt-1"></i>
+                                <div>
+                                    <strong class="text-dark d-block">حساب صافي الأرباح اللحظي:</strong>
+                                    <span class="text-muted small">طرح المصروفات وتكاليف المعامل من المقبوضات لإظهار صافي الربح الفعلي لإدارة العيادة.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Content for Tab: Users & Security -->
+                    <div class="screen-content-pane d-none" id="pane-users">
+                        <span class="badge bg-secondary-subtle text-dark px-3 py-1 rounded-pill fw-bold mb-3">
+                            <i class="bi bi-shield-lock me-1"></i> الصلاحيات والأمان (RBAC)
+                        </span>
+                        <h3 class="fw-extrabold text-dark mb-3">أمان مشفر وصلاحيات دقيقة لكل موظف</h3>
+                        <p class="text-muted small leading-relaxed mb-4">
+                            تحكم كامل في كادر العيادة؛ تحديد أدوار وصلاحيات واضحة لكل فرد لحماية خصوصية وسرية السجلات الطبية والمالية.
+                        </p>
+                        <ul class="list-unstyled d-flex flex-column gap-3 mb-4">
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-dark fs-5 mt-1"></i>
+                                <div>
+                                    <strong class="text-dark d-block">4 أدوار أمنية محكمة:</strong>
+                                    <span class="text-muted small">صلاحيات مخصصة للمدير (Admin)، طبيب الأسنان (Doctor)، الاستقبال (Receptionist)، والمحاسب (Accountant).</span>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-dark fs-5 mt-1"></i>
+                                <div>
+                                    <strong class="text-dark d-block">تجميد وتنشيط الحسابات بضغطة زر:</strong>
+                                    <span class="text-muted small">إمكانية تعطيل وصول أي موظف فوراً لحماية أمان العيادة بدون حذف سجلاته القديمة.</span>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-dark fs-5 mt-1"></i>
+                                <div>
+                                    <strong class="text-dark d-block">حفظ خصوصية السجلات المالية:</strong>
+                                    <span class="text-muted small">منع الطاقم الطبي والاستقبال من الاطلاع على تقارير الأرباح والمصروفات الخاصة بالإدارة.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
                     <!-- Open Full Lightbox Button -->
                     <div class="pt-3 border-top mt-auto">
                         <button type="button" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm" id="openActiveLightboxBtn">
@@ -1044,24 +1330,129 @@
 </section>
 
 <!-- ==========================================================
-     5. CORE FEATURES & MODULES GRID (كل مزايا المنظومة)
+     5. DEDICATED SECTION: 4 TAILORED ROLE DASHBOARDS
      ========================================================== -->
-<section class="py-5 bg-white position-relative" id="features">
+<section class="py-5 bg-white position-relative border-top border-bottom">
     <div class="container py-lg-4">
         <div class="text-center max-w-750 mx-auto mb-5">
             <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold">
-                <i class="bi bi-stars me-1"></i> مميزات المنظومة الشاملة
+                <i class="bi bi-person-workspace me-1"></i> بيئة عمل مخصصة لكل تخصص
             </span>
             <h2 class="display-6 fw-extrabold text-dark mt-2">
-                كل أداة تحتاجها لإدارة عيادتك في مكان واحد
+                4 لوحات تحكم متخصصة مصممة لكل فرد في طاقم العيادة
             </h2>
             <p class="text-muted fs-6">
-                صممت Dental Pro ERP كمنظومة سحابية متناغمة تغطي كل تفاصيل العمل الإداري والإكلينيكي والمحاسبي في عيادات الأسنان.
+                لا نضع الجميع في شاشة واحدة مزدحمة! كل مستخدم في عيادتك يحصل على لوحة قيادة ذكية ومبسطة تركز حصراً على مهامه اليومية.
             </p>
         </div>
 
         <div class="row g-4">
-            <!-- Feature 1 -->
+            <!-- 1. Doctor Dashboard -->
+            <div class="col-md-6 col-lg-3">
+                <div class="role-card h-100">
+                    <div class="rounded-circle bg-primary-subtle text-primary p-3 d-inline-flex mb-3">
+                        <i class="bi bi-heart-pulse-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">لوحة طبيب الأسنان</h5>
+                    <span class="badge bg-primary-subtle text-primary mb-3">Doctor Dashboard</span>
+                    <p class="text-muted small mb-3">
+                        شاشة سريرية فورية تركز على راحة الطبيب أثناء الكشف وتقديم العلاج:
+                    </p>
+                    <ul class="list-unstyled small text-secondary d-flex flex-column gap-2 mb-0">
+                        <li><i class="bi bi-check2 text-primary me-1"></i> قائمة المرضى المنتظرين بصالة الاستقبال</li>
+                        <li><i class="bi bi-check2 text-primary me-1"></i> جدول مواعيد وجلسات الطبيب لليوم</li>
+                        <li><i class="bi bi-check2 text-primary me-1"></i> مخطط الأسنان FDI السريع بنقرة زر</li>
+                        <li><i class="bi bi-check2 text-primary me-1"></i> متابعة طلبيات المعامل والتركيبات الجاهزة</li>
+                        <li><i class="bi bi-check2 text-primary me-1"></i> تقرير الحالات المنجزة ونسبة العمولة</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2. Receptionist Dashboard -->
+            <div class="col-md-6 col-lg-3">
+                <div class="role-card h-100">
+                    <div class="rounded-circle bg-info-subtle text-info p-3 d-inline-flex mb-3">
+                        <i class="bi bi-calendar2-week-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">لوحة مكتب الاستقبال</h5>
+                    <span class="badge bg-info-subtle text-info mb-3">Reception Desk</span>
+                    <p class="text-muted small mb-3">
+                        واجهة سريعة وخفيفة لتنظيم تدفق المرضى والحجوزات دون أي انتظار:
+                    </p>
+                    <ul class="list-unstyled small text-secondary d-flex flex-column gap-2 mb-0">
+                        <li><i class="bi bi-check2 text-info me-1"></i> تسجيل وصول المريض بنقرة واحدة</li>
+                        <li><i class="bi bi-check2 text-info me-1"></i> إدارة صالة الانتظار وتوزيع غرف الكشف</li>
+                        <li><i class="bi bi-check2 text-info me-1"></i> حجز سريع للمواعيد الجديدة والمستعجلة</li>
+                        <li><i class="bi bi-check2 text-info me-1"></i> تذكير المرضى آلياً عبر الواتساب</li>
+                        <li><i class="bi bi-check2 text-info me-1"></i> بحث فوري عن الملفات برقم الهاتف والاسم</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3. Accountant Dashboard -->
+            <div class="col-md-6 col-lg-3">
+                <div class="role-card h-100">
+                    <div class="rounded-circle bg-warning-subtle text-warning p-3 d-inline-flex mb-3">
+                        <i class="bi bi-receipt-cutoff fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">لوحة المحاسب والمالية</h5>
+                    <span class="badge bg-warning-subtle text-warning mb-3">Accountant Hub</span>
+                    <p class="text-muted small mb-3">
+                        مركز تحكم مالي دقيق لمتابعة المقبوضات والأقساط والامتثال الضريبي:
+                    </p>
+                    <ul class="list-unstyled small text-secondary d-flex flex-column gap-2 mb-0">
+                        <li><i class="bi bi-check2 text-warning me-1"></i> مقبوضات اليوم النقدية والشبكة والتحويلات</li>
+                        <li><i class="bi bi-check2 text-warning me-1"></i> متابعة الأقساط المتأخرة والديون المستحقة</li>
+                        <li><i class="bi bi-check2 text-warning me-1"></i> إصدار الفواتير الإلكترونية ZATCA وسندات القبض</li>
+                        <li><i class="bi bi-check2 text-warning me-1"></i> تتبع المصروفات التشغيلية وإيصالات الدفع</li>
+                        <li><i class="bi bi-check2 text-warning me-1"></i> حساب عمولات ومستحقات كل طبيب آلياً</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4. Admin Dashboard -->
+            <div class="col-md-6 col-lg-3">
+                <div class="role-card h-100">
+                    <div class="rounded-circle bg-success-subtle text-success p-3 d-inline-flex mb-3">
+                        <i class="bi bi-speedometer2 fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">لوحة المدير والمالك</h5>
+                    <span class="badge bg-success-subtle text-success mb-3">Executive Admin</span>
+                    <p class="text-muted small mb-3">
+                        رؤية بانورامية استراتيجية تمنح الإدارة السيطرة الكاملة على نمو العيادة:
+                    </p>
+                    <ul class="list-unstyled small text-secondary d-flex flex-column gap-2 mb-0">
+                        <li><i class="bi bi-check2 text-success me-1"></i> المؤشرات الحيوية الشاملة (KPIs) ونمو الإيرادات</li>
+                        <li><i class="bi bi-check2 text-success me-1"></i> تقارير إنتاجية الأطباء ونسب الإنجاز</li>
+                        <li><i class="bi bi-check2 text-success me-1"></i> صافي الأرباح الشهرية بعد خصم المصاريف</li>
+                        <li><i class="bi bi-check2 text-success me-1"></i> إدارة المستخدمين وصلاحيات الوصول والأمان</li>
+                        <li><i class="bi bi-check2 text-success me-1"></i> تخصيص العملة، الضرائب، وإعدادات المركز</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================
+     6. CORE FEATURES & MODULES GRID (12 مزية شاملة)
+     ========================================================== -->
+<section class="py-5 bg-light position-relative" id="features">
+    <div class="container py-lg-4">
+        <div class="text-center max-w-750 mx-auto mb-5">
+            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold">
+                <i class="bi bi-stars me-1"></i> المنظومة الشاملة المتكاملة
+            </span>
+            <h2 class="display-6 fw-extrabold text-dark mt-2">
+                12 وحدة متخصصة تغطي كل تفصيلة في إدارة عيادة الأسنان
+            </h2>
+            <p class="text-muted fs-6">
+                صممت Dental Pro ERP لتغني عيادتك عن استخدام عدة برامج متفرقة. كل أداة تحتاجها موجودة ومترابطة سحابياً.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- 1. EMR -->
             <div class="col-md-6 col-lg-3">
                 <div class="saas-feature-card">
                     <div class="saas-feature-icon-box bg-primary-subtle text-primary">
@@ -1075,13 +1466,13 @@
                 </div>
             </div>
 
-            <!-- Feature 2 -->
+            <!-- 2. Odontogram -->
             <div class="col-md-6 col-lg-3">
                 <div class="saas-feature-card">
                     <div class="saas-feature-icon-box bg-info-subtle text-info">
                         <i class="bi bi-cpu-fill"></i>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">مخطط الأسنان Odontogram</h5>
+                    <h5 class="fw-bold text-dark mb-2">مخطط الأسنان FDI التفاعلي</h5>
                     <p class="text-muted small mb-3">
                         تخطيط تفاعلي للأسنان الـ 32 بنظام FDI الدولي، توثيق فوري للتسوس، الحشوات، التيجان، والزراعة بنقرة واحدة.
                     </p>
@@ -1089,7 +1480,7 @@
                 </div>
             </div>
 
-            <!-- Feature 3 -->
+            <!-- 3. Appointments -->
             <div class="col-md-6 col-lg-3">
                 <div class="saas-feature-card">
                     <div class="saas-feature-icon-box bg-success-subtle text-success">
@@ -1103,7 +1494,7 @@
                 </div>
             </div>
 
-            <!-- Feature 4 -->
+            <!-- 4. WhatsApp Bot -->
             <div class="col-md-6 col-lg-3">
                 <div class="saas-feature-card">
                     <div class="saas-feature-icon-box bg-warning-subtle text-warning">
@@ -1117,7 +1508,7 @@
                 </div>
             </div>
 
-            <!-- Feature 5 -->
+            <!-- 5. ZATCA e-Invoicing -->
             <div class="col-md-6 col-lg-3">
                 <div class="saas-feature-card">
                     <div class="saas-feature-icon-box bg-danger-subtle text-danger">
@@ -1125,13 +1516,13 @@
                     </div>
                     <h5 class="fw-bold text-dark mb-2">الفواتير الإلكترونية ZATCA</h5>
                     <p class="text-muted small mb-3">
-                        فواتير ضريبية مبسطة مع رمز استجابة سريع QR Code متوافق بالكامل مع هيئة الزكاة والضريبة والجمارك السعودية.
+                        فواتير ضريبية مبسطة مع رمز استجابة سريع QR Code مشفر متوافق بالكامل مع هيئة الزكاة والضريبة والجمارك.
                     </p>
                     <span class="badge bg-light text-danger border small">مطابق للمرحلة الثانية</span>
                 </div>
             </div>
 
-            <!-- Feature 6 -->
+            <!-- 6. Installments -->
             <div class="col-md-6 col-lg-3">
                 <div class="saas-feature-card">
                     <div class="saas-feature-icon-box bg-purple-subtle text-purple" style="background: #f3e8ff; color: #9333ea;">
@@ -1145,31 +1536,87 @@
                 </div>
             </div>
 
-            <!-- Feature 7 -->
+            <!-- 7. Lab Orders & Shade Guide -->
             <div class="col-md-6 col-lg-3">
                 <div class="saas-feature-card">
                     <div class="saas-feature-icon-box bg-teal-subtle text-teal" style="background: #ccfbf1; color: #0d9488;">
-                        <i class="bi bi-gear-wide-connected"></i>
+                        <i class="bi bi-box-seam-fill"></i>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">إدارة طلبات معامل الأسنان</h5>
+                    <h5 class="fw-bold text-dark mb-2">طلبيات المعامل ودرجات الألوان</h5>
                     <p class="text-muted small mb-3">
-                        تتبع تصنيع التيجان، الفينير، والجسور مع معامل الأسنان الخارجية من الإرسال حتى الاستلام والتركيب للمريض.
+                        تتبع تركيبات الأسنان (زيركون، إيماكس، جسور) مع تحديد درجات اللون (Shade Guide: A1, A2, BL1) وتواريخ الاستلام.
                     </p>
-                    <span class="badge bg-light text-secondary border small">بدون تأخير للمرضى</span>
+                    <span class="badge bg-light text-secondary border small">تسليم بدون تأخير</span>
                 </div>
             </div>
 
-            <!-- Feature 8 -->
+            <!-- 8. Expenses & Net Profit -->
+            <div class="col-md-6 col-lg-3">
+                <div class="saas-feature-card">
+                    <div class="saas-feature-icon-box bg-warning-subtle text-dark" style="background: #fef3c7; color: #d97706;">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">المصروفات وصافي الأرباح</h5>
+                    <p class="text-muted small mb-3">
+                        توثيق مصاريف العيادة (إيجار، خامات، صيانة، رواتب)، وإرفاق صور الإيصالات مع احتساب صافي الأرباح شهرياً وسنوياً.
+                    </p>
+                    <span class="badge bg-light text-warning border small">رقابة مالية تامة</span>
+                </div>
+            </div>
+
+            <!-- 9. Compressed Image Engine -->
+            <div class="col-md-6 col-lg-3">
+                <div class="saas-feature-card">
+                    <div class="saas-feature-icon-box bg-info-subtle text-info">
+                        <i class="bi bi-file-earmark-zip-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">تقنية الضغط الذكي للمرفقات</h5>
+                    <p class="text-muted small mb-3">
+                        ضغط فائق للصور والإيصالات وأشعة الأسنان لتوفير مساحة التخزين السحابية وتسريع تصفح الملفات الطبية لحظياً.
+                    </p>
+                    <span class="badge bg-light text-info border small">سرعة فائقة وخفة</span>
+                </div>
+            </div>
+
+            <!-- 10. Doctor Commissions Engine -->
+            <div class="col-md-6 col-lg-3">
+                <div class="saas-feature-card">
+                    <div class="saas-feature-icon-box bg-success-subtle text-success">
+                        <i class="bi bi-pie-chart-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">حساب عمولات ونسب الأطباء</h5>
+                    <p class="text-muted small mb-3">
+                        احتساب فوري لنسب الأطباء وعمولات العمليات بمجرد سداد الفاتورة، مع تقرير مفصل لكل طبيب يمنع أي لبس حسابي.
+                    </p>
+                    <span class="badge bg-light text-success border small">شفافية مطلقة</span>
+                </div>
+            </div>
+
+            <!-- 11. Multi-Currency & Clinic Profile -->
+            <div class="col-md-6 col-lg-3">
+                <div class="saas-feature-card">
+                    <div class="saas-feature-icon-box bg-primary-subtle text-primary">
+                        <i class="bi bi-currency-exchange"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">العملات المتعددة والتهيئة</h5>
+                    <p class="text-muted small mb-3">
+                        دعم لكافة العملات (ر.س، ج.م، د.إ، د.ك، $) وطرق الدفع (نقدي، مدى، تحويل، محافظ) مع تخصيص شعار وترويسة العيادة.
+                    </p>
+                    <span class="badge bg-light text-primary border small">تخصيص كامل</span>
+                </div>
+            </div>
+
+            <!-- 12. Multi-Role RBAC & HIPAA Security -->
             <div class="col-md-6 col-lg-3">
                 <div class="saas-feature-card">
                     <div class="saas-feature-icon-box bg-secondary-subtle text-dark">
                         <i class="bi bi-shield-lock-fill"></i>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">صلاحيات وأمان متعدد الأدوار</h5>
+                    <h5 class="fw-bold text-dark mb-2">أمان مشفر وصلاحيات RBAC</h5>
                     <p class="text-muted small mb-3">
-                        حماية قصوى لبيانات العيادة وصلاحيات محكمة: الطبيب، موظف الاستقبال، المحاسب، ومدير العيادة لحفظ الخصوصية.
+                        صلاحيات دقيقة للأطباء، الاستقبال، والمحاسب، مع تجميد الحسابات بنقرة زر وحماية البيانات الطبية وفق معايير HIPAA.
                     </p>
-                    <span class="badge bg-light text-dark border small">تشفير طبي فائق</span>
+                    <span class="badge bg-light text-dark border small">حماية وسرية تامة</span>
                 </div>
             </div>
         </div>
@@ -1177,9 +1624,9 @@
 </section>
 
 <!-- ==========================================================
-     6. CLINIC WORKFLOW / PATIENT JOURNEY (رحلة المريض)
+     7. CLINIC WORKFLOW / PATIENT JOURNEY (رحلة المريض)
      ========================================================== -->
-<section class="py-5 bg-light position-relative" id="workflow">
+<section class="py-5 bg-white position-relative border-bottom" id="workflow">
     <div class="container py-lg-4">
         <div class="text-center max-w-750 mx-auto mb-5">
             <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold">
@@ -1253,7 +1700,100 @@
 </section>
 
 <!-- ==========================================================
-     7. INTERACTIVE ROI & SAVINGS CALCULATOR (حاسبة العائد)
+     8. MASTER FEATURES MATRIX (مصفوفة الإمكانيات الشاملة)
+     ========================================================== -->
+<section class="py-5 bg-light position-relative">
+    <div class="container py-lg-4">
+        <div class="text-center max-w-750 mx-auto mb-5">
+            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-bold">
+                <i class="bi bi-check2-all me-1"></i> فحص المواصفات الشامل
+            </span>
+            <h2 class="display-6 fw-extrabold text-dark mt-2">
+                مصفوفة إمكانيات ومميزات برنامج Dental Pro الكاملة
+            </h2>
+            <p class="text-muted fs-6">
+                قائمة تفصيلية تؤكد تغطية النظام لكافة احتياجات عيادتك الطبية والإدارية والمالية بنسبة 100%.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- 1. Clinical -->
+            <div class="col-md-6 col-lg-3">
+                <div class="clinic-card p-4 h-100 bg-white">
+                    <div class="d-flex align-items-center gap-2 mb-3 text-primary">
+                        <i class="bi bi-heart-pulse fs-4"></i>
+                        <h6 class="fw-bold text-dark mb-0">السجل السريري والطبي</h6>
+                    </div>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 text-secondary mb-0">
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> مخطط تفاعلي لـ 32 سن (FDI)</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> 6 حالات سريرية ملونة لكل سن</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> توثيق أسطح السن التفصيلية</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> شريط التنبيهات للحساسية والضغط</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> أرشفة الأشعة البانورامية والمستندات</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> توليد وطباعة خطط العلاج الملونة</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2. Reception & Appointments -->
+            <div class="col-md-6 col-lg-3">
+                <div class="clinic-card p-4 h-100 bg-white">
+                    <div class="d-flex align-items-center gap-2 mb-3 text-info">
+                        <i class="bi bi-calendar2-check fs-4"></i>
+                        <h6 class="fw-bold text-dark mb-0">الاستقبال والمواعيد</h6>
+                    </div>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 text-secondary mb-0">
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> أجندة وجدول مخصص لكل طبيب</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> إدارة طابور صالة الانتظار الحية</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> حالات تدفق المريض (مجدول، حضر...)</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> تذكيرات واتساب مؤتمتة للمرضى</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> بحث فوري بالاسم والجوال والهوية</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> تقليل الغياب والتخلف بنسبة 85%</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3. Billing & ZATCA -->
+            <div class="col-md-6 col-lg-3">
+                <div class="clinic-card p-4 h-100 bg-white">
+                    <div class="d-flex align-items-center gap-2 mb-3 text-danger">
+                        <i class="bi bi-receipt-cutoff fs-4"></i>
+                        <h6 class="fw-bold text-dark mb-0">المحاسبة و ZATCA</h6>
+                    </div>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 text-secondary mb-0">
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> فواتير ضريبية معتمدة مع QR Code</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> سندات قبض وصرف فورية</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> جدولة الأقساط (تقويم وزراعة)</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> حساب عمولات الأطباء آلياً</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> طرق دفع متعددة (نقدي، مدى، تحويل)</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> دعم العملات المتعددة وموضع الرمز</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4. Labs, Expenses & Tech -->
+            <div class="col-md-6 col-lg-3">
+                <div class="clinic-card p-4 h-100 bg-white">
+                    <div class="d-flex align-items-center gap-2 mb-3 text-warning">
+                        <i class="bi bi-gear-wide-connected fs-4"></i>
+                        <h6 class="fw-bold text-dark mb-0">المعامل والمصروفات والأمان</h6>
+                    </div>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 text-secondary mb-0">
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> تتبع طلبيات المعامل ودرجات الألوان</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> توثيق المصروفات وصافي الأرباح</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> ضغط ذكي فوري لصور الإيصالات</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> 4 صلاحيات أمنية محكمة (RBAC)</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> توافق كامل مع الآيباد والتابلت</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-1"></i> سحابي 100% مع نسخ احتياطي يومي</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================
+     9. INTERACTIVE ROI & SAVINGS CALCULATOR (حاسبة العائد)
      ========================================================== -->
 <section class="py-5 bg-white position-relative" id="calculator">
     <div class="container py-lg-4">
@@ -1345,7 +1885,7 @@
 </section>
 
 <!-- ==========================================================
-     8. TRADITIONAL VS DENTAL PRO ERP (مقارنة صريحة)
+     10. TRADITIONAL VS DENTAL PRO ERP (مقارنة صريحة)
      ========================================================== -->
 <section class="py-5 bg-white border-top border-bottom">
     <div class="container py-lg-4">
@@ -1432,7 +1972,7 @@
 </section>
 
 <!-- ==========================================================
-     9. PRICING & SUBSCRIPTION PLANS (الباقات والأسعار)
+     11. PRICING & SUBSCRIPTION PLANS (الباقات والأسعار)
      ========================================================== -->
 <section class="py-5 bg-light position-relative" id="pricing">
     <div class="container py-lg-4">
@@ -1610,7 +2150,7 @@
 </section>
 
 <!-- ==========================================================
-     10. TESTIMONIALS & CLINIC SUCCESS STORIES (شهادات الأطباء)
+     12. TESTIMONIALS & CLINIC SUCCESS STORIES (شهادات الأطباء)
      ========================================================== -->
 <section class="py-5 bg-white position-relative">
     <div class="container py-lg-4">
@@ -1712,7 +2252,7 @@
 </section>
 
 <!-- ==========================================================
-     11. FAQ SECTION (الأسئلة الشائعة)
+     13. FAQ SECTION (الأسئلة الشائعة)
      ========================================================== -->
 <section class="py-5 bg-light position-relative" id="faq">
     <div class="container py-lg-4">
@@ -1764,12 +2304,12 @@
                     <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-sm">
                         <h2 class="accordion-header" id="headingThree">
                             <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                هل تقدمون خدمة نقل بيانات المرضى السابقة من نظامنا القديم؟
+                                هل يقدم البرنامج دعماً لطلبات معامل الأسنان وتحديد درجات الألوان (Shades)؟
                             </button>
                         </h2>
                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
                             <div class="accordion-body text-muted small leading-relaxed">
-                                نعم، فريق الدعم الفني لدينا يتولى تصدير واستيراد بيانات المرضى، أرقام الهواتف، والتاريخ السابق من ملفات Excel أو قواعد البيانات الأخرى دون أي فقدان للبيانات، مما يضمن انتقالاً سلساً دون توقف عمل العيادة.
+                                نعم، يتضمن النظام وحدة متخصصة بالكامل لطلبيات معامل الأسنان الخارجية؛ تسجل أرقام الأسنان، نوع الخامة (زيركون، إيماكس، بورسلين، تقويم)، دليل درجات اللون (Shades: A1, A2, BL1)، وتتبع حالة التصنيع وتاريخ الاستلام المتوقع.
                             </div>
                         </div>
                     </div>
@@ -1778,12 +2318,12 @@
                     <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-sm">
                         <h2 class="accordion-header" id="headingFour">
                             <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                هل يحتاج البرنامج إلى خوادم داخلية أو تجهيزات تقنية مكلفة؟
+                                كيف يتم حساب عمولات ونسب الأطباء في النظام؟
                             </button>
                         </h2>
                         <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                             <div class="accordion-body text-muted small leading-relaxed">
-                                لا على الإطلاق! برنامج Dental Pro ERP هو نظام سحابي 100% (Cloud SaaS)، يعمل مباشرة عبر الإنترنت من أي جهاز دون الحاجة لشراء خوادم باهظة الثمن أو توظيف مهندسي شبكات. يتم تحديث النظام وعمل النسخ الاحتياطية آلياً يومياً.
+                                يمكنك في صفحة إدارة المستخدمين تحديد نسبة العمولة لكل طبيب بشكل مستقل. بمجرد تحصيل الفاتورة من المريض، يقوم النظام بحساب مستحقات الطبيب وعمولته بدقة ويظهرها في تقرير مفصل فوري للطبيب وللإدارة لمنع أي خلافات مالية.
                             </div>
                         </div>
                     </div>
@@ -1792,12 +2332,26 @@
                     <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-sm">
                         <h2 class="accordion-header" id="headingFive">
                             <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                هل يتوفر تدريب للطاقم الطبي وموظفي الاستقبال؟
+                                هل يدعم البرنامج العملات المختلفة وتخصيص بيانات الفواتير؟
                             </button>
                         </h2>
                         <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
                             <div class="accordion-body text-muted small leading-relaxed">
-                                نوفر جلسة تدريبية شاملة عبر الفيديو لكافة أفراد الطاقم (الأطباء، الاستقبال، المحاسبين)، بالإضافة لدليل استخدام مصور بالفيديو ودعم فني متاح عبر الواتساب والهاتف للرد على أي استفسار فوراً.
+                                نعم، توفر شاشة الإعدادات دعماً لأي عملة (ريال سعودي، جنيه مصري، درهم، دينار، دولار...) مع تحديد موضع الرمز، وتخصيص اسم المركز، الشعار، والرقم الضريبي ليظهر رسمياً على كافة مطبوعات الفواتير وسندات القبض.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-sm">
+                        <h2 class="accordion-header" id="headingSix">
+                            <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                هل يحتاج البرنامج إلى خوادم داخلية أو تركيب معقد؟
+                            </button>
+                        </h2>
+                        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted small leading-relaxed">
+                                لا على الإطلاق! برنامج Dental Pro ERP هو نظام سحابي 100% (Cloud SaaS)، يعمل مباشرة عبر الإنترنت من أي جهاز دون الحاجة لشراء خوادم باهظة الثمن أو توظيف مهندسي شبكات. يتم تحديث النظام وعمل النسخ الاحتياطية آلياً يومياً.
                             </div>
                         </div>
                     </div>
@@ -1809,7 +2363,7 @@
 </section>
 
 <!-- ==========================================================
-     12. HIGH-CONVERTING FINAL CTA BANNER
+     14. HIGH-CONVERTING FINAL CTA BANNER
      ========================================================== -->
 <section class="py-5 text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, #0b1329 0%, #0369a1 50%, #0d9488 100%);">
     <div class="container py-lg-5 position-relative z-1 text-center">
@@ -1841,7 +2395,7 @@
 </section>
 
 <!-- ==========================================================
-     13. MODALS: LIGHTBOX & LIVE DEMO REQUEST
+     15. MODALS: LIGHTBOX & LIVE DEMO REQUEST
      ========================================================== -->
 
 <!-- Lightbox Modal for High-Res Screenshots -->
@@ -1946,20 +2500,26 @@
     document.addEventListener('DOMContentLoaded', function () {
         
         // ==========================================================
-        // 1. SCREEN TOUR TAB SWITCHER
+        // 1. SCREEN TOUR TAB SWITCHER (8 MODULES)
         // ==========================================================
         const screenTabs = document.querySelectorAll('.screen-tab-btn');
         const activeScreenImg = document.getElementById('activeScreenImage');
         const activeScreenUrl = document.getElementById('activeScreenUrl');
         const openActiveLightboxBtn = document.getElementById('openActiveLightboxBtn');
         const zoomCurrentScreenBtn = document.getElementById('zoomCurrentScreenBtn');
+        const simLabs = document.getElementById('simulatedLabsUi');
+        const simExpenses = document.getElementById('simulatedExpensesUi');
+        const simUsers = document.getElementById('simulatedUsersUi');
 
         const screenUrlMap = {
             '#tab-dashboard': 'https://app.dentalpro.com/clinic/dashboard',
             '#tab-odontogram': 'https://app.dentalpro.com/clinic/patients/1 (Odontogram)',
             '#tab-patients': 'https://app.dentalpro.com/clinic/patients',
             '#tab-appointments': 'https://app.dentalpro.com/clinic/appointments',
-            '#tab-billing': 'https://app.dentalpro.com/clinic/billing'
+            '#tab-billing': 'https://app.dentalpro.com/clinic/billing',
+            '#tab-labs': 'https://app.dentalpro.com/clinic/labs',
+            '#tab-expenses': 'https://app.dentalpro.com/clinic/expenses',
+            '#tab-users': 'https://app.dentalpro.com/clinic/users'
         };
 
         const paneMap = {
@@ -1967,7 +2527,10 @@
             '#tab-odontogram': 'pane-odontogram',
             '#tab-patients': 'pane-patients',
             '#tab-appointments': 'pane-appointments',
-            '#tab-billing': 'pane-billing'
+            '#tab-billing': 'pane-billing',
+            '#tab-labs': 'pane-labs',
+            '#tab-expenses': 'pane-expenses',
+            '#tab-users': 'pane-users'
         };
 
         let currentActiveImg = "{{ asset('images/screenshots/dashboard.png') }}";
@@ -1982,15 +2545,31 @@
                 const img = this.getAttribute('data-img');
                 const title = this.getAttribute('data-title');
 
-                currentActiveImg = img;
                 currentActiveTitle = title;
 
-                // Animate image switch
-                activeScreenImg.style.opacity = '0.3';
-                setTimeout(() => {
-                    activeScreenImg.src = img;
-                    activeScreenImg.style.opacity = '1';
-                }, 150);
+                // Handle visual display: Image vs Simulated UI
+                if (img) {
+                    currentActiveImg = img;
+                    activeScreenImg.classList.remove('d-none');
+                    if (simLabs) simLabs.classList.add('d-none');
+                    if (simExpenses) simExpenses.classList.add('d-none');
+                    if (simUsers) simUsers.classList.add('d-none');
+
+                    activeScreenImg.style.opacity = '0.3';
+                    setTimeout(() => {
+                        activeScreenImg.src = img;
+                        activeScreenImg.style.opacity = '1';
+                    }, 150);
+                } else {
+                    activeScreenImg.classList.add('d-none');
+                    if (simLabs) simLabs.classList.add('d-none');
+                    if (simExpenses) simExpenses.classList.add('d-none');
+                    if (simUsers) simUsers.classList.add('d-none');
+
+                    if (target === '#tab-labs' && simLabs) simLabs.classList.remove('d-none');
+                    if (target === '#tab-expenses' && simExpenses) simExpenses.classList.remove('d-none');
+                    if (target === '#tab-users' && simUsers) simUsers.classList.remove('d-none');
+                }
 
                 if (screenUrlMap[target]) {
                     activeScreenUrl.textContent = screenUrlMap[target];
