@@ -2171,8 +2171,8 @@
             <a href="#requestDemoModal" data-bs-toggle="modal" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-primary shadow-lg d-inline-flex align-items-center gap-2">
                 <i class="bi bi-rocket-takeoff-fill"></i> ابدأ تجربتك المجانية الآن
             </a>
-            <a href="https://wa.me/966500000000?text=مرحباً، أود التحدث مع مستشار أنظمة طب الأسنان حول Dental Pro ERP" target="_blank" class="btn btn-outline-light btn-lg rounded-pill px-4 py-3 fw-bold d-inline-flex align-items-center gap-2">
-                <i class="bi bi-whatsapp text-success fs-5"></i> تواصل مع مستشار الأنظمة
+            <a href="https://wa.me/201553408200?text=مرحباً، أود التحدث مع مستشار أنظمة طب الأسنان حول Dental Pro ERP" target="_blank" class="btn btn-outline-light btn-lg rounded-pill px-4 py-3 fw-bold d-inline-flex align-items-center gap-2">
+                <i class="bi bi-whatsapp text-success fs-5"></i> تواصل مع مستشار الأنظمة (<span dir="ltr">+201553408200</span>)
             </a>
         </div>
 
@@ -2244,7 +2244,7 @@
                         <label class="form-label small fw-semibold text-dark">رقم الجوال (واتساب للتواصل)</label>
                         <div class="clinic-input-icon">
                             <i class="bi bi-whatsapp text-success"></i>
-                            <input type="tel" class="form-control" id="leadPhone" placeholder="05XXXXXXXX" required>
+                            <input type="tel" class="form-control" id="leadPhone" placeholder="+201553408200" required>
                         </div>
                     </div>
 
@@ -2562,7 +2562,7 @@
                     `مرحباً، أود بدء التجربة المجانية وحجز عرض توضيحي لنظام Dental Pro ERP.\nالاسم: ${name}\nالمركز: ${clinic}\nالجوال: ${phone}\nعدد الأطباء: ${chairs}\nالمدينة: ${city}`
                 );
 
-                const waUrl = `https://wa.me/966500000000?text=${whatsappMsg}`;
+                const waUrl = `https://wa.me/201553408200?text=${whatsappMsg}`;
                 if (leadDirectWhatsappBtn) {
                     leadDirectWhatsappBtn.href = waUrl;
                 }

@@ -29,8 +29,8 @@
                 <span class="fw-medium">🚀 مخطط الأسنان الرقمي التفاعلي 32 سن + الربط المعتمد مع هيئة الزكاة والضريبة (ZATCA المرحلة 2) متاح الآن!</span>
             </div>
             <div class="d-flex gap-3 align-items-center">
-                <a href="https://wa.me/966500000000?text=مرحباً، أرغب بالاستفسار عن برنامج Dental Pro ERP لعيادات الأسنان" target="_blank" class="text-white text-decoration-none small">
-                    <i class="bi bi-whatsapp text-success me-1"></i> استشارة المبيعات: +966500000000
+                <a href="https://wa.me/201553408200?text=مرحباً، أرغب بالاستفسار عن برنامج Dental Pro ERP لعيادات الأسنان" target="_blank" class="text-white text-decoration-none small">
+                    <i class="bi bi-whatsapp text-success me-1"></i> استشارة المبيعات: <span dir="ltr">+201553408200</span>
                 </a>
                 <span class="text-white-50">|</span>
                 @auth
@@ -163,8 +163,8 @@
                     <h6 class="fw-bold text-white mb-3 border-bottom border-secondary pb-2">احصل على استشارة أو ديمو مجاني</h6>
                     <p class="small mb-3" style="color: #cbd5e1 !important;">فريق استشاريي الأنظمة الطبية جاهز للإجابة على استفساراتك وتقديم عرض حي مخصص لعيادتك.</p>
                     <div class="d-flex flex-column gap-2 mb-3">
-                        <a href="https://wa.me/966500000000?text=مرحباً، أود حجز عرض توضيحي مباشر لنظام Dental Pro ERP" target="_blank" class="btn btn-success w-100 rounded-pill py-2 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
-                            <i class="bi bi-whatsapp fs-5"></i> تواصل عبر الواتساب المباشر
+                        <a href="https://wa.me/201553408200?text=مرحباً، أود حجز عرض توضيحي مباشر لنظام Dental Pro ERP" target="_blank" class="btn btn-success w-100 rounded-pill py-2 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                            <i class="bi bi-whatsapp fs-5"></i> تواصل عبر الواتساب المباشر (<span dir="ltr">+201553408200</span>)
                         </a>
                         <button type="button" data-bs-toggle="modal" data-bs-target="#requestDemoModal" class="btn btn-outline-light w-100 rounded-pill py-2 fw-semibold">
                             <i class="bi bi-calendar-event me-1"></i> طلب موعد اتصال وعرض ديمو
@@ -172,7 +172,7 @@
                     </div>
                     <div class="small text-muted d-flex align-items-center gap-3">
                         <span><i class="bi bi-envelope text-info me-1"></i> info@dentalpro-erp.com</span>
-                        <span><i class="bi bi-telephone text-info me-1"></i> 920001234</span>
+                        <span><i class="bi bi-telephone text-info me-1"></i> <a href="tel:+201553408200" class="text-white-50 text-decoration-none" dir="ltr">+201553408200</a></span>
                     </div>
                 </div>
             </div>
@@ -191,6 +191,92 @@
             </div>
         </div>
     </footer>
+
+    <!-- Fixed Floating WhatsApp Widget -->
+    <div id="whatsapp-floating-widget" class="position-fixed" style="bottom: 26px; left: 26px; z-index: 99999;">
+        <a href="https://wa.me/201553408200?text=مرحباً، أود الاستفسار عن منظومة Dental Pro ERP لعيادات الأسنان" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="whatsapp-pulse-btn d-flex align-items-center justify-content-center text-white text-decoration-none"
+           aria-label="تواصل معنا عبر واتساب +201553408200"
+           title="تواصل عبر واتساب (+201553408200)">
+            <i class="bi bi-whatsapp"></i>
+            <span class="whatsapp-floating-tooltip d-none d-md-inline-flex align-items-center gap-2">
+                <span>تواصل معنا عبر واتساب</span>
+                <span class="badge bg-success text-white py-1 px-2 rounded-pill font-monospace" dir="ltr">+201553408200</span>
+            </span>
+        </a>
+    </div>
+
+    <style>
+        .whatsapp-pulse-btn {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border-radius: 50%;
+            font-size: 32px;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.45), 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #ffffff !important;
+            text-decoration: none;
+        }
+        .whatsapp-pulse-btn:hover {
+            transform: translateY(-4px) scale(1.08);
+            box-shadow: 0 16px 35px rgba(37, 211, 102, 0.6), 0 6px 14px rgba(0, 0, 0, 0.15);
+            color: #ffffff !important;
+        }
+        .whatsapp-pulse-btn::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            background: #25D366;
+            opacity: 0.5;
+            animation: waPulseRadar 2.2s cubic-bezier(0.25, 0, 0, 1) infinite;
+            z-index: -1;
+        }
+        @keyframes waPulseRadar {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            70% { transform: scale(1.4); opacity: 0; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+        .whatsapp-floating-tooltip {
+            position: absolute;
+            left: calc(100% + 14px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 0.82rem;
+            font-weight: 700;
+            white-space: nowrap;
+            padding: 8px 14px;
+            border-radius: 9999px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s ease;
+            pointer-events: none;
+            direction: rtl;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .whatsapp-floating-tooltip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            transform: translateY(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent #0f172a transparent transparent;
+        }
+        #whatsapp-floating-widget:hover .whatsapp-floating-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(4px);
+        }
+    </style>
 
     @stack('scripts')
 </body>
