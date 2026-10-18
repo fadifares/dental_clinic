@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y143GZ76WV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-K2Z8ZZY78C');
+</script>
+
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -22,7 +35,7 @@
 <body class="d-flex flex-column min-vh-100 bg-white text-dark">
 
     <!-- Top Announcement Bar -->
-    <div class="bg-gradient text-white py-2 small d-none d-md-block" style="background: linear-gradient(90deg, #0b192c 0%, #0369a1 50%, #0d9488 100%);">
+    <div class="text-white py-2 small d-none d-md-block" style="background: linear-gradient(90deg, #0b192c 0%, #0369a1 50%, #0d9488 100%) !important;">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center gap-2">
                 <span class="badge bg-warning text-dark px-2 py-1 fw-bold rounded-pill">جديد V4.2</span>
