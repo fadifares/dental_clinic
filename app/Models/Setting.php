@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToClinic;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
+    use BelongsToClinic;
+
     protected $guarded = [];
 
     /**
@@ -20,11 +23,26 @@ class Setting extends Model
      */
     public static function get(string $key, mixed $default = null): mixed
     {
-        if (array_key_exists($key, self::$runtimeCache)) {
-            return self::$runtimeCache[$key];
+        $clinicPrefix = (auth()->check() && auth()->user()->clinic_id) ? auth()->user()->clinic_id : 'global';
+        $cacheKey = $clinicPrefix.':'.$key;
+
+        if (array_key_exists($cacheKey, self::$runtimeCache)) {
+            return self::$runtimeCache[$cacheKey];
         }
 
-        $setting = static::where('key', $key)->first();
+        $clinicId = (auth()->check() && auth()->user()->clinic_id) ? auth()->user()->clinic_id : null;
+
+        $setting = static::withoutGlobalScope('clinic')
+            ->where('key', $key)
+            ->where(function ($q) use ($clinicId) {
+                if ($clinicId) {
+                    $q->where('clinic_id', $clinicId)->orWhereNull('clinic_id');
+                } else {
+                    $q->whereNull('clinic_id');
+                }
+            })
+            ->orderByDesc('clinic_id')
+            ->first();
 
         if (! $setting) {
             return $default;
@@ -38,7 +56,7 @@ class Setting extends Model
             default => $setting->value,
         };
 
-        self::$runtimeCache[$key] = $value;
+        self::$runtimeCache[$cacheKey] = $value;
 
         return $value;
     }
@@ -68,16 +86,26 @@ class Setting extends Model
             default => (string) $value,
         };
 
-        $setting = static::updateOrCreate(
-            ['key' => $key],
+        $clinicId = (auth()->check() && auth()->user()->clinic_id) ? auth()->user()->clinic_id : null;
+        $searchAttrs = ['key' => $key];
+        if ($clinicId) {
+            $searchAttrs['clinic_id'] = $clinicId;
+        } else {
+            $searchAttrs['clinic_id'] = null;
+        }
+
+        $setting = static::withoutGlobalScope('clinic')->updateOrCreate(
+            $searchAttrs,
             [
                 'value' => $serializedValue,
                 'group' => $group,
                 'type' => $type,
+                'clinic_id' => $clinicId,
             ]
         );
 
-        self::$runtimeCache[$key] = $value;
+        $clinicPrefix = $clinicId ?? 'global';
+        self::$runtimeCache[$clinicPrefix.':'.$key] = $value;
 
         return $setting;
     }

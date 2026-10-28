@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Services\ImageUploadService;
+use App\Traits\BelongsToClinic;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Expense extends Model
 {
-    use HasFactory;
+    use BelongsToClinic, HasFactory;
 
     protected $guarded = [];
 

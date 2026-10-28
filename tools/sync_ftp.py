@@ -33,7 +33,7 @@ def upload_file(ftp, local_path, remote_path):
         filename = os.path.basename(remote_path)
         ftp.cwd(remote_dir if remote_dir else '/')
         ftp.storbinary(f'STOR {filename}', f)
-    print(f"Uploaded: {local_path} -> {remote_path}")
+    print(f"Uploaded: {local_path} -> {remote_path}", flush=True)
 
 def main():
     with open('.vscode/sftp.json', 'r') as f:
@@ -43,7 +43,7 @@ def main():
     
     files_to_upload = sys.argv[1:]
     if not files_to_upload:
-        print("No files specified for FTP upload.")
+        print("No files specified for FTP upload.", flush=True)
         return
     
     ftp = get_ftp_connection(config)
