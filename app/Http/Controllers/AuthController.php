@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClinicUserActivity;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,8 +57,42 @@ class AuthController extends Controller
                 ]);
             }
 
+            // Check if clinic is suspended (super admins can still log in)
+            if ($user->clinic_id && $user->clinic && $user->clinic->status === 'suspended' && ! $user->isSuperAdmin()) {
+                Auth::logout();
+                throw ValidationException::withMessages([
+                    'email' => 'تم تجميد حساب العيادة مؤقتاً. يرجى التواصل مع إدارة النظام.',
+                ]);
+            }
+
+            // Track login timestamp & IP
+            $user->update([
+                'last_login_at' => now(),
+                'last_login_ip' => $request->ip(),
+            ]);
+
+            // Record login activity
+            if ($user->clinic_id) {
+                try {
+                    ClinicUserActivity::create([
+                        'clinic_id' => $user->clinic_id,
+                        'user_id' => $user->id,
+                        'action_type' => 'login',
+                        'description' => "قام {$user->name} بتسجيل الدخول إلى النظام",
+                        'ip_address' => $request->ip(),
+                        'created_at' => now(),
+                    ]);
+                } catch (\Throwable $e) {
+                    // Ignore tracking errors
+                }
+            }
+
             // Regenerate session to protect against session fixation attacks
             $request->session()->regenerate();
+
+            if ($user->isSuperAdmin() && ! session()->has('url.intended')) {
+                return redirect()->route('appmanager.index');
+            }
 
             return redirect()->intended(route('clinic.dashboard'));
         }

@@ -19,7 +19,12 @@ class UserController extends Controller
      */
     public function index(): View
     {
-        $users = User::latest()->get();
+        $clinic = auth()->user()->clinic;
+        $query = User::query();
+        if ($clinic) {
+            $query->where('clinic_id', $clinic->id);
+        }
+        $users = $query->latest()->get();
 
         $stats = [
             'total' => $users->count(),
@@ -30,6 +35,7 @@ class UserController extends Controller
             'multi_role' => $users->filter(fn ($u) => count($u->getRolesArray()) > 1)->count(),
             'active' => $users->where('is_active', true)->count(),
             'inactive' => $users->where('is_active', false)->count(),
+            'max_users' => $clinic ? $clinic->max_users : 10,
         ];
 
         // Permissions Matrix Definition
@@ -84,7 +90,7 @@ class UserController extends Controller
             ],
         ];
 
-        return view('clinic.users.index', compact('users', 'stats', 'matrix'));
+        return view('clinic.users.index', compact('users', 'stats', 'matrix', 'clinic'));
     }
 
     /**
@@ -92,6 +98,13 @@ class UserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $clinic = auth()->user()->clinic;
+
+        // Check clinic max users quota
+        if ($clinic && ! $clinic->canAddUser()) {
+            return back()->withInput()->with('error', "تم الوصول للحد الأقصى لعدد المستخدمين المسموح به لعيادتكم ({$clinic->max_users} مستخدمين). يرجى مراجعة إدارة النظام لترقية باقة العيادة.");
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
@@ -106,6 +119,7 @@ class UserController extends Controller
         $roles = $validated['roles'] ?? (isset($validated['role']) ? [$validated['role']] : ['receptionist']);
 
         $user = new User([
+            'clinic_id' => $clinic?->id,
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
@@ -138,10 +152,23 @@ class UserController extends Controller
      */
     public function toggleStatus(User $user): RedirectResponse
     {
+        // Security check: Primary owner cannot be deactivated
+        if ($user->isPrimaryOwner()) {
+            return redirect()->route('clinic.users.index')
+                ->with('error', 'هذا الحساب هو المستخدم الرئيسي للعيادة ولا يمكن تعطيله أو تجميده.');
+        }
+
         // Security check: Admin cannot deactivate their own logged-in account
         if ($user->id === auth()->id()) {
             return redirect()->route('clinic.users.index')
                 ->with('error', 'لا يمكنك تعطيل حسابك الشخصي الذي تستخدمه لتسجيل الدخول حالياً لأسباب أمنية.');
+        }
+
+        // Quota check when reactivating an inactive user
+        $clinic = auth()->user()->clinic;
+        if (! $user->is_active && $clinic && ! $clinic->canAddUser()) {
+            return redirect()->route('clinic.users.index')
+                ->with('error', "لا يمكن تنشيط هذا الحساب لتجاوز الحد الأقصى المسموح به للعيادة ({$clinic->max_users} مستخدمين). يرجى مراجعة إدارة المنصة.");
         }
 
         $user->is_active = ! $user->is_active;
@@ -168,6 +195,12 @@ class UserController extends Controller
         ]);
 
         $roles = $validated['roles'] ?? (isset($validated['role']) ? [$validated['role']] : $user->getRolesArray());
+
+        // Security check: Primary owner cannot lose admin role
+        if ($user->isPrimaryOwner() && ! in_array(UserRole::Admin->value, $roles, true)) {
+            return redirect()->route('clinic.users.index')
+                ->with('error', 'لا يمكن إزالة صلاحية مدير النظام (Admin) عن المستخدم الرئيسي للعيادة.');
+        }
 
         // Security check: Admin cannot revoke their own admin role to prevent lockout
         if ($user->id === auth()->id() && ! in_array(UserRole::Admin->value, $roles, true)) {

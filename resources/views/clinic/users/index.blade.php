@@ -10,8 +10,13 @@
         <h3 class="fw-bold text-dark mb-1">إدارة المستخدمين وصلاحيات الوصول (RBAC & Security) 🛡️</h3>
         <p class="text-muted small mb-0">التحكم بكادر العمل، تعيين الصلاحيات الدقيقة، تجميد أو تنشيط الحسابات، ومراقبة معايير الأمان والحماية.</p>
     </div>
-    <div class="d-flex gap-2">
-        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newUserModal">
+    <div class="d-flex align-items-center gap-2">
+        @if($clinic && !$clinic->canAddUser())
+            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill small">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i> بلغت العيادة الحد الأقصى ({{ $stats['max_users'] }} مستخدمين)
+            </span>
+        @endif
+        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newUserModal" {{ ($clinic && !$clinic->canAddUser()) ? 'disabled' : '' }}>
             <i class="bi bi-person-plus-fill me-1"></i> إضافة موظف / مستخدم جديد
         </button>
     </div>
@@ -85,9 +90,9 @@
     <div class="col-sm-6 col-md-3">
         <div class="clinic-card p-3 d-flex align-items-center justify-content-between">
             <div>
-                <span class="text-muted small d-block mb-1">الحسابات النشطة</span>
-                <h3 class="fw-bold text-success mb-0">{{ $stats['active'] }} <span class="fs-6 fw-normal text-muted">/ {{ $stats['total'] }}</span></h3>
-                <span class="text-muted" style="font-size: 0.75rem;">معطلة: {{ $stats['inactive'] }}</span>
+                <span class="text-muted small d-block mb-1">الحسابات النشطة وسعة الباقة</span>
+                <h3 class="fw-bold text-success mb-0">{{ $stats['active'] }} <span class="fs-6 fw-normal text-muted">/ {{ $stats['max_users'] }} كحد أقصى</span></h3>
+                <span class="text-muted" style="font-size: 0.75rem;">إجمالي الحسابات: {{ $stats['total'] }} (معطلة: {{ $stats['inactive'] }})</span>
             </div>
             <div class="clinic-stat-icon bg-success-subtle text-success">
                 <i class="bi bi-shield-check fs-4"></i>
@@ -143,6 +148,11 @@
                                     <div>
                                         <div class="fw-bold text-dark">
                                             {{ $u->name }}
+                                            @if($u->is_primary_owner)
+                                                <span class="badge bg-warning text-dark border border-warning shadow-sm ms-1" style="font-size: 0.72rem;" title="المسؤول الرئيسي للعيادة - لا يمكن حذفه أو تعطيله">
+                                                    <i class="bi bi-crown-fill text-dark me-1"></i> المسؤول الرئيسي
+                                                </span>
+                                            @endif
                                             @if($u->id === auth()->id())
                                                 <span class="badge bg-secondary-subtle text-secondary border ms-1" style="font-size: 0.7rem;">أنت حالياً</span>
                                             @endif
@@ -202,7 +212,11 @@
                                         <i class="bi bi-pencil-square text-primary"></i>
                                     </button>
 
-                                    @if($u->id !== auth()->id())
+                                    @if($u->is_primary_owner)
+                                        <span class="badge bg-light text-muted border rounded-pill px-2 py-1 align-self-center" title="المسؤول الرئيسي للعيادة محمي دائماً ولا يمكن تعطيله">
+                                            <i class="bi bi-shield-lock-fill text-warning"></i> محمي
+                                        </span>
+                                    @elseif($u->id !== auth()->id())
                                     <form action="{{ route('clinic.users.toggle', $u) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من تغيير حالة نشاط هذا المستخدم؟')">
                                         @csrf
                                         @method('PATCH')

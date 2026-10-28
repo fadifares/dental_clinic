@@ -311,6 +311,13 @@
                 </li>
                 @endif
 
+                <li class="nav-item">
+                    <a href="{{ route('clinic.analytics') }}" class="nav-link {{ request()->routeIs('clinic.analytics') ? 'active' : '' }}">
+                        <i class="bi bi-graph-up-arrow fs-5 text-success"></i>
+                        <span>الإحصائيات والتحليلات</span>
+                    </a>
+                </li>
+
                 @if(auth()->user()->isAdmin())
                 <li class="nav-item">
                     <a href="{{ route('clinic.users.index') }}" class="nav-link {{ request()->routeIs('clinic.users.*') ? 'active' : '' }}">
@@ -322,6 +329,15 @@
                     <a href="{{ route('clinic.settings.index') }}" class="nav-link {{ request()->routeIs('clinic.settings.*') ? 'active' : '' }}">
                         <i class="bi bi-gear-fill fs-5 text-info"></i>
                         <span>إعدادات النظام والعيادة</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->isSuperAdmin())
+                <li class="nav-item mt-2 pt-2 border-top border-secondary">
+                    <a href="{{ route('appmanager.index') }}" class="nav-link text-warning" style="background: rgba(245, 158, 11, 0.1);">
+                        <i class="bi bi-grid-1x2-fill fs-5 text-warning"></i>
+                        <span class="fw-bold">لوحة مدير المنصة (SaaS)</span>
                     </a>
                 </li>
                 @endif

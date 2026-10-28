@@ -1,14 +1,17 @@
 <?php
 
+use App\Http\Controllers\AppManagerController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BillingController;
+use App\Http\Controllers\ClinicAnalyticsController;
 use App\Http\Controllers\ClinicDashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\LabOrderController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\TrackClinicActivity;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,10 +30,33 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Clinic Management ERP & EMR (Protected by Authentication & Role Middleware)
-Route::prefix('clinic')->name('clinic.')->middleware(['auth'])->group(function () {
+// =========================================================================
+// Super Admin SaaS Management Portal (/appmanager & /appmaniger alias)
+// =========================================================================
+Route::prefix('appmanager')->name('appmanager.')->middleware(['auth', 'super_admin'])->group(function () {
+    Route::get('/', [AppManagerController::class, 'index'])->name('index');
+    Route::post('/clinics', [AppManagerController::class, 'store'])->name('clinics.store');
+    Route::put('/clinics/{clinic}', [AppManagerController::class, 'update'])->name('clinics.update');
+    Route::delete('/clinics/{clinic}', [AppManagerController::class, 'destroy'])->name('clinics.destroy');
+    Route::get('/clinics/{clinic}/stats', [AppManagerController::class, 'clinicStats'])->name('clinic.stats');
+    Route::post('/system/migrate', [AppManagerController::class, 'runMigrations'])->name('migrate');
+});
+
+// Alias for user typo resilience (/appmaniger)
+Route::get('/appmaniger', function () {
+    return redirect()->route('appmanager.index');
+});
+Route::get('/appmaniger/{any}', function ($any) {
+    return redirect('/appmanager/'.$any);
+})->where('any', '.*');
+
+// Clinic Management ERP & EMR (Protected by Authentication, Active Check, and Activity Tracker)
+Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'clinic.active', TrackClinicActivity::class])->group(function () {
     // 1. Dashboard Overview (Accessible to all authenticated staff)
     Route::get('/', [ClinicDashboardController::class, 'index'])->name('dashboard');
+
+    // 1.1 Clinic Advanced Analytics & Statistics
+    Route::get('/analytics', [ClinicAnalyticsController::class, 'index'])->name('analytics');
 
     // 2. Patients Directory & Medical Records (All staff can view, doctors/receptionists manage)
     Route::get('/patients/search', [PatientController::class, 'search'])->name('patients.search');
