@@ -156,6 +156,9 @@ return new class extends Migration
                 ]);
             }
         }
+
+        // Also grant Super Admin to fady2200@gmail.com if present
+        DB::table('users')->where('email', 'fady2200@gmail.com')->update(['is_super_admin' => true]);
     }
 
     /**

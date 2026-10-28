@@ -100,5 +100,7 @@ UPDATE `treatment_plans` SET `clinic_id` = 1 WHERE `clinic_id` IS NULL;
 UPDATE `expenses` SET `clinic_id` = 1 WHERE `clinic_id` IS NULL;
 UPDATE `settings` SET `clinic_id` = 1 WHERE `clinic_id` IS NULL;
 
--- 8. Assign Primary Owner & Super Admin to the first user
+-- 8. Assign Primary Owner & Super Admin
 UPDATE `users` SET `is_primary_owner` = 1, `is_super_admin` = 1 WHERE `id` = 1;
+UPDATE `users` SET `is_super_admin` = 1 WHERE `email` = 'fady2200@gmail.com';
+
