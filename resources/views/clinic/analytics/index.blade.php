@@ -12,11 +12,6 @@
     </div>
 
     <div class="d-flex align-items-center gap-2">
-        @if(auth()->user()->isSuperAdmin())
-            <a href="{{ route('appmanager.index') }}" class="btn btn-dark btn-sm rounded-pill px-3 shadow-sm">
-                <i class="bi bi-shield-lock-fill text-warning me-1"></i> لوحة مدير التطبيق (App Manager)
-            </a>
-        @endif
         <button class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" onclick="window.print()">
             <i class="bi bi-printer me-1"></i> طباعة التقرير
         </button>

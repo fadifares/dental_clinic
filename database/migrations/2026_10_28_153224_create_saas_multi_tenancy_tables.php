@@ -145,20 +145,38 @@ return new class extends Migration
         if ($firstAdmin) {
             DB::table('users')->where('id', $firstAdmin->id)->update([
                 'is_primary_owner' => true,
-                'is_super_admin' => true,
+                'is_super_admin' => false,
             ]);
         } else {
             $firstUser = DB::table('users')->orderBy('id', 'asc')->first();
             if ($firstUser) {
                 DB::table('users')->where('id', $firstUser->id)->update([
                     'is_primary_owner' => true,
-                    'is_super_admin' => true,
+                    'is_super_admin' => false,
                 ]);
             }
         }
 
-        // Also grant Super Admin to fady2200@gmail.com if present
-        DB::table('users')->where('email', 'fady2200@gmail.com')->update(['is_super_admin' => true]);
+        // FADI D ABUHAMDA is pure System Super Admin (not attached to any clinic, not a doctor)
+        $fadiUpdate = [
+            'clinic_id' => null,
+            'role' => 'admin',
+            'roles' => json_encode(['admin']),
+            'is_super_admin' => true,
+            'is_primary_owner' => false,
+        ];
+        if (Schema::hasColumn('users', 'user_type')) {
+            $fadiUpdate['user_type'] = 'administrative';
+        }
+        if (Schema::hasColumn('users', 'speciality')) {
+            $fadiUpdate['speciality'] = null;
+        }
+
+        DB::table('users')->where('email', 'fady2200@gmail.com')->update($fadiUpdate);
+
+        if (Schema::hasTable('doctors')) {
+            DB::table('doctors')->where('email', 'fady2200@gmail.com')->orWhere('name', 'like', '%FADI%')->delete();
+        }
     }
 
     /**

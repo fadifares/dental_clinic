@@ -26,7 +26,7 @@ class SaaSManagementTest extends TestCase
             'max_users' => 10,
         ]);
 
-        // Ensure Primary Owner exists
+        // Ensure Primary Owner exists as clinic manager only (NOT super admin)
         User::firstOrCreate(['email' => 'owner@clinic1.com'], [
             'clinic_id' => $clinic->id,
             'name' => 'المدير الرئيسي',
@@ -34,20 +34,20 @@ class SaaSManagementTest extends TestCase
             'role' => UserRole::Admin,
             'is_active' => true,
             'is_primary_owner' => true,
-            'is_super_admin' => true,
+            'is_super_admin' => false,
         ]);
     }
 
     public function test_super_admin_can_access_appmanager_dashboard(): void
     {
         $superAdmin = User::create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@saas.com',
+            'name' => 'FADI D ABUHAMDA',
+            'email' => 'fady2200@gmail.com',
             'password' => bcrypt('Password123#'),
             'role' => UserRole::Admin,
             'is_active' => true,
             'is_super_admin' => true,
-            'clinic_id' => 1,
+            'clinic_id' => null,
         ]);
 
         $response = $this->actingAs($superAdmin)->get('/appmanager');
@@ -56,20 +56,19 @@ class SaaSManagementTest extends TestCase
         $response->assertSee('إجمالي العيادات المسجلة');
     }
 
-    public function test_regular_clinic_admin_is_forbidden_from_appmanager(): void
+    public function test_clinic_manager_is_forbidden_from_appmanager_and_does_not_see_it_in_menu(): void
     {
-        $regularAdmin = User::create([
-            'name' => 'Regular Admin',
-            'email' => 'regular@clinic.com',
-            'password' => bcrypt('Password123#'),
-            'role' => UserRole::Admin,
-            'is_active' => true,
-            'is_super_admin' => false,
-            'clinic_id' => 1,
-        ]);
+        $clinicAdmin = User::where('email', 'owner@clinic1.com')->first();
 
-        $response = $this->actingAs($regularAdmin)->get('/appmanager');
+        // 1. Forbidden from accessing /appmanager
+        $response = $this->actingAs($clinicAdmin)->get('/appmanager');
         $response->assertStatus(403);
+
+        // 2. Cannot see App Manager in clinic sidebar navigation
+        $responseClinic = $this->actingAs($clinicAdmin)->get('/clinic');
+        $responseClinic->assertStatus(200);
+        $responseClinic->assertDontSee('لوحة مدير المنصة');
+        $responseClinic->assertDontSee('/appmanager');
     }
 
     public function test_appmaniger_typo_route_redirects_to_appmanager(): void

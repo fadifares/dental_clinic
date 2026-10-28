@@ -100,7 +100,20 @@ UPDATE `treatment_plans` SET `clinic_id` = 1 WHERE `clinic_id` IS NULL;
 UPDATE `expenses` SET `clinic_id` = 1 WHERE `clinic_id` IS NULL;
 UPDATE `settings` SET `clinic_id` = 1 WHERE `clinic_id` IS NULL;
 
--- 8. Assign Primary Owner & Super Admin
-UPDATE `users` SET `is_primary_owner` = 1, `is_super_admin` = 1 WHERE `id` = 1;
-UPDATE `users` SET `is_super_admin` = 1 WHERE `email` = 'fady2200@gmail.com';
+-- 8. Assign Primary Owner for Clinic #1 (Clinic Manager ONLY, not Super Admin)
+UPDATE `users` SET `is_primary_owner` = 1, `is_super_admin` = 0 WHERE `id` = 1 OR `email` = 'admin@dentalcare.com';
+
+-- 9. Assign FADI D ABUHAMDA as the pure System Super Admin (NOT a doctor, not tied to any clinic)
+UPDATE `users` SET 
+  `is_super_admin` = 1, 
+  `is_primary_owner` = 0, 
+  `clinic_id` = NULL, 
+  `role` = 'admin', 
+  `roles` = '["admin"]', 
+  `user_type` = 'administrative', 
+  `speciality` = NULL 
+WHERE `email` = 'fady2200@gmail.com';
+
+-- 10. Ensure FADI is not registered as a doctor in any clinic
+DELETE FROM `doctors` WHERE `email` = 'fady2200@gmail.com' OR `name` LIKE '%FADI%';
 

@@ -78,11 +78,11 @@ class ClinicDashboardController extends Controller
                 ->orWhere('email', $user->email)
                 ->first() ?? Doctor::first();
 
-            $docTodayApts = Appointment::with(['patient', 'doctor'])
+            $docTodayApts = $currentDoctor ? Appointment::with(['patient', 'doctor'])
                 ->where('doctor_id', $currentDoctor->id)
                 ->whereDate('appointment_date', $today)
                 ->orderBy('appointment_time')
-                ->get();
+                ->get() : collect();
 
             // Active chair patient (in consultation or waiting or first)
             $activePatientId = $request->query('patient_id');
@@ -102,8 +102,8 @@ class ClinicDashboardController extends Controller
                 }
             }
 
-            $doctorRevenue = Invoice::where('doctor_id', $currentDoctor->id)->whereMonth('created_at', now()->month)->sum('paid_amount');
-            $doctorCommission = $doctorRevenue * ($currentDoctor->commission_rate / 100);
+            $doctorRevenue = $currentDoctor ? Invoice::where('doctor_id', $currentDoctor->id)->whereMonth('created_at', now()->month)->sum('paid_amount') : 0;
+            $doctorCommission = $currentDoctor ? $doctorRevenue * ($currentDoctor->commission_rate / 100) : 0;
 
             $doctorData = [
                 'currentDoctor' => $currentDoctor,
@@ -112,8 +112,8 @@ class ClinicDashboardController extends Controller
                 'doctorInChair' => $docTodayApts->where('status', 'in_consultation')->first(),
                 'activePatient' => $activePatient,
                 'patientToothConditions' => $patientToothConditions,
-                'doctorLabOrders' => LabOrder::with('patient')->where('doctor_id', $currentDoctor->id)->latest()->take(6)->get(),
-                'completedCasesCount' => Appointment::where('doctor_id', $currentDoctor->id)->where('status', 'completed')->whereMonth('appointment_date', now()->month)->count(),
+                'doctorLabOrders' => $currentDoctor ? LabOrder::with('patient')->where('doctor_id', $currentDoctor->id)->latest()->take(6)->get() : collect(),
+                'completedCasesCount' => $currentDoctor ? Appointment::where('doctor_id', $currentDoctor->id)->where('status', 'completed')->whereMonth('appointment_date', now()->month)->count() : 0,
                 'monthlyRevenue' => $doctorRevenue,
                 'estimatedCommission' => $doctorCommission,
             ];
