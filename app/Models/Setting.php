@@ -104,6 +104,13 @@ class Setting extends Model
             ]
         );
 
+        // Clear stale runtime cache entries for this key
+        foreach (array_keys(self::$runtimeCache) as $cKey) {
+            if (str_ends_with($cKey, ':'.$key) || $cKey === $key) {
+                unset(self::$runtimeCache[$cKey]);
+            }
+        }
+
         $clinicPrefix = $clinicId ?? 'global';
         self::$runtimeCache[$clinicPrefix.':'.$key] = $value;
 

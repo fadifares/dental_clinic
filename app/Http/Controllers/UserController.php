@@ -124,6 +124,7 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'is_active' => true,
+            'is_super_admin' => false,
         ]);
         $user->roles = $roles;
         $user->save();
@@ -211,6 +212,7 @@ class UserController extends Controller
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->roles = $roles;
+        $user->is_super_admin = false;
 
         if (! empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);

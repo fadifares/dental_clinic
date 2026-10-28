@@ -24,8 +24,8 @@ trait BelongsToClinic
         });
 
         static::creating(function ($model) {
-            if (empty($model->clinic_id) && auth()->check() && auth()->user()->clinic_id) {
-                $model->clinic_id = auth()->user()->clinic_id;
+            if (empty($model->clinic_id) && $model->getTable() !== 'settings') {
+                $model->clinic_id = (auth()->check() && auth()->user()->clinic_id) ? auth()->user()->clinic_id : 1;
             }
         });
     }

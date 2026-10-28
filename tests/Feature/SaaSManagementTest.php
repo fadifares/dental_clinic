@@ -80,7 +80,7 @@ class SaaSManagementTest extends TestCase
             'role' => UserRole::Admin,
             'is_active' => true,
             'is_super_admin' => true,
-            'clinic_id' => 1,
+            'clinic_id' => null,
         ]);
 
         $response = $this->actingAs($superAdmin)->get('/appmaniger');
@@ -96,7 +96,7 @@ class SaaSManagementTest extends TestCase
             'role' => UserRole::Admin,
             'is_active' => true,
             'is_super_admin' => true,
-            'clinic_id' => 1,
+            'clinic_id' => null,
         ]);
 
         $response = $this->actingAs($superAdmin)->post('/appmanager/clinics', [
@@ -134,7 +134,7 @@ class SaaSManagementTest extends TestCase
             'role' => UserRole::Admin,
             'is_active' => true,
             'is_super_admin' => true,
-            'clinic_id' => 1,
+            'clinic_id' => null,
         ]);
 
         $clinic = Clinic::first();
@@ -243,5 +243,60 @@ class SaaSManagementTest extends TestCase
         $responseAnalytics->assertSee('مؤشر حركة الدخول والنشاط اليومي');
         $responseAnalytics->assertSee('أكثر الصفحات والشاشات زيارة داخل العيادة');
         $responseAnalytics->assertSee('مستخدمو العيادة ومعدل نشاطهم وإنتاجيتهم');
+    }
+
+    public function test_clinic_user_with_is_super_admin_flag_is_still_blocked_from_appmanager_due_to_clinic_id(): void
+    {
+        $clinic = Clinic::first();
+        $compromisedUser = User::create([
+            'clinic_id' => $clinic->id,
+            'name' => 'Compromised Clinic User',
+            'email' => 'compromised@clinic.com',
+            'password' => bcrypt('Password123#'),
+            'role' => UserRole::Admin,
+            'is_active' => true,
+            'is_super_admin' => true, // Attempted tampering
+        ]);
+
+        // Must be blocked because clinic_id is NOT null
+        $response = $this->actingAs($compromisedUser)->get('/appmanager');
+        $response->assertStatus(403);
+    }
+
+    public function test_platform_super_admin_cannot_access_clinic_portal_and_is_redirected_to_appmanager(): void
+    {
+        $superAdmin = User::create([
+            'name' => 'FADI D ABUHAMDA',
+            'email' => 'fadi_isolated@saas.com',
+            'password' => bcrypt('Password123#'),
+            'role' => UserRole::Admin,
+            'is_active' => true,
+            'is_super_admin' => true,
+            'clinic_id' => null,
+        ]);
+
+        // Attempting to access clinic operations is blocked & redirected to appmanager
+        $response = $this->actingAs($superAdmin)->get('/clinic');
+        $response->assertRedirect('/appmanager');
+        $response->assertSessionHas('error');
+    }
+
+    public function test_clinic_admin_cannot_create_super_admin_in_clinic_users(): void
+    {
+        $clinic = Clinic::first();
+        $clinicAdmin = User::where('clinic_id', $clinic->id)->where('is_primary_owner', true)->first();
+
+        $this->actingAs($clinicAdmin)->post('/clinic/users', [
+            'name' => 'عضو جديد',
+            'email' => 'regular_staff@clinic.com',
+            'password' => 'Password123#',
+            'role' => UserRole::Receptionist->value,
+            'is_super_admin' => 1, // Malicious attempt to escalate
+        ]);
+
+        $createdUser = User::where('email', 'regular_staff@clinic.com')->first();
+        $this->assertNotNull($createdUser);
+        $this->assertFalse((bool) $createdUser->is_super_admin);
+        $this->assertEquals($clinic->id, $createdUser->clinic_id);
     }
 }

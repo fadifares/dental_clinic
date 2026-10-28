@@ -51,7 +51,12 @@ class User extends Authenticatable
 
     public function isSuperAdmin(): bool
     {
-        return (bool) $this->is_super_admin;
+        return (bool) $this->is_super_admin && is_null($this->clinic_id);
+    }
+
+    public function isClinicUser(): bool
+    {
+        return ! is_null($this->clinic_id);
     }
 
     public function isPrimaryOwner(): bool
@@ -184,6 +189,12 @@ class User extends Authenticatable
      */
     protected static function booted(): void
     {
+        static::creating(function (User $user): void {
+            if (is_null($user->clinic_id) && ! $user->is_super_admin) {
+                $user->clinic_id = 1;
+            }
+        });
+
         static::saved(function (User $user): void {
             if ($user->wasChanged('name')) {
                 // 1. Direct update for any doctor record linked by user_id

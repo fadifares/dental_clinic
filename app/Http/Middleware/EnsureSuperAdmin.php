@@ -14,8 +14,9 @@ class EnsureSuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! Auth::check() || ! Auth::user()->isSuperAdmin()) {
-            abort(403, 'غير مصرح لك بالدخول إلى لوحة تحكم مدير التطبيق (App Manager).');
+        // Strictly allow only independent platform super admins who do not belong to any clinic
+        if (! Auth::check() || ! Auth::user()->isSuperAdmin() || Auth::user()->clinic_id !== null) {
+            abort(403, 'غير مصرح لك بالدخول إلى لوحة تحكم مدير التطبيق (App Manager). هذا القسم مخصص حصرياً لإدارة المنصة ومحظور تماماً على مستخدمي العيادات.');
         }
 
         return $next($request);

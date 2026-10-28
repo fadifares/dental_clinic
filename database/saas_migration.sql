@@ -102,6 +102,7 @@ UPDATE `settings` SET `clinic_id` = 1 WHERE `clinic_id` IS NULL;
 
 -- 8. Assign Primary Owner for Clinic #1 (Clinic Manager ONLY, not Super Admin)
 UPDATE `users` SET `is_primary_owner` = 1, `is_super_admin` = 0 WHERE `id` = 1 OR `email` = 'admin@dentalcare.com';
+UPDATE `users` SET `is_super_admin` = 0 WHERE `clinic_id` IS NOT NULL;
 
 -- 9. Assign FADI D ABUHAMDA as the pure System Super Admin (NOT a doctor, not tied to any clinic)
 UPDATE `users` SET 

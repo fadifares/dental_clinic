@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\UserRole;
+use App\Models\Clinic;
 use App\Models\DentalChart;
 use App\Models\Doctor;
 use App\Models\Expense;
@@ -19,6 +20,18 @@ use Tests\TestCase;
 class DentalClinicTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Clinic::firstOrCreate(['id' => 1], [
+            'name' => 'العيادة الأولى',
+            'slug' => 'clinic-1',
+            'status' => 'active',
+            'max_users' => 50,
+        ]);
+    }
 
     /**
      * Test public dental clinic homepage renders successfully without authentication.

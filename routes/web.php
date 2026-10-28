@@ -122,5 +122,9 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'clinic.active', T
 
 // Alias for convenience
 Route::get('/dashboard', function () {
+    if (auth()->check() && auth()->user()->isSuperAdmin()) {
+        return redirect()->route('appmanager.index');
+    }
+
     return redirect()->route('clinic.dashboard');
 });

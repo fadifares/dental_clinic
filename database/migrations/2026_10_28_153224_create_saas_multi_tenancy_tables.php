@@ -157,6 +157,9 @@ return new class extends Migration
             }
         }
 
+        // Enforce that all clinic users cannot be super admin
+        DB::table('users')->whereNotNull('clinic_id')->update(['is_super_admin' => false]);
+
         // FADI D ABUHAMDA is pure System Super Admin (not attached to any clinic, not a doctor)
         $fadiUpdate = [
             'clinic_id' => null,
