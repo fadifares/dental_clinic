@@ -42,6 +42,15 @@
                 <span class="fw-medium">🚀 مخطط الأسنان الرقمي التفاعلي 32 سن + الربط المعتمد مع هيئة الزكاة والضريبة (ZATCA المرحلة 2) متاح الآن!</span>
             </div>
             <div class="d-flex gap-3 align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <a href="https://www.facebook.com/GO2WEB.PAL" target="_blank" rel="noopener noreferrer" class="text-white text-opacity-75 hover-white text-decoration-none d-inline-flex align-items-center gap-1" title="تابعنا على فيسبوك">
+                        <i class="bi bi-facebook fs-6"></i>
+                    </a>
+                    <a href="https://www.instagram.com/go2web.pal/" target="_blank" rel="noopener noreferrer" class="text-white text-opacity-75 hover-white text-decoration-none d-inline-flex align-items-center gap-1" title="تابعنا على انستجرام">
+                        <i class="bi bi-instagram fs-6"></i>
+                    </a>
+                </div>
+                <span class="text-white-50">|</span>
                 <a href="https://wa.me/201553408200?text=مرحباً، أرغب بالاستفسار عن برنامج Dental Pro ERP لعيادات الأسنان" target="_blank" class="text-white text-decoration-none small">
                     <i class="bi bi-whatsapp text-success me-1"></i> استشارة المبيعات: <span dir="ltr">+201553408200</span>
                 </a>
@@ -102,6 +111,15 @@
                 </ul>
 
                 <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-1 me-1">
+                        <a href="https://www.facebook.com/GO2WEB.PAL" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light border-0 text-primary rounded-circle d-inline-flex align-items-center justify-content-center header-social-btn" style="width: 34px; height: 34px; background: rgba(2, 132, 199, 0.1);" title="صفحتنا على فيسبوك" aria-label="Facebook">
+                            <i class="bi bi-facebook fs-6"></i>
+                        </a>
+                        <a href="https://www.instagram.com/go2web.pal/" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light border-0 text-danger rounded-circle d-inline-flex align-items-center justify-content-center header-social-btn" style="width: 34px; height: 34px; background: rgba(225, 48, 108, 0.1);" title="حسابنا على انستجرام" aria-label="Instagram">
+                            <i class="bi bi-instagram fs-6"></i>
+                        </a>
+                    </div>
+
                     <a href="#demo-modal-trigger" data-bs-toggle="modal" data-bs-target="#requestDemoModal" class="btn btn-outline-primary px-3 py-2 rounded-pill fw-bold shadow-sm d-none d-sm-inline-flex align-items-center gap-1">
                         <i class="bi bi-play-circle-fill"></i> طلب ديمو حي
                     </a>
@@ -142,10 +160,26 @@
                     <p class="text-light text-opacity-75 small leading-relaxed" style="color: #cbd5e1 !important; line-height: 1.8;">
                         النظام السحابي الأول المصمم خصيصاً لأطباء ومراكز طب الأسنان لتبسيط دورة العمل اليومية، من السجل الطبي ومخطط الأسنان الرقمي وحتى الفوترة الإلكترونية المعتمدة ومتابعة أرباح العيادة.
                     </p>
-                    <div class="d-flex flex-wrap gap-2 pt-2">
+                    <div class="d-flex flex-wrap gap-2 pt-2 mb-3">
                         <span class="badge bg-secondary text-white small px-2 py-1"><i class="bi bi-shield-check text-success me-1"></i> معتمد ZATCA</span>
                         <span class="badge bg-secondary text-white small px-2 py-1"><i class="bi bi-lock-fill text-warning me-1"></i> تشفير 256-Bit</span>
                         <span class="badge bg-secondary text-white small px-2 py-1"><i class="bi bi-cloud-check-fill text-info me-1"></i> نسخ سحابي يومي</span>
+                    </div>
+
+                    <!-- Social Media Links -->
+                    <div class="pt-2">
+                        <div class="small fw-semibold text-white-50 mb-2">تابعنا وتواصل معنا عبر منصات التواصل:</div>
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="https://www.facebook.com/GO2WEB.PAL" target="_blank" rel="noopener noreferrer" class="footer-social-icon social-facebook" title="تابعنا على فيسبوك" aria-label="Facebook">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="https://www.instagram.com/go2web.pal/" target="_blank" rel="noopener noreferrer" class="footer-social-icon social-instagram" title="تابعنا على انستجرام" aria-label="Instagram">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                            <a href="https://wa.me/201553408200?text=مرحباً، أود الاستفسار عن منظومة Dental Pro ERP" target="_blank" rel="noopener noreferrer" class="footer-social-icon social-whatsapp" title="تواصل عبر واتساب" aria-label="WhatsApp">
+                                <i class="bi bi-whatsapp"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -183,9 +217,18 @@
                             <i class="bi bi-calendar-event me-1"></i> طلب موعد اتصال وعرض ديمو
                         </button>
                     </div>
-                    <div class="small text-muted d-flex align-items-center gap-3">
+                    <div class="small text-muted d-flex flex-wrap align-items-center gap-3 mb-2">
                         <span><i class="bi bi-envelope text-info me-1"></i> info@dentalpro-erp.com</span>
                         <span><i class="bi bi-telephone text-info me-1"></i> <a href="tel:+201553408200" class="text-white-50 text-decoration-none" dir="ltr">+201553408200</a></span>
+                    </div>
+                    <div class="small d-flex align-items-center gap-2 pt-1 text-white-50">
+                        <span>منصاتنا الاجتماعية:</span>
+                        <a href="https://www.facebook.com/GO2WEB.PAL" target="_blank" rel="noopener noreferrer" class="badge bg-primary text-white text-decoration-none px-2 py-1 rounded-pill d-inline-flex align-items-center gap-1">
+                            <i class="bi bi-facebook"></i> فيسبوك
+                        </a>
+                        <a href="https://www.instagram.com/go2web.pal/" target="_blank" rel="noopener noreferrer" class="badge text-white text-decoration-none px-2 py-1 rounded-pill d-inline-flex align-items-center gap-1" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);">
+                            <i class="bi bi-instagram"></i> انستجرام
+                        </a>
                     </div>
                 </div>
             </div>
@@ -194,7 +237,15 @@
 
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small" style="color: #94a3b8 !important;">
                 <div>جميع الحقوق محفوظة © {{ date('Y') }} - منظومة <strong>Dental Pro ERP</strong> لإدارة عيادات ومراكز الأسنان السحابية.</div>
-                <div class="mt-2 mt-md-0 d-flex gap-3">
+                <div class="mt-2 mt-md-0 d-flex align-items-center gap-3">
+                    <a href="https://www.facebook.com/GO2WEB.PAL" target="_blank" rel="noopener noreferrer" class="text-white-50 text-decoration-none hover-white d-flex align-items-center gap-1" title="فيسبوك">
+                        <i class="bi bi-facebook text-primary"></i> <span class="d-none d-sm-inline">فيسبوك</span>
+                    </a>
+                    <span>•</span>
+                    <a href="https://www.instagram.com/go2web.pal/" target="_blank" rel="noopener noreferrer" class="text-white-50 text-decoration-none hover-white d-flex align-items-center gap-1" title="انستجرام">
+                        <i class="bi bi-instagram text-danger"></i> <span class="d-none d-sm-inline">انستجرام</span>
+                    </a>
+                    <span>•</span>
                     <a href="#faq" class="text-muted text-decoration-none">سياسة الخصوصية وأمان البيانات</a>
                     <span>•</span>
                     <a href="#faq" class="text-muted text-decoration-none">شروط الاستخدام والخدمة</a>
@@ -222,6 +273,53 @@
     </div>
 
     <style>
+        .footer-social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            color: #ffffff !important;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .footer-social-icon:hover {
+            transform: translateY(-3px) scale(1.1);
+            color: #ffffff !important;
+        }
+        .footer-social-icon.social-facebook {
+            background-color: #1877F2;
+        }
+        .footer-social-icon.social-facebook:hover {
+            box-shadow: 0 8px 20px rgba(24, 119, 242, 0.5);
+            background-color: #0d6efd;
+        }
+        .footer-social-icon.social-instagram {
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        }
+        .footer-social-icon.social-instagram:hover {
+            box-shadow: 0 8px 20px rgba(214, 36, 159, 0.5);
+        }
+        .footer-social-icon.social-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        }
+        .footer-social-icon.social-whatsapp:hover {
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);
+        }
+        .hover-white:hover {
+            color: #ffffff !important;
+        }
+        .header-social-btn {
+            transition: all 0.25s ease;
+        }
+        .header-social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
         .whatsapp-pulse-btn {
             position: relative;
             width: 60px;

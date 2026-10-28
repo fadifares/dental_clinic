@@ -2181,6 +2181,17 @@
             <span><i class="bi bi-check2 text-warning me-1"></i> تفعيل فوري للحساب</span>
             <span><i class="bi bi-check2 text-warning me-1"></i> دعم وتدريب مجاني</span>
         </div>
+
+        <!-- Social Media Channels in CTA -->
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-4 pt-2">
+            <span class="text-light text-opacity-75 small me-2">تابعنا وتواصل معنا مباشرة:</span>
+            <a href="https://www.facebook.com/GO2WEB.PAL" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1.5 shadow-sm" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.25);">
+                <i class="bi bi-facebook text-info"></i> فيسبوك GO2WEB
+            </a>
+            <a href="https://www.instagram.com/go2web.pal/" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1.5 shadow-sm" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.25);">
+                <i class="bi bi-instagram text-warning"></i> انستجرام @go2web.pal
+            </a>
+        </div>
     </div>
 </section>
 
