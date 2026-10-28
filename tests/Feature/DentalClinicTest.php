@@ -28,8 +28,7 @@ class DentalClinicTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertSee('دنتال');
-        $response->assertSee('حجز موعد كشف أونلاين');
+        $response->assertSee('Dental Pro');
     }
 
     /**

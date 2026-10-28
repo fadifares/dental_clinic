@@ -7,11 +7,12 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'roles', 'is_active'])]
+#[Fillable(['clinic_id', 'name', 'email', 'password', 'role', 'roles', 'is_active', 'is_super_admin', 'is_primary_owner', 'last_login_at', 'last_login_ip'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -31,7 +32,25 @@ class User extends Authenticatable
             'role' => UserRole::class,
             'roles' => 'array',
             'is_active' => 'boolean',
+            'is_super_admin' => 'boolean',
+            'is_primary_owner' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
+    }
+
+    public function clinic(): BelongsTo
+    {
+        return $this->belongsTo(Clinic::class);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return (bool) $this->is_super_admin;
+    }
+
+    public function isPrimaryOwner(): bool
+    {
+        return (bool) $this->is_primary_owner;
     }
 
     /**
