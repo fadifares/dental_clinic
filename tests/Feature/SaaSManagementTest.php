@@ -299,4 +299,16 @@ class SaaSManagementTest extends TestCase
         $this->assertFalse((bool) $createdUser->is_super_admin);
         $this->assertEquals($clinic->id, $createdUser->clinic_id);
     }
+
+    public function test_public_pricing_page_is_accessible_and_renders_plans(): void
+    {
+        $response = $this->get('/pricing');
+        $response->assertStatus(200);
+        $response->assertSee('باقة البداية (Starter)');
+        $response->assertSee('الباقة الاحترافية (Pro Clinic)');
+        $response->assertSee('باقة المراكز (Center)');
+        $response->assertSee('4,500');
+        $response->assertSee('8,500');
+        $response->assertSee('15,000');
+    }
 }

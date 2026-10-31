@@ -25,6 +25,10 @@ Route::get('/', function () {
     return view('website.index');
 })->name('website.home');
 
+Route::get('/pricing', function () {
+    return view('website.pricing');
+})->name('pricing');
+
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');

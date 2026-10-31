@@ -88,25 +88,27 @@
             <div class="collapse navbar-collapse" id="navbarClinic">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold gap-lg-2">
                     <li class="nav-item">
-                        <a class="nav-link active text-primary" href="{{ url('/') }}">الرئيسية</a>
+                        <a class="nav-link {{ request()->routeIs('website.home') ? 'active text-primary' : '' }}" href="{{ route('website.home') }}">الرئيسية</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#features">مميزات البرنامج</a>
+                        <a class="nav-link" href="{{ url('/#features') }}">مميزات البرنامج</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#odontogram-demo">المخطط التفاعلي</a>
+                        <a class="nav-link" href="{{ url('/#odontogram-demo') }}">المخطط التفاعلي</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#screens">شاشات النظام</a>
+                        <a class="nav-link" href="{{ url('/#screens') }}">شاشات النظام</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#workflow">رحلة المريض</a>
+                        <a class="nav-link {{ request()->routeIs('pricing') ? 'active text-primary fw-bold' : '' }}" href="{{ route('pricing') }}">
+                            باقات الأسعار <span class="badge bg-danger text-white rounded-pill ms-1" style="font-size: 0.65rem;">مصر 🇪🇬</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#calculator">حاسبة التوفير</a>
+                        <a class="nav-link" href="{{ url('/#calculator') }}">حاسبة التوفير</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#faq">الأسئلة الشائعة</a>
+                        <a class="nav-link" href="{{ url('/#faq') }}">الأسئلة الشائعة</a>
                     </li>
                 </ul>
 
@@ -198,10 +200,11 @@
                 <div class="col-6 col-lg-2">
                     <h6 class="fw-bold text-white mb-3 border-bottom border-secondary pb-2">روابط سريعة</h6>
                     <ul class="list-unstyled small d-flex flex-column gap-2" style="color: #cbd5e1 !important;">
-                        <li><a href="#screens" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">شاشات البرنامج</a></li>
-                        <li><a href="#workflow" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">رحلة المريض بالعيادة</a></li>
-                        <li><a href="#calculator" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">حاسبة توفير العيادة</a></li>
-                        <li><a href="#faq" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">الأسئلة الشائعة</a></li>
+                        <li><a href="{{ route('pricing') }}" class="text-warning text-decoration-none fw-bold"><i class="bi bi-tag-fill me-1"></i> باقات الأسعار (مصر 🇪🇬)</a></li>
+                        <li><a href="{{ url('/#screens') }}" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">شاشات البرنامج</a></li>
+                        <li><a href="{{ url('/#workflow') }}" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">رحلة المريض بالعيادة</a></li>
+                        <li><a href="{{ url('/#calculator') }}" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">حاسبة توفير العيادة</a></li>
+                        <li><a href="{{ url('/#faq') }}" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">الأسئلة الشائعة</a></li>
                         <li><a href="{{ route('login') }}" class="text-light text-opacity-75 text-decoration-none" style="color: #cbd5e1 !important;">بوابة الكادر الطبي</a></li>
                     </ul>
                 </div>
