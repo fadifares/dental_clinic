@@ -215,7 +215,7 @@
                         </button>
                     </div>
                     <div class="small text-muted d-flex flex-wrap align-items-center gap-3 mb-2">
-                        <span><i class="bi bi-envelope text-info me-1"></i> info@dentalpro-erp.com</span>
+                        <span><i class="bi bi-envelope text-info me-1"></i> app@go-2web.com </span>
                         <span><i class="bi bi-telephone text-info me-1"></i> <a href="tel:+201553408200" class="text-white-50 text-decoration-none" dir="ltr">+201553408200</a></span>
                     </div>
                     <div class="small d-flex align-items-center gap-2 pt-1 text-white-50">
