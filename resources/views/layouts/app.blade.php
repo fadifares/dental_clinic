@@ -69,15 +69,15 @@
     </div>
 
     <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg clinic-glass-nav sticky-top py-3" style="box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);">
+    <nav class="navbar navbar-expand-xl clinic-solid-nav py-2.5">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold fs-4 text-dark" href="{{ url('/') }}">
-                <span class="d-inline-flex align-items-center justify-content-center rounded-3 shadow-sm text-white" style="width: 44px; height: 44px; background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-dark me-0" href="{{ url('/') }}">
+                <span class="d-inline-flex align-items-center justify-content-center rounded-3 shadow-sm text-white" style="width: 42px; height: 42px; background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);">
                     <i class="bi bi-heart-pulse-fill fs-5"></i>
                 </span>
                 <div>
-                    <span class="fw-extrabold text-dark tracking-tight">Dental<span class="text-primary">Pro</span> <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-6 py-0 px-2 rounded-pill align-middle">ERP</span></span>
-                    <span class="d-block text-muted fw-normal" style="font-size: 0.72rem; letter-spacing: -0.2px;">المنظومة السحابية الذكية لعيادات الأسنان</span>
+                    <span class="fw-extrabold text-dark tracking-tight fs-5">Dental<span class="text-primary">Pro</span> <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-6 py-0 px-2 rounded-pill align-middle">ERP</span></span>
+                    <span class="d-block text-muted fw-normal" style="font-size: 0.7rem; letter-spacing: -0.2px;">المنظومة السحابية الذكية لعيادات الأسنان</span>
                 </div>
             </a>
 
@@ -86,53 +86,47 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarClinic">
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold gap-lg-2">
+                <ul class="navbar-nav mx-auto mb-2 mb-xl-0 fw-semibold align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('website.home') ? 'active text-primary' : '' }}" href="{{ route('website.home') }}">الرئيسية</a>
+                        <a class="nav-link clinic-nav-link {{ request()->routeIs('website.home') ? 'active fw-bold text-primary' : '' }}" href="{{ route('website.home') }}">الرئيسية</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#features') }}">مميزات البرنامج</a>
+                        <a class="nav-link clinic-nav-link" href="{{ url('/#features') }}">مميزات البرنامج</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#odontogram-demo') }}">المخطط التفاعلي</a>
+                        <a class="nav-link clinic-nav-link" href="{{ url('/#odontogram-demo') }}">المخطط التفاعلي</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#screens') }}">شاشات النظام</a>
+                        <a class="nav-link clinic-nav-link" href="{{ url('/#screens') }}">شاشات النظام</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('pricing') ? 'active text-primary fw-bold' : '' }}" href="{{ route('pricing') }}">
+                        <a class="nav-link clinic-nav-link {{ request()->routeIs('pricing') ? 'active fw-bold text-primary' : '' }}" href="{{ route('pricing') }}">
                             باقات الأسعار <span class="badge bg-danger text-white rounded-pill ms-1" style="font-size: 0.65rem;">مصر 🇪🇬</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#calculator') }}">حاسبة التوفير</a>
+                        <a class="nav-link clinic-nav-link" href="{{ url('/#calculator') }}">حاسبة التوفير</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#faq') }}">الأسئلة الشائعة</a>
+                        <a class="nav-link clinic-nav-link" href="{{ url('/#faq') }}">الأسئلة الشائعة</a>
                     </li>
                 </ul>
 
-                <div class="d-flex align-items-center gap-2">
-                    <div class="d-flex align-items-center gap-1 me-1">
-                        <a href="https://www.facebook.com/GO2WEB.PAL" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light border-0 text-primary rounded-circle d-inline-flex align-items-center justify-content-center header-social-btn" style="width: 34px; height: 34px; background: rgba(2, 132, 199, 0.1);" title="صفحتنا على فيسبوك" aria-label="Facebook">
-                            <i class="bi bi-facebook fs-6"></i>
-                        </a>
-                        <a href="https://www.instagram.com/go2web.pal/" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light border-0 text-danger rounded-circle d-inline-flex align-items-center justify-content-center header-social-btn" style="width: 34px; height: 34px; background: rgba(225, 48, 108, 0.1);" title="حسابنا على انستجرام" aria-label="Instagram">
-                            <i class="bi bi-instagram fs-6"></i>
-                        </a>
-                    </div>
-
-                    <a href="#demo-modal-trigger" data-bs-toggle="modal" data-bs-target="#requestDemoModal" class="btn btn-outline-primary px-3 py-2 rounded-pill fw-bold shadow-sm d-none d-sm-inline-flex align-items-center gap-1">
-                        <i class="bi bi-play-circle-fill"></i> طلب ديمو حي
+                <div class="d-flex align-items-center gap-2 mt-2 mt-xl-0">
+                    <a href="#requestDemoModal" data-bs-toggle="modal" class="btn btn-outline-primary btn-unified-nav shadow-sm d-none d-sm-inline-flex">
+                        <i class="bi bi-play-circle-fill"></i>
+                        <span>طلب ديمو حي</span>
                     </a>
 
                     @auth
-                        <a href="{{ route('clinic.dashboard') }}" class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm d-inline-flex align-items-center gap-1">
-                            <i class="bi bi-speedometer2"></i> لوحة العيادة
+                        <a href="{{ route('clinic.dashboard') }}" class="btn btn-primary btn-unified-nav shadow-sm text-white" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border: none;">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>لوحة العيادة</span>
                         </a>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm d-inline-flex align-items-center gap-1">
-                            <i class="bi bi-box-arrow-in-left"></i> دخول النظام
+                        <a href="{{ route('login') }}" class="btn btn-primary btn-unified-nav shadow-sm text-white" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border: none;">
+                            <i class="bi bi-box-arrow-in-left"></i>
+                            <span>دخول النظام</span>
                         </a>
                     @endauth
                 </div>
@@ -276,6 +270,124 @@
     </div>
 
     <style>
+        /* ==========================================================
+           GLOBAL UNIFIED BUTTON SYSTEM & CRISP SOLID NAVBAR
+           ========================================================== */
+        .clinic-solid-nav {
+            background-color: #ffffff !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05) !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1040 !important;
+        }
+
+        .clinic-solid-nav .clinic-nav-link {
+            font-size: 0.9rem !important;
+            font-weight: 600 !important;
+            color: #334155 !important;
+            padding: 0.45rem 0.65rem !important;
+            white-space: nowrap !important;
+            transition: color 0.2s ease !important;
+        }
+
+        .clinic-solid-nav .clinic-nav-link:hover,
+        .clinic-solid-nav .clinic-nav-link.active {
+            color: #0284c7 !important;
+        }
+
+        /* Unified Buttons System */
+        .btn-unified-nav {
+            height: 40px !important;
+            min-height: 40px !important;
+            padding: 0 1.25rem !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+            font-size: 0.88rem !important;
+            font-weight: 700 !important;
+            border-radius: 9999px !important;
+            white-space: nowrap !important;
+            line-height: 1 !important;
+            text-decoration: none !important;
+            transition: all 0.25s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        .btn-unified-nav:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-unified-hero {
+            height: 52px !important;
+            min-height: 52px !important;
+            min-width: 210px !important;
+            padding: 0 1.75rem !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.65rem !important;
+            font-size: 0.98rem !important;
+            font-weight: 800 !important;
+            border-radius: 9999px !important;
+            white-space: nowrap !important;
+            line-height: 1 !important;
+            text-decoration: none !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            box-sizing: border-box !important;
+        }
+
+        .btn-unified-hero:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-unified-cta {
+            height: 52px !important;
+            min-height: 52px !important;
+            min-width: 250px !important;
+            padding: 0 1.75rem !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.65rem !important;
+            font-size: 1rem !important;
+            font-weight: 800 !important;
+            border-radius: 9999px !important;
+            white-space: nowrap !important;
+            line-height: 1 !important;
+            text-decoration: none !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            box-sizing: border-box !important;
+        }
+
+        .btn-unified-cta:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-unified-card {
+            height: 48px !important;
+            min-height: 48px !important;
+            width: 100% !important;
+            padding: 0 1.5rem !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+            font-size: 0.95rem !important;
+            font-weight: 800 !important;
+            border-radius: 9999px !important;
+            white-space: nowrap !important;
+            line-height: 1 !important;
+            text-decoration: none !important;
+            transition: all 0.25s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        .btn-unified-card:hover {
+            transform: translateY(-2px);
+        }
+
         .footer-social-icon {
             display: inline-flex;
             align-items: center;

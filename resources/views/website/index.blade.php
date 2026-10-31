@@ -456,15 +456,18 @@
             </p>
 
             <!-- Action Buttons -->
-            <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
-                <a href="#requestDemoModal" data-bs-toggle="modal" class="btn btn-primary btn-lg rounded-pill px-4 py-3 shadow-lg fw-bold d-inline-flex align-items-center gap-2" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
-                    <i class="bi bi-rocket-takeoff-fill fs-5"></i> ابدأ تجربتك المجانية (14 يوماً)
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 mb-4">
+                <a href="#requestDemoModal" data-bs-toggle="modal" class="btn btn-primary btn-unified-hero shadow-lg text-white" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border: none;">
+                    <i class="bi bi-rocket-takeoff-fill fs-5"></i>
+                    <span>ابدأ تجربتك المجانية (14 يوماً)</span>
                 </a>
-                <a href="#odontogram-demo" class="btn btn-outline-dark btn-lg rounded-pill px-4 py-3 fw-bold d-inline-flex align-items-center gap-2">
-                    <i class="bi bi-cpu-fill text-primary"></i> جرب المخطط التفاعلي مباشرة
+                <a href="#odontogram-demo" class="btn btn-outline-dark btn-unified-hero">
+                    <i class="bi bi-cpu-fill text-primary fs-5"></i>
+                    <span>جرب المخطط التفاعلي</span>
                 </a>
-                <a href="#screens" class="btn btn-light btn-lg rounded-pill px-4 py-3 fw-semibold border d-inline-flex align-items-center gap-2 text-secondary">
-                    <i class="bi bi-images text-info"></i> استعرض شاشات البرنامج
+                <a href="{{ route('pricing') }}" class="btn btn-light btn-unified-hero border text-secondary shadow-sm">
+                    <i class="bi bi-tags-fill text-success fs-5"></i>
+                    <span>باقات الأسعار في مصر 🇪🇬</span>
                 </a>
             </div>
 
@@ -2167,12 +2170,14 @@
             انضم الآن إلى مئات الأطباء والمراكز الرائدة. ابدأ نسختك التجريبية المجانية لمدة 14 يوماً بدون أي التزام أو بطاقة ائتمان.
         </p>
 
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a href="#requestDemoModal" data-bs-toggle="modal" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-primary shadow-lg d-inline-flex align-items-center gap-2">
-                <i class="bi bi-rocket-takeoff-fill"></i> ابدأ تجربتك المجانية الآن
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-3">
+            <a href="#requestDemoModal" data-bs-toggle="modal" class="btn btn-light btn-unified-cta fw-bold text-primary shadow-lg">
+                <i class="bi bi-rocket-takeoff-fill fs-5"></i>
+                <span>ابدأ تجربتك المجانية الآن</span>
             </a>
-            <a href="https://wa.me/201553408200?text=مرحباً، أود التحدث مع مستشار أنظمة طب الأسنان حول Dental Pro ERP" target="_blank" class="btn btn-outline-light btn-lg rounded-pill px-4 py-3 fw-bold d-inline-flex align-items-center gap-2">
-                <i class="bi bi-whatsapp text-success fs-5"></i> تواصل مع مستشار الأنظمة (<span dir="ltr">+201553408200</span>)
+            <a href="https://wa.me/201553408200?text=مرحباً، أود التحدث مع مستشار أنظمة طب الأسنان حول Dental Pro ERP" target="_blank" class="btn btn-outline-light btn-unified-cta fw-bold">
+                <i class="bi bi-whatsapp text-success fs-5"></i>
+                <span>تواصل مع مستشار الأنظمة</span>
             </a>
         </div>
 

@@ -305,11 +305,12 @@
 
                     <!-- CTA -->
                     <div class="pt-3">
-                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاشتراك أو بدء تجربة مجانية لباقة (البداية Starter - 450 ج.م)" 
+                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاشتراك أو بدء تجربة مجانية لباقة (البداية Starter - 4500 ج.م)" 
                            target="_blank" 
-                           class="btn btn-outline-primary w-100 py-2 rounded-pill fw-bold tier-cta-btn" 
+                           class="btn btn-outline-primary btn-unified-card tier-cta-btn" 
                            data-base-text="مرحباً، أود الاشتراك أو بدء تجربة مجانية لباقة (البداية Starter)">
-                            <i class="bi bi-play-circle me-1"></i> ابدأ تجربتك المجانية (14 يوماً)
+                            <i class="bi bi-play-circle-fill"></i>
+                            <span>ابدأ تجربتك المجانية (14 يوماً)</span>
                         </a>
                     </div>
                 </div>
@@ -383,11 +384,13 @@
 
                     <!-- CTA -->
                     <div class="pt-3">
-                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاشتراك أو بدء تجربة مجانية للباقة الاحترافية (Pro Clinic - 850 ج.م)" 
+                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاشتراك أو بدء تجربة مجانية للباقة الاحترافية (Pro Clinic - 8500 ج.م)" 
                            target="_blank" 
-                           class="btn btn-primary w-100 py-2 rounded-pill fw-bold shadow-sm tier-cta-btn" 
+                           class="btn btn-primary btn-unified-card shadow-sm tier-cta-btn text-white" 
+                           style="background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%); border: none;"
                            data-base-text="مرحباً، أود الاشتراك أو بدء تجربة مجانية للباقة الاحترافية (Pro Clinic)">
-                            <i class="bi bi-lightning-charge-fill me-1"></i> ابدأ تجربتك المجانية الآن
+                            <i class="bi bi-lightning-charge-fill"></i>
+                            <span>ابدأ تجربتك المجانية الآن</span>
                         </a>
                     </div>
                 </div>
@@ -457,11 +460,12 @@
 
                     <!-- CTA -->
                     <div class="pt-3">
-                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاستفسار عن باقة المراكز الطبية الكبرى (Medical Center - 1500 ج.م)" 
+                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاستفسار عن باقة المراكز الطبية الكبرى (Medical Center - 15000 ج.م)" 
                            target="_blank" 
-                           class="btn btn-outline-dark w-100 py-2 rounded-pill fw-bold tier-cta-btn" 
+                           class="btn btn-outline-dark btn-unified-card tier-cta-btn" 
                            data-base-text="مرحباً، أود الاستفسار عن باقة المراكز الطبية الكبرى (Medical Center)">
-                            <i class="bi bi-headset me-1"></i> تواصل لطلب الباقة أو عرض مخصص
+                            <i class="bi bi-headset"></i>
+                            <span>تواصل لطلب عرض للمركز</span>
                         </a>
                     </div>
                 </div>
@@ -730,16 +734,23 @@
         <p class="lead text-white-50 mx-auto mb-4" style="max-width: 650px;">
             مستشارو الأنظمة الطبية جاهزون لمساعدتك في اختيار الباقة الأنسب لعيادتك والإجابة على كل أسئلتك.
         </p>
-        <div class="d-flex flex-wrap justify-content-center gap-3">
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-3">
             <a href="https://wa.me/201553408200?text=مرحباً، أود التحدث مع مستشار الأنظمة بخصوص باقات Dental Pro ERP لعيادات الأسنان" 
                target="_blank" 
-               class="btn btn-success btn-lg px-4 py-3 rounded-pill fw-bold shadow-lg d-inline-flex align-items-center gap-2">
-                <i class="bi bi-whatsapp fs-5"></i> محادثة واتساب فورية (+201553408200)
+               class="btn btn-success btn-unified-cta shadow-lg">
+                <i class="bi bi-whatsapp fs-5"></i>
+                <span>محادثة واتساب فورية</span>
             </a>
             <a href="tel:+201553408200" 
-               class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-bold d-inline-flex align-items-center gap-2">
-                <i class="bi bi-telephone fs-5"></i> اتصال هاتفي مباشر
+               class="btn btn-outline-light btn-unified-cta shadow-sm">
+                <i class="bi bi-telephone-fill fs-5"></i>
+                <span>اتصال هاتفي مباشر</span>
             </a>
+        </div>
+        <div class="d-flex align-items-center justify-content-center gap-2 mt-3 text-white-50 small">
+            <i class="bi bi-clock-history text-warning"></i>
+            <span>فريق الاستشارات متاح لخدمتكم يومياً | </span>
+            <span dir="ltr" class="text-white fw-bold font-monospace">+201553408200</span>
         </div>
     </div>
 </section>
@@ -809,3 +820,4 @@
     });
 </script>
 @endpush
+
