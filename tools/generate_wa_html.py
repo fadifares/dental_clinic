@@ -11,7 +11,7 @@ html_content = f"""<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>حملة واتساب - Dental Pro ERP | Go-2Web</title>
+  <title>حملة واتساب والتواصل - Dental Pro ERP | Go-2Web</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,10 +39,10 @@ html_content = f"""<!DOCTYPE html>
         <div>
           <div class="flex items-center gap-2">
             <span class="text-2xl">🦷</span>
-            <h1 class="text-xl sm:text-2xl font-black tracking-tight">Dental Pro ERP | منصة المراسلة السريعة عبر واتساب</h1>
+            <h1 class="text-xl sm:text-2xl font-black tracking-tight">Dental Pro ERP | منصة المراسلة والصفحات الرقمية</h1>
           </div>
           <p class="text-emerald-100 text-xs sm:text-sm mt-1">
-            إرسال مباشر بنقرة واحدة (Click-to-Chat) مع حفظ حالة التواصل تلقائياً على جهازك
+            إرسال مباشر عبر واتساب (Click-to-Chat) + استعراض صفحات التواصل الاجتماعي والمواقع الرسمية
           </p>
         </div>
         <div class="flex items-center gap-3">
@@ -60,26 +60,31 @@ html_content = f"""<!DOCTYPE html>
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <div class="text-xs font-semibold text-slate-500 mb-1">إجمالي العيادات بالملف</div>
+        <div class="text-xs font-semibold text-slate-500 mb-1">إجمالي العيادات</div>
         <div class="text-2xl font-black text-slate-800" id="statTotal">0</div>
-        <div class="text-[11px] text-slate-400 mt-1">عيادات ومراكز مسجلة</div>
+        <div class="text-[11px] text-slate-400 mt-1">عيادات ومراكز بالملف</div>
       </div>
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
         <div class="text-xs font-semibold text-slate-500 mb-1">أرقام واتساب جاهزة</div>
         <div class="text-2xl font-black text-emerald-600" id="statMobile">0</div>
-        <div class="text-[11px] text-emerald-700 mt-1">أرقام محمول مصرية مباشرة</div>
+        <div class="text-[11px] text-emerald-700 mt-1">أرقام محمول مصرية</div>
       </div>
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <div class="text-xs font-semibold text-slate-500 mb-1">تم إرسالها بنجاح</div>
+        <div class="text-xs font-semibold text-slate-500 mb-1">صفحات تواصل ومواقع</div>
+        <div class="text-2xl font-black text-indigo-600" id="statSocial">0</div>
+        <div class="text-[11px] text-indigo-700 mt-1">فيسبوك، يوتيوب، مواقع</div>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <div class="text-xs font-semibold text-slate-500 mb-1">تم التواصل معهم</div>
         <div class="text-2xl font-black text-blue-600" id="statSent">0</div>
         <div class="text-[11px] text-blue-700 mt-1 font-semibold" id="statPercent">0% مكتمل</div>
       </div>
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 col-span-2 md:col-span-1">
         <div class="text-xs font-semibold text-slate-500 mb-1">المتبقي للإرسال</div>
         <div class="text-2xl font-black text-amber-600" id="statRemaining">0</div>
-        <div class="text-[11px] text-amber-700 mt-1">عيادة جاهزة للمراسلة</div>
+        <div class="text-[11px] text-amber-700 mt-1">عيادة بانتظار المراسلة</div>
       </div>
     </div>
 
@@ -116,15 +121,22 @@ html_content = f"""<!DOCTYPE html>
           <option value="شراكة">جهات ومؤسسات شراكة</option>
         </select>
 
+        <select id="socialFilter" onchange="applyFilters()" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <option value="all">كل الروابط</option>
+          <option value="social">صفحات فيسبوك / سوشيال ميديا فقط (20)</option>
+          <option value="website">مواقع إلكترونية رسمية (25)</option>
+          <option value="has_any">لديها أي رابط (سوشيال أو موقع)</option>
+        </select>
+
         <select id="statusFilter" onchange="applyFilters()" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
           <option value="all">كل الحالات</option>
-          <option value="pending" selected>لم يتم الإرسال (المتبقي)</option>
+          <option value="pending">لم يتم الإرسال (المتبقي)</option>
           <option value="sent">تم التواصل معهم</option>
         </select>
 
         <select id="phoneTypeFilter" onchange="applyFilters()" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <option value="all">كل الأرقام</option>
           <option value="mobile" selected>أرقام واتساب فقط (محمول)</option>
-          <option value="all">كل الأرقام (مع الأرضي)</option>
         </select>
       </div>
     </div>
@@ -132,7 +144,7 @@ html_content = f"""<!DOCTYPE html>
     <!-- Results Counter -->
     <div class="flex justify-between items-center mb-4 text-xs font-bold text-slate-500">
       <div>المعروض حالياً: <span id="displayedCount" class="text-slate-900">0</span> عيادة</div>
-      <div class="text-[11px] text-slate-400">نصيحة: اضغط الزر الأخضر وسيتم فتح واتساب والرسالة جاهزة تماماً للإرسال</div>
+      <div class="text-[11px] text-slate-400">اضغط على زر السوشيال أو الموقع لاستعراض الصفحة الرسمية للعيادة</div>
     </div>
 
     <!-- Clinics Grid -->
@@ -227,16 +239,48 @@ html_content = f"""<!DOCTYPE html>
       }}
     }}
 
+    function getSocialLinkButton(c) {{
+      if (!c.website) return '';
+      
+      if (c.website_type === 'facebook') {{
+        return `
+          <a href="${{c.website}}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-[11px] font-bold px-2.5 py-1 rounded-md transition" title="فتح صفحة فيسبوك للعيادة">
+            <span>📘</span> فيسبوك العيادة
+          </a>
+        `;
+      }} else if (c.website_type === 'youtube') {{
+        return `
+          <a href="${{c.website}}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-[11px] font-bold px-2.5 py-1 rounded-md transition" title="قناة يوتيوب">
+            <span>📺</span> يوتيوب
+          </a>
+        `;
+      }} else if (c.website_type === 'directory') {{
+        return `
+          <a href="${{c.website}}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-[11px] font-bold px-2.5 py-1 rounded-md transition" title="صفحة الدليل الطبي">
+            <span>📖</span> صفحة الدليل
+          </a>
+        `;
+      }} else {{
+        return `
+          <a href="${{c.website}}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-800 border border-cyan-200 text-[11px] font-bold px-2.5 py-1 rounded-md transition" title="الموقع الرسمي للعيادة">
+            <span>🌐</span> الموقع الرسمي
+          </a>
+        `;
+      }}
+    }}
+
     function updateStats() {{
       const state = getSentState();
       const total = clinicsData.length;
       const mobileCount = clinicsData.filter(c => c.is_mobile).length;
+      const socialCount = clinicsData.filter(c => c.website).length;
       const sentCount = clinicsData.filter(c => state[c.id]).length;
       const remaining = mobileCount - clinicsData.filter(c => c.is_mobile && state[c.id]).length;
       const percent = mobileCount > 0 ? Math.round((clinicsData.filter(c => c.is_mobile && state[c.id]).length / mobileCount) * 100) : 0;
 
       document.getElementById('statTotal').textContent = total;
       document.getElementById('statMobile').textContent = mobileCount;
+      document.getElementById('statSocial').textContent = socialCount;
       document.getElementById('statSent').textContent = sentCount;
       document.getElementById('statRemaining').textContent = Math.max(0, remaining);
       document.getElementById('statPercent').textContent = percent + '% مكتمل';
@@ -250,6 +294,7 @@ html_content = f"""<!DOCTYPE html>
       const cat = document.getElementById('categoryFilter').value;
       const status = document.getElementById('statusFilter').value;
       const phoneType = document.getElementById('phoneTypeFilter').value;
+      const socialFilter = document.getElementById('socialFilter').value;
       const state = getSentState();
 
       const filtered = clinicsData.filter(c => {{
@@ -269,6 +314,11 @@ html_content = f"""<!DOCTYPE html>
           if (cat === 'شراكة' && !c.category.includes('شراكة') && !c.category.includes('مؤسسات')) return false;
           if (cat !== 'شراكة' && !c.category.includes(cat)) return false;
         }}
+
+        // Social Filter
+        if (socialFilter === 'social' && !['facebook', 'youtube', 'instagram'].includes(c.website_type)) return false;
+        if (socialFilter === 'website' && c.website_type !== 'website') return false;
+        if (socialFilter === 'has_any' && !c.website) return false;
 
         // Status Filter
         if (status === 'pending' && isSent) return false;
@@ -317,10 +367,15 @@ html_content = f"""<!DOCTYPE html>
                 ${{c.name}}
               </h3>
 
-              <div class="flex items-center gap-3 text-xs text-slate-500 mb-3">
+              <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500 mb-3">
                 ${{c.rating ? `<span class="flex items-center gap-1 font-bold text-amber-500">⭐ ${{c.rating}}</span>` : ''}}
                 ${{c.reviews ? `<span class="text-slate-400">(${{c.reviews}} تقييم)</span>` : ''}}
                 <span class="font-mono text-slate-600 font-semibold dir-ltr">${{c.phone_raw || 'بدون هاتف'}}</span>
+              </div>
+
+              <!-- Social link button if present -->
+              <div class="mb-3">
+                ${{getSocialLinkButton(c)}}
               </div>
 
               <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 mb-3 text-[12px] text-slate-600 leading-relaxed max-h-24 overflow-y-auto custom-scrollbar">
@@ -335,11 +390,11 @@ html_content = f"""<!DOCTYPE html>
                     onclick="handleSendClick(${{c.id}}, '${{waLink}}')" 
                     class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow flex items-center justify-center gap-1.5 transition active:scale-95"
                   >
-                    <span>💬</span> مراسلة واتساب فوراً
+                    <span>💬</span> مراسلة واتساب
                   </button>
                 ` : `
                   <div class="flex-1 bg-slate-200 text-slate-500 font-bold py-2 px-3 rounded-lg text-xs text-center cursor-not-allowed">
-                    هاتف أرضي (غير مؤكد للواتساب)
+                    هاتف أرضي
                   </div>
                 `}}
 
@@ -380,7 +435,7 @@ html_content = f"""<!DOCTYPE html>
     function exportProgress() {{
       const state = getSentState();
       const rows = [
-        ['ID', 'اسم العيادة', 'الفئة', 'المحافظة', 'الهاتف', 'حالة التواصل']
+        ['ID', 'اسم العيادة', 'الفئة', 'المحافظة', 'الهاتف', 'الموقع أو صفحة التواصل', 'حالة التواصل']
       ];
 
       clinicsData.forEach(c => {{
@@ -390,6 +445,7 @@ html_content = f"""<!DOCTYPE html>
           `"${{c.category}}"`,
           `"${{c.city}}"`,
           `"${{c.phone_raw}}"`,
+          `"${{c.website || ''}}"`,
           state[c.id] ? 'تم التواصل' : 'لم يتم'
         ]);
       }});
@@ -416,4 +472,4 @@ html_content = f"""<!DOCTYPE html>
 with open('public/whatsapp.html', 'w', encoding='utf-8') as f:
     f.write(html_content)
 
-print("Generated public/whatsapp.html successfully!")
+print("Generated public/whatsapp.html with social links successfully!")
