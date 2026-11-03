@@ -9,6 +9,7 @@ use App\Http\Controllers\ClinicDashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\LabOrderController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\TrackClinicActivity;
@@ -44,6 +45,11 @@ Route::prefix('appmanager')->name('appmanager.')->middleware(['auth', 'super_adm
     Route::delete('/clinics/{clinic}', [AppManagerController::class, 'destroy'])->name('clinics.destroy');
     Route::get('/clinics/{clinic}/stats', [AppManagerController::class, 'clinicStats'])->name('clinic.stats');
     Route::post('/system/migrate', [AppManagerController::class, 'runMigrations'])->name('migrate');
+
+    // Super Admin Profile & Password Settings
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile/info', [ProfileController::class, 'updateInfo'])->name('profile.info');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
 // Alias for user typo resilience (/appmaniger)
@@ -122,7 +128,21 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'clinic.active', T
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
     });
+
+    // 10. User Profile & Password Security (Accessible to all clinic staff)
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile/info', [ProfileController::class, 'updateInfo'])->name('profile.info');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
+
+// Alias for profile & dashboard
+Route::get('/profile', function () {
+    if (auth()->check() && auth()->user()->isSuperAdmin()) {
+        return redirect()->route('appmanager.profile');
+    }
+
+    return redirect()->route('clinic.profile');
+})->middleware('auth')->name('profile.show');
 
 // Alias for convenience
 Route::get('/dashboard', function () {

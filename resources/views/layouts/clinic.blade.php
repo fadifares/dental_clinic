@@ -318,6 +318,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('clinic.profile') }}" class="nav-link {{ request()->routeIs('clinic.profile') ? 'active' : '' }}">
+                        <i class="bi bi-person-gear fs-5 text-primary"></i>
+                        <span>الملف الشخصي والأمان</span>
+                    </a>
+                </li>
+
                 @if(auth()->user()->isAdmin())
                 <li class="nav-item">
                     <a href="{{ route('clinic.users.index') }}" class="nav-link {{ request()->routeIs('clinic.users.*') ? 'active' : '' }}">
@@ -337,21 +344,24 @@
 
         <!-- Permanently Visible Bottom User Profile & Logout Section -->
         <div class="sidebar-footer p-3 border-top border-secondary">
-            <div class="d-flex align-items-center gap-2 text-white mb-2">
+            <a href="{{ route('clinic.profile') }}" class="d-flex align-items-center gap-2 text-white mb-2 text-decoration-none p-1 rounded" title="تعديل الملف الشخصي وكلمة المرور">
                 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm flex-shrink-0" style="width: 38px; height: 38px;">
                     <i class="bi bi-person-badge-fill"></i>
                 </div>
-                <div class="overflow-hidden">
-                    <div class="fw-bold small text-truncate text-white">{{ auth()->user()->name }}</div>
-                    <div class="badge bg-secondary-subtle text-light px-1 text-truncate" style="font-size: 0.7rem; max-width: 170px;" title="{{ auth()->user()->getRoleLabelsString() }}">
+                <div class="overflow-hidden flex-grow-1">
+                    <div class="fw-bold small text-truncate text-white d-flex align-items-center justify-content-between">
+                        <span>{{ auth()->user()->name }}</span>
+                        <i class="bi bi-gear-fill text-white-50" style="font-size: 0.75rem;"></i>
+                    </div>
+                    <div class="badge bg-secondary-subtle text-light px-1 text-truncate" style="font-size: 0.7rem; max-width: 150px;" title="{{ auth()->user()->getRoleLabelsString() }}">
                         {{ auth()->user()->getRoleLabelsString() }}
                     </div>
                 </div>
-            </div>
+            </a>
 
             <div class="d-flex gap-2">
-                <a href="{{ url('/') }}" target="_blank" class="btn btn-outline-info btn-sm flex-fill rounded-pill">
-                    <i class="bi bi-globe me-1"></i> الموقع
+                <a href="{{ route('clinic.profile') }}" class="btn btn-outline-info btn-sm flex-fill rounded-pill text-truncate" title="الملف الشخصي وكلمة المرور">
+                    <i class="bi bi-person-gear me-1"></i> حسابي
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="flex-fill mb-0">
                     @csrf
@@ -411,6 +421,11 @@
                         <li class="px-2 py-1 border-bottom mb-2">
                             <span class="fw-bold d-block text-dark small text-truncate">{{ auth()->user()->name }}</span>
                             <span class="badge bg-secondary-subtle text-dark" style="font-size: 0.7rem;">{{ auth()->user()->getRoleLabelsString() }}</span>
+                        </li>
+                        <li>
+                            <a class="dropdown-item small py-2 rounded {{ request()->routeIs('clinic.profile') ? 'active bg-primary text-white' : '' }}" href="{{ route('clinic.profile') }}">
+                                <i class="bi bi-person-gear me-2 text-primary"></i> الملف الشخصي والأمان
+                            </a>
                         </li>
                         <li>
                             <a class="dropdown-item small py-2 rounded" href="{{ url('/') }}" target="_blank">

@@ -147,9 +147,9 @@
                     </button>
                 </form>
 
-                <!-- Link to Clinic Dashboard -->
-                <a href="{{ route('clinic.dashboard') }}" class="btn btn-sm btn-outline-light rounded-pill px-3">
-                    <i class="bi bi-hospital me-1"></i> العودة للعيادة
+                <!-- Link to Website -->
+                <a href="{{ url('/') }}" target="_blank" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                    <i class="bi bi-globe me-1"></i> الموقع التعريفي
                 </a>
 
                 <!-- User profile / logout -->
@@ -159,6 +159,12 @@
                         <span>{{ auth()->user()->name }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow">
+                        <li>
+                            <a class="dropdown-item py-2" href="{{ route('appmanager.profile') }}">
+                                <i class="bi bi-person-gear me-2 text-warning"></i> الملف الشخصي وكلمة المرور
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider border-secondary my-1"></li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf

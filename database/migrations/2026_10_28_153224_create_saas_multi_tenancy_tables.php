@@ -33,6 +33,9 @@ return new class extends Migration
             if (! Schema::hasColumn('users', 'clinic_id')) {
                 $table->foreignId('clinic_id')->nullable()->after('id')->constrained('clinics')->nullOnDelete();
             }
+            if (! Schema::hasColumn('users', 'phone')) {
+                $table->string('phone')->nullable()->after('email');
+            }
             if (! Schema::hasColumn('users', 'is_super_admin')) {
                 $table->boolean('is_super_admin')->default(false)->after('role');
             }
