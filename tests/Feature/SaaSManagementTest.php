@@ -307,8 +307,8 @@ class SaaSManagementTest extends TestCase
         $response->assertSee('باقة البداية (Starter)');
         $response->assertSee('الباقة الاحترافية (Pro Clinic)');
         $response->assertSee('باقة المراكز (Center)');
-        $response->assertSee('4,500');
-        $response->assertSee('8,500');
-        $response->assertSee('15,000');
+        $response->assertSee('7,500');
+        $response->assertSee('14,500');
+        $response->assertSee('28,000');
     }
 }

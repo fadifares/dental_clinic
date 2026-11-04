@@ -256,11 +256,11 @@
                     <div class="my-3 pb-3 border-bottom border-light-subtle">
                         <div class="d-flex align-items-baseline gap-1">
                             <span class="price-currency">ج.م</span>
-                            <span class="price-value tier-price" data-monthly="450" data-annual="4,500">4,500</span>
+                            <span class="price-value tier-price" data-monthly="750" data-annual="7,500">7,500</span>
                             <span class="price-period tier-period">/ سنوياً</span>
                         </div>
                         <div class="small text-success fw-bold mt-1 tier-subtext">
-                            يعادل <span class="fw-extrabold font-monospace">375 ج.م</span> فقط شهرياً (وفرت 900 ج.م)
+                            يعادل <span class="fw-extrabold font-monospace">625 ج.م</span> فقط شهرياً (وفرت 1,500 ج.م)
                         </div>
                         <div class="small text-muted mt-2">
                             <i class="bi bi-people-fill text-primary me-1"></i> سعة المستخدمين: <strong>حتى 2 مستخدمين</strong> (طبيب + سكرتير)
@@ -305,7 +305,7 @@
 
                     <!-- CTA -->
                     <div class="pt-3">
-                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاشتراك أو بدء تجربة مجانية لباقة (البداية Starter - 4500 ج.م)" 
+                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاشتراك أو بدء تجربة مجانية لباقة (البداية Starter - 7500 ج.م)" 
                            target="_blank" 
                            class="btn btn-outline-primary btn-unified-card tier-cta-btn" 
                            data-base-text="مرحباً، أود الاشتراك أو بدء تجربة مجانية لباقة (البداية Starter)">
@@ -335,11 +335,11 @@
                     <div class="my-3 pb-3 border-bottom border-light-subtle">
                         <div class="d-flex align-items-baseline gap-1">
                             <span class="price-currency">ج.م</span>
-                            <span class="price-value tier-price text-primary" data-monthly="850" data-annual="8,500">8,500</span>
+                            <span class="price-value tier-price text-primary" data-monthly="1450" data-annual="14,500">14,500</span>
                             <span class="price-period tier-period">/ سنوياً</span>
                         </div>
                         <div class="small text-success fw-bold mt-1 tier-subtext">
-                            يعادل <span class="fw-extrabold font-monospace">708 ج.م</span> فقط شهرياً (وفرت 1,700 ج.م)
+                            يعادل <span class="fw-extrabold font-monospace">1,208 ج.م</span> فقط شهرياً (وفرت 2,900 ج.م)
                         </div>
                         <div class="small text-muted mt-2">
                             <i class="bi bi-people-fill text-primary me-1"></i> سعة المستخدمين: <strong>حتى 5 مستخدمين</strong> (أطباء + تمريض + استقبال)
@@ -384,7 +384,7 @@
 
                     <!-- CTA -->
                     <div class="pt-3">
-                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاشتراك أو بدء تجربة مجانية للباقة الاحترافية (Pro Clinic - 8500 ج.م)" 
+                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاشتراك أو بدء تجربة مجانية للباقة الاحترافية (Pro Clinic - 14500 ج.م)" 
                            target="_blank" 
                            class="btn btn-primary btn-unified-card shadow-sm tier-cta-btn text-white" 
                            style="background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%); border: none;"
@@ -411,11 +411,11 @@
                     <div class="my-3 pb-3 border-bottom border-light-subtle">
                         <div class="d-flex align-items-baseline gap-1">
                             <span class="price-currency">ج.م</span>
-                            <span class="price-value tier-price" data-monthly="1,500" data-annual="15,000">15,000</span>
+                            <span class="price-value tier-price" data-monthly="2800" data-annual="28,000">28,000</span>
                             <span class="price-period tier-period">/ سنوياً</span>
                         </div>
                         <div class="small text-success fw-bold mt-1 tier-subtext">
-                            يعادل <span class="fw-extrabold font-monospace">1,250 ج.م</span> فقط شهرياً (وفرت 3,000 ج.م)
+                            يعادل <span class="fw-extrabold font-monospace">2,333 ج.م</span> فقط شهرياً (وفرت 5,600 ج.م)
                         </div>
                         <div class="small text-muted mt-2">
                             <i class="bi bi-people-fill text-primary me-1"></i> سعة المستخدمين: <strong>حتى 15 مستخدماً</strong> (قابلة للزيادة)
@@ -460,7 +460,7 @@
 
                     <!-- CTA -->
                     <div class="pt-3">
-                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاستفسار عن باقة المراكز الطبية الكبرى (Medical Center - 15000 ج.م)" 
+                        <a href="https://wa.me/201553408200?text=مرحباً، أود الاستفسار عن باقة المراكز الطبية الكبرى (Medical Center - 28000 ج.م)" 
                            target="_blank" 
                            class="btn btn-outline-dark btn-unified-card tier-cta-btn" 
                            data-base-text="مرحباً، أود الاستفسار عن باقة المراكز الطبية الكبرى (Medical Center)">
