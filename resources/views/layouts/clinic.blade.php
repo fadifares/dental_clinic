@@ -511,7 +511,7 @@
 
 <!-- GLOBAL MODAL: Quick Add New Patient -->
 <div class="modal fade" id="newPatientGlobalModal" tabindex="-1" aria-labelledby="newPatientGlobalModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title fw-bold text-dark">
@@ -522,51 +522,55 @@
             <form action="{{ route('clinic.patients.store') }}" method="POST">
                 @csrf
                 <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">اسم المريض الثلاثي <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control" placeholder="مثال: خالد ناصر المطيري" required>
-                    </div>
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">اسم المريض الثلاثي <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" placeholder="مثال: خالد ناصر المطيري" required>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label small fw-semibold">رقم الجوال <span class="text-danger">*</span></label>
-                            <input type="tel" name="phone" class="form-control" placeholder="05XXXXXXXX" required>
+                            <input type="tel" name="phone" class="form-control" placeholder="05XXXXXXXX" required dir="ltr">
                         </div>
-                        <div class="col-6">
-                            <label class="form-label small fw-semibold">البريد الإلكتروني (لتذكيرات المواعيد)</label>
-                            <input type="email" name="email" class="form-control" placeholder="patient@example.com">
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">البريد الإلكتروني (لتذكيرات المواعيد وبطاقة التقويم)</label>
+                            <input type="email" name="email" class="form-control" placeholder="patient@example.com" dir="ltr">
                         </div>
-                    </div>
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
+                        <div class="col-md-6">
                             <label class="form-label small fw-semibold">رقم الهوية / الإقامة</label>
                             <input type="text" name="national_id" class="form-control" placeholder="10XXXXXXXX">
                         </div>
-                        <div class="col-6">
-                            <label class="form-label small fw-semibold">الجنس</label>
-                            <select name="gender" class="form-select">
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">الجنس <span class="text-danger">*</span></label>
+                            <select name="gender" class="form-select" required>
                                 <option value="male">ذكر</option>
                                 <option value="female">أنثى</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">تاريخ الميلاد</label>
-                        <input type="date" name="date_of_birth" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold text-danger">
-                            <i class="bi bi-exclamation-triangle-fill"></i> الحساسيات الدوائية (إن وجدت)
-                        </label>
-                        <input type="text" name="allergies" class="form-control" placeholder="مثال: حساسية بنسلين، حساسية لاتكس">
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label small fw-semibold">الأمراض المزمنة</label>
-                        <input type="text" name="chronic_diseases" class="form-control" placeholder="مثال: سكري، ضغط، سيولة دم">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">تاريخ الميلاد</label>
+                            <input type="date" name="date_of_birth" class="form-control">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold text-danger">
+                                <i class="bi bi-exclamation-triangle-fill me-1"></i> الحساسيات الدوائية (إن وجدت)
+                            </label>
+                            <input type="text" name="allergies" class="form-control" placeholder="مثال: حساسية بنسلين، حساسية لاتكس">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">
+                                <i class="bi bi-heart-pulse-fill text-primary me-1"></i> الأمراض المزمنة
+                            </label>
+                            <input type="text" name="chronic_diseases" class="form-control" placeholder="مثال: سكري، ضغط، سيولة دم">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-top bg-light rounded-bottom-4">
-                    <button type="button" class="btn btn-secondary btn-sm rounded-pill" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
                         <i class="bi bi-check-lg me-1"></i> حفظ وفتح الملف الطبي
                     </button>
                 </div>
