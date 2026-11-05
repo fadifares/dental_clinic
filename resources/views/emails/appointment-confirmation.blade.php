@@ -6,28 +6,28 @@
     <title>تأكيد حجز موعدك الطبي - {{ $appointment->clinic->name ?? 'Dental Pro' }}</title>
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "Event",
+      "@@context": "https://schema.org",
+      "@@type": "Event",
       "name": "موعد أسنان: {{ $appointment->service_type ?? 'كشف واستشارة' }}",
       "startDate": "{{ $appointment->getStartDateTime()->toIso8601String() }}",
       "endDate": "{{ $appointment->getEndDateTime()->toIso8601String() }}",
       "eventStatus": "https://schema.org/EventScheduled",
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
       "location": {
-        "@type": "Place",
+        "@@type": "Place",
         "name": "{{ $appointment->clinic->name ?? 'عيادة الأسنان' }}",
         "address": {
-          "@type": "PostalAddress",
+          "@@type": "PostalAddress",
           "addressLocality": "{{ $appointment->clinic->address ?? 'الفرع الرئيسي' }}"
         }
       },
       "organizer": {
-        "@type": "Organization",
+        "@@type": "Organization",
         "name": "{{ $appointment->clinic->name ?? 'مركز Dental Pro لطب الأسنان' }}",
         "email": "{{ config('mail.from.address', 'app@go-2web.com') }}"
       },
       "performer": {
-        "@type": "Person",
+        "@@type": "Person",
         "name": "{{ $appointment->doctor?->name ?? 'طبيب الأسنان' }}"
       },
       "description": "موعد طبي للمريض {{ $appointment->patient?->name ?? '' }} في عيادة الأسنان"
