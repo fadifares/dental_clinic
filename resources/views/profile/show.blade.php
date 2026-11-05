@@ -70,6 +70,56 @@
         color: #0284c7;
         background-color: rgba(2, 132, 199, 0.1);
     }
+    .btn-update-password {
+        background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%);
+        color: #ffffff !important;
+        border: none;
+        padding: 0.7rem 2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+    .btn-update-password:hover {
+        background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
+        box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+        transform: translateY(-2px);
+        color: #ffffff !important;
+    }
+    .btn-update-password:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+    }
+    .btn-save-profile {
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        color: #ffffff !important;
+        border: none;
+        padding: 0.7rem 2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+    .btn-save-profile:hover {
+        background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+        box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+        transform: translateY(-2px);
+        color: #ffffff !important;
+    }
+    .btn-save-profile:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+    }
 </style>
 
 <div class="container-fluid py-2">
@@ -317,8 +367,8 @@
                         </div>
 
                         <div class="mt-4 pt-3 border-top d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm d-inline-flex align-items-center gap-1.5">
-                                <i class="bi bi-check2-circle fs-6"></i>
+                            <button type="submit" class="btn-save-profile">
+                                <i class="bi bi-check2-circle fs-5"></i>
                                 <span>حفظ التعديلات الشخصية</span>
                             </button>
                         </div>
@@ -409,8 +459,8 @@
                         </div>
 
                         <div class="mt-4 pt-3 border-top d-flex justify-content-end">
-                            <button type="submit" class="btn btn-warning px-4 py-2 rounded-pill fw-bold shadow-sm d-inline-flex align-items-center gap-1.5 text-dark">
-                                <i class="bi bi-key-fill fs-6"></i>
+                            <button type="submit" class="btn-update-password">
+                                <i class="bi bi-shield-lock-fill fs-5 text-info"></i>
                                 <span>تحديث كلمة المرور</span>
                             </button>
                         </div>
