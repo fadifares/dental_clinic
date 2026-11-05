@@ -39,11 +39,12 @@ class Appointment extends Model
     {
         $dateStr = $this->appointment_date ? $this->appointment_date->format('Y-m-d') : now()->toDateString();
         $timeStr = $this->appointment_time ?? '12:00:00';
+        $tz = config('app.timezone') ?: 'Africa/Cairo';
 
         try {
-            return Carbon::parse("{$dateStr} {$timeStr}");
+            return Carbon::parse("{$dateStr} {$timeStr}", $tz);
         } catch (\Throwable) {
-            return now();
+            return now($tz);
         }
     }
 
@@ -75,8 +76,10 @@ class Appointment extends Model
 
         $uid = 'apt-'.$this->id.'-'.($this->created_at?->timestamp ?? time()).'@dentalpro.test';
         $dtStamp = gmdate('Ymd\THis\Z');
-        $dtStart = gmdate('Ymd\THis\Z', $start->timestamp);
-        $dtEnd = gmdate('Ymd\THis\Z', $end->timestamp);
+
+        // Output as RFC 5545 Local Floating Time (without trailing Z) so calendar apps do NOT shift by UTC offset
+        $dtStart = $start->format('Ymd\THis');
+        $dtEnd = $end->format('Ymd\THis');
 
         $escape = function ($str) {
             return addcslashes((string) $str, ",;\\\n\r");
@@ -139,7 +142,16 @@ class Appointment extends Model
         $clinicAddress = $this->clinic?->address ?? 'الفرع الرئيسي';
         $service = $this->service_type ?? 'كشف واستشارة طبية';
         $dateStr = $this->appointment_date ? $this->appointment_date->format('Y-m-d') : date('Y-m-d');
-        $timeStr = $this->appointment_time ?? '12:00';
+
+        $rawTime = $this->appointment_time ?? '12:00';
+        $timeParsed = null;
+        try {
+            $timeParsed = Carbon::parse($rawTime);
+            $timePeriod = $timeParsed->format('A') === 'PM' ? 'مساءً' : 'صباحاً';
+            $timeFormatted = $timeParsed->format('h:i').' '.$timePeriod;
+        } catch (\Throwable) {
+            $timeFormatted = $rawTime;
+        }
         $fileNum = $this->patient?->file_number ?? '-';
 
         $msg = "🦷 *تأكيد حجز موعد طبي - {$clinicName}*\n\n"
@@ -147,7 +159,7 @@ class Appointment extends Model
              ."تم تأكيد حجز موعد جلستك القادمة بنجاح وفق التفاصيل التالية:\n\n"
              ."👨‍⚕️ *الطبيب المعالج:* {$doctorName} ({$doctorSpec})\n"
              ."📅 *التاريخ:* {$dateStr}\n"
-             ."⏰ *الوقت:* {$timeStr}\n"
+             ."⏰ *الوقت:* {$timeFormatted}\n"
              ."🩺 *نوع الإجراء:* {$service}\n"
              ."📁 *رقم الملف:* #{$fileNum}\n"
              ."📍 *الموقع:* {$clinicAddress}\n\n"
@@ -166,13 +178,15 @@ class Appointment extends Model
         $start = $this->getStartDateTime();
         $end = $this->getEndDateTime();
 
-        $startStr = gmdate('Ymd\THis\Z', $start->timestamp);
-        $endStr = gmdate('Ymd\THis\Z', $end->timestamp);
+        // Local format without Z + timezone parameter
+        $startStr = $start->format('Ymd\THis');
+        $endStr = $end->format('Ymd\THis');
+        $tz = config('app.timezone') ?: 'Africa/Cairo';
 
         $title = urlencode('موعد في عيادة الأسنان - '.($this->service_type ?? 'كشف'));
-        $details = urlencode('موعد طبي مع د. '.($this->doctor?->name ?? 'طبيب الأسنان')."\nالخدمة: ".($this->service_type ?? 'كشف أسنان')."\nالمريض: ".($this->patient?->name ?? ''));
+        $details = urlencode('موعد طبي مع '.($this->doctor?->name ?? 'طبيب الأسنان')."\nالخدمة: ".($this->service_type ?? 'كشف أسنان')."\nالمريض: ".($this->patient?->name ?? ''));
         $location = urlencode(($this->clinic?->name ?? 'عيادة الأسنان').' - '.($this->clinic?->address ?? ''));
 
-        return "https://calendar.google.com/calendar/render?action=TEMPLATE&text={$title}&dates={$startStr}/{$endStr}&details={$details}&location={$location}";
+        return "https://calendar.google.com/calendar/render?action=TEMPLATE&text={$title}&dates={$startStr}/{$endStr}&ctz={$tz}&details={$details}&location={$location}";
     }
 }

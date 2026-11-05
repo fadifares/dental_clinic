@@ -212,12 +212,31 @@
 
             <div class="detail-row">
                 <span class="detail-label">⏰ التوقيت المحدد:</span>
-                <span class="detail-value">{{ $appointment->appointment_time ?? '12:00' }}</span>
+                <span class="detail-value rtl-text">
+                    @php
+                        $parsedTime = null;
+                        try {
+                            $parsedTime = \Carbon\Carbon::parse($appointment->appointment_time);
+                        } catch(\Throwable $e) {}
+                    @endphp
+                    @if($parsedTime)
+                        {{ $parsedTime->format('h:i') }} {{ $parsedTime->format('A') === 'PM' ? 'مساءً' : 'صباحاً' }}
+                        <span style="font-size: 12px; color: #64748b;">({{ $appointment->appointment_time }})</span>
+                    @else
+                        {{ $appointment->appointment_time ?? '12:00' }}
+                    @endif
+                </span>
             </div>
 
             <div class="detail-row">
                 <span class="detail-label">👨‍⚕️ الطبيب المعالج:</span>
-                <span class="detail-value rtl-text">د. {{ $appointment->doctor ? $appointment->doctor->name : 'طبيب العيادة المختص' }} ({{ $appointment->doctor->speciality ?? 'طب أسنان' }})</span>
+                <span class="detail-value rtl-text">
+                    @php
+                        $docName = $appointment->doctor ? $appointment->doctor->name : 'طبيب العيادة المختص';
+                        $docDisplay = str_starts_with(trim($docName), 'د.') ? trim($docName) : 'د. ' . trim($docName);
+                    @endphp
+                    {{ $docDisplay }} ({{ $appointment->doctor->speciality ?? 'طب أسنان' }})
+                </span>
             </div>
 
             <div class="detail-row">
