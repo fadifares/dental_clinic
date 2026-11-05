@@ -273,11 +273,11 @@
                                 <label class="form-label fw-bold small text-dark mb-1.5">
                                     البريد الإلكتروني (لتسجيل الدخول) <span class="text-danger">*</span>
                                 </label>
-                                <div class="clinic-field-wrap" dir="ltr">
-                                    <i class="bi bi-envelope field-icon-start"></i>
+                                <div class="clinic-field-wrap">
+                                    <i class="bi bi-envelope field-icon-end"></i>
                                     <input type="email" name="email" 
-                                           class="form-control text-start @error('email') is-invalid @enderror" 
-                                           style="padding-left: 42px; padding-right: 14px;"
+                                           class="form-control @error('email') is-invalid @enderror" 
+                                           style="padding-right: 42px; padding-left: 14px;"
                                            value="{{ old('email', $user->email) }}" required placeholder="your.email@example.com">
                                 </div>
                                 @error('email')
@@ -289,11 +289,11 @@
                                 <label class="form-label fw-bold small text-dark mb-1.5">
                                     رقم الهاتف / الواتساب
                                 </label>
-                                <div class="clinic-field-wrap" dir="ltr">
-                                    <i class="bi bi-telephone field-icon-start"></i>
+                                <div class="clinic-field-wrap">
+                                    <i class="bi bi-telephone field-icon-end"></i>
                                     <input type="text" name="phone" 
-                                           class="form-control text-start @error('phone') is-invalid @enderror" 
-                                           style="padding-left: 42px; padding-right: 14px;"
+                                           class="form-control @error('phone') is-invalid @enderror" 
+                                           style="padding-right: 42px; padding-left: 14px;"
                                            value="{{ old('phone', $user->phone) }}" placeholder="+20 1x xxx xxxx">
                                 </div>
                                 @error('phone')
