@@ -3,6 +3,75 @@
 @section('title', 'الملف الشخصي وأمان الحساب | DentalPro ERP')
 
 @section('content')
+<style>
+    .clinic-field-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    .clinic-field-wrap .form-control {
+        height: 48px;
+        font-size: 0.95rem;
+        border-radius: 0.65rem !important;
+        background-color: #f8fafc;
+        border: 1px solid #cbd5e1;
+        transition: all 0.2s ease-in-out;
+        width: 100%;
+        color: #1e293b;
+    }
+    .clinic-field-wrap .form-control:focus {
+        background-color: #ffffff;
+        border-color: #0284c7;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+    .clinic-field-wrap .field-icon-end {
+        position: absolute;
+        right: 14px;
+        color: #94a3b8;
+        font-size: 1.15rem;
+        pointer-events: none;
+        z-index: 4;
+        transition: color 0.2s ease;
+    }
+    .clinic-field-wrap:focus-within .field-icon-end {
+        color: #0284c7;
+    }
+    .clinic-field-wrap .field-icon-start {
+        position: absolute;
+        left: 14px;
+        color: #94a3b8;
+        font-size: 1.15rem;
+        pointer-events: none;
+        z-index: 4;
+        transition: color 0.2s ease;
+    }
+    .clinic-field-wrap:focus-within .field-icon-start {
+        color: #0284c7;
+    }
+    .clinic-field-wrap .field-toggle-btn {
+        position: absolute;
+        left: 10px;
+        background: transparent;
+        border: none;
+        color: #64748b;
+        font-size: 1.15rem;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+    }
+    .clinic-field-wrap .field-toggle-btn:hover {
+        color: #0284c7;
+        background-color: rgba(2, 132, 199, 0.1);
+    }
+</style>
+
 <div class="container-fluid py-2">
     <!-- Header & Breadcrumb -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
@@ -96,42 +165,42 @@
 
                     <ul class="list-unstyled mb-0 d-flex flex-column gap-3 small">
                         @if($user->clinic)
-                            <li class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted"><i class="bi bi-hospital me-1 text-info"></i> العيادة التابع لها:</span>
-                                <span class="fw-bold text-dark">{{ $user->clinic->name }}</span>
+                            <li class="d-flex justify-content-between align-items-center gap-2">
+                                <span class="text-muted text-nowrap"><i class="bi bi-hospital me-1 text-info"></i> العيادة التابع لها:</span>
+                                <span class="fw-bold text-dark text-truncate">{{ $user->clinic->name }}</span>
                             </li>
-                            <li class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted"><i class="bi bi-hash me-1 text-info"></i> معرّف العيادة (Slug):</span>
+                            <li class="d-flex justify-content-between align-items-center gap-2">
+                                <span class="text-muted text-nowrap"><i class="bi bi-hash me-1 text-info"></i> معرّف العيادة (Slug):</span>
                                 <span class="badge bg-light text-dark font-monospace border px-2 py-1">{{ $user->clinic->slug }}</span>
                             </li>
                         @endif
 
-                        <li class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted"><i class="bi bi-telephone me-1 text-primary"></i> الهاتف:</span>
+                        <li class="d-flex justify-content-between align-items-center gap-2">
+                            <span class="text-muted text-nowrap"><i class="bi bi-telephone me-1 text-primary"></i> الهاتف:</span>
                             <span class="fw-bold text-dark font-monospace" dir="ltr">{{ $user->phone ?? 'غير مسجل' }}</span>
                         </li>
 
-                        <li class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted"><i class="bi bi-calendar-event me-1 text-secondary"></i> تاريخ التسجيل:</span>
+                        <li class="d-flex justify-content-between align-items-center gap-2">
+                            <span class="text-muted text-nowrap"><i class="bi bi-calendar-event me-1 text-secondary"></i> تاريخ التسجيل:</span>
                             <span class="fw-medium text-dark font-monospace">{{ $user->created_at->format('Y-m-d') }}</span>
                         </li>
 
-                        <li class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted"><i class="bi bi-clock-history me-1 text-warning"></i> آخر تسجيل دخول:</span>
-                            <span class="fw-bold text-dark font-monospace">
+                        <li class="d-flex justify-content-between align-items-center gap-2">
+                            <span class="text-muted text-nowrap"><i class="bi bi-clock-history me-1 text-warning"></i> آخر تسجيل دخول:</span>
+                            <span class="fw-bold text-dark font-monospace text-end">
                                 {{ $user->last_login_at ? $user->last_login_at->format('Y-m-d H:i') : 'الآن' }}
                             </span>
                         </li>
 
-                        <li class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted"><i class="bi bi-globe me-1 text-info"></i> عنوان IP الأخير:</span>
+                        <li class="d-flex justify-content-between align-items-center gap-2">
+                            <span class="text-muted text-nowrap"><i class="bi bi-globe me-1 text-info"></i> عنوان IP الأخير:</span>
                             <span class="badge bg-secondary-subtle text-dark font-monospace px-2 py-1">
                                 {{ $user->last_login_ip ?? request()->ip() }}
                             </span>
                         </li>
 
-                        <li class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted"><i class="bi bi-check-circle me-1 text-success"></i> حالة الحساب:</span>
+                        <li class="d-flex justify-content-between align-items-center gap-2">
+                            <span class="text-muted text-nowrap"><i class="bi bi-check-circle me-1 text-success"></i> حالة الحساب:</span>
                             <span class="badge bg-success-subtle text-success px-2 py-1 rounded-pill fw-bold">
                                 {{ $user->is_active ? 'نشط وفعّال' : 'معطّل' }}
                             </span>
@@ -169,13 +238,13 @@
         <div class="col-lg-8">
             <!-- 1. Edit Personal Info -->
             <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-header bg-white border-bottom py-3 d-flex align-items-center gap-2">
+                <div class="card-header bg-white border-bottom py-3 d-flex align-items-center gap-2.5">
                     <span class="badge bg-primary-subtle text-primary p-2 rounded-3">
                         <i class="bi bi-person-lines-fill fs-6"></i>
                     </span>
                     <div>
                         <h5 class="fw-bold text-dark mb-0 fs-6">1. البيانات الشخصية ومعلومات الاتصال</h5>
-                        <span class="text-muted" style="font-size: 0.78rem;">تحديث اسمك، بريدك الإلكتروني، ورقم هاتفك المستخدم للتواصل والإشعارات</span>
+                        <div class="text-muted small mt-0.5">تحديث اسمك، بريدك الإلكتروني، ورقم هاتفك المستخدم للتواصل والإشعارات</div>
                     </div>
                 </div>
                 <div class="card-body p-4">
@@ -185,12 +254,14 @@
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small text-dark">
+                                <label class="form-label fw-bold small text-dark mb-1.5">
                                     الاسم الكامل <span class="text-danger">*</span>
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
-                                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
+                                <div class="clinic-field-wrap">
+                                    <i class="bi bi-person field-icon-end"></i>
+                                    <input type="text" name="name" 
+                                           class="form-control @error('name') is-invalid @enderror" 
+                                           style="padding-right: 42px; padding-left: 14px;"
                                            value="{{ old('name', $user->name) }}" required placeholder="أدخل اسمك الكامل">
                                 </div>
                                 @error('name')
@@ -199,13 +270,15 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small text-dark">
+                                <label class="form-label fw-bold small text-dark mb-1.5">
                                     البريد الإلكتروني (لتسجيل الدخول) <span class="text-danger">*</span>
                                 </label>
-                                <div class="input-group" dir="ltr">
-                                    <input type="email" name="email" class="form-control text-start @error('email') is-invalid @enderror" 
+                                <div class="clinic-field-wrap" dir="ltr">
+                                    <i class="bi bi-envelope field-icon-start"></i>
+                                    <input type="email" name="email" 
+                                           class="form-control text-start @error('email') is-invalid @enderror" 
+                                           style="padding-left: 42px; padding-right: 14px;"
                                            value="{{ old('email', $user->email) }}" required placeholder="your.email@example.com">
-                                    <span class="input-group-text bg-light border-start-0"><i class="bi bi-envelope text-muted"></i></span>
                                 </div>
                                 @error('email')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
@@ -213,13 +286,15 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small text-dark">
+                                <label class="form-label fw-bold small text-dark mb-1.5">
                                     رقم الهاتف / الواتساب
                                 </label>
-                                <div class="input-group" dir="ltr">
-                                    <input type="text" name="phone" class="form-control text-start @error('phone') is-invalid @enderror" 
+                                <div class="clinic-field-wrap" dir="ltr">
+                                    <i class="bi bi-telephone field-icon-start"></i>
+                                    <input type="text" name="phone" 
+                                           class="form-control text-start @error('phone') is-invalid @enderror" 
+                                           style="padding-left: 42px; padding-right: 14px;"
                                            value="{{ old('phone', $user->phone) }}" placeholder="+20 1x xxx xxxx">
-                                    <span class="input-group-text bg-light border-start-0"><i class="bi bi-telephone text-muted"></i></span>
                                 </div>
                                 @error('phone')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
@@ -227,13 +302,17 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small text-dark">
+                                <label class="form-label fw-bold small text-dark mb-1.5">
                                     الدور الوظيفي في النظام
                                 </label>
-                                <input type="text" class="form-control bg-light" 
-                                       value="{{ $user->isSuperAdmin() ? 'مدير المنصة العام (SaaS Super Admin)' : $user->getRoleLabelsString() }}" 
-                                       disabled readonly>
-                                <div class="form-text" style="font-size: 0.74rem;">الصلاحيات يتم تحديدها من قبل إدارة العيادة والمنصة.</div>
+                                <div class="clinic-field-wrap">
+                                    <i class="bi bi-shield-lock field-icon-end"></i>
+                                    <input type="text" class="form-control bg-light" 
+                                           style="padding-right: 42px; padding-left: 14px;"
+                                           value="{{ $user->isSuperAdmin() ? 'مدير المنصة العام (SaaS Super Admin)' : $user->getRoleLabelsString() }}" 
+                                           disabled readonly>
+                                </div>
+                                <div class="form-text text-muted" style="font-size: 0.74rem;">الصلاحيات يتم تحديدها من قبل إدارة العيادة والمنصة.</div>
                             </div>
                         </div>
 
@@ -249,13 +328,13 @@
 
             <!-- 2. Change Password -->
             <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-white border-bottom py-3 d-flex align-items-center gap-2">
+                <div class="card-header bg-white border-bottom py-3 d-flex align-items-center gap-2.5">
                     <span class="badge bg-warning-subtle text-warning p-2 rounded-3">
                         <i class="bi bi-key-fill fs-6 text-dark"></i>
                     </span>
                     <div>
                         <h5 class="fw-bold text-dark mb-0 fs-6">2. تعديل كلمة المرور وتأمين الحساب</h5>
-                        <span class="text-muted" style="font-size: 0.78rem;">تأكد من اختيار كلمة مرور قوية مكونة من 8 خانات على الأقل تحتوي على حروف وأرقام</span>
+                        <div class="text-muted small mt-0.5">تأكد من اختيار كلمة مرور قوية مكونة من 8 خانات على الأقل تحتوي على حروف وأرقام</div>
                     </div>
                 </div>
                 <div class="card-body p-4">
@@ -265,15 +344,17 @@
 
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="form-label fw-bold small text-dark">
+                                <label class="form-label fw-bold small text-dark mb-1.5">
                                     كلمة المرور الحالية <span class="text-danger">*</span>
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
+                                <div class="clinic-field-wrap">
+                                    <i class="bi bi-lock field-icon-end"></i>
                                     <input type="password" name="current_password" id="current_password" 
-                                           class="form-control border-start-0 @error('current_password') is-invalid @enderror" 
+                                           class="form-control @error('current_password') is-invalid @enderror" 
+                                           style="padding-right: 42px; padding-left: 46px;" 
                                            required placeholder="أدخل كلمة المرور الحالية للتأكيد">
-                                    <button class="btn btn-outline-secondary border-start-0" type="button" onclick="togglePassVisibility('current_password', this)">
+                                    <button type="button" class="field-toggle-btn" 
+                                            onclick="togglePassVisibility('current_password', this)" title="إظهار / إخفاء كلمة المرور">
                                         <i class="bi bi-eye"></i>
                                     </button>
                                 </div>
@@ -283,15 +364,17 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small text-dark">
+                                <label class="form-label fw-bold small text-dark mb-1.5">
                                     كلمة المرور الجديدة <span class="text-danger">*</span>
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-shield-lock text-muted"></i></span>
+                                <div class="clinic-field-wrap">
+                                    <i class="bi bi-shield-lock field-icon-end"></i>
                                     <input type="password" name="password" id="new_password" 
-                                           class="form-control border-start-0 @error('password') is-invalid @enderror" 
+                                           class="form-control @error('password') is-invalid @enderror" 
+                                           style="padding-right: 42px; padding-left: 46px;" 
                                            required minlength="8" placeholder="8 خانات على الأقل">
-                                    <button class="btn btn-outline-secondary border-start-0" type="button" onclick="togglePassVisibility('new_password', this)">
+                                    <button type="button" class="field-toggle-btn" 
+                                            onclick="togglePassVisibility('new_password', this)" title="إظهار / إخفاء كلمة المرور">
                                         <i class="bi bi-eye"></i>
                                     </button>
                                 </div>
@@ -301,15 +384,17 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small text-dark">
+                                <label class="form-label fw-bold small text-dark mb-1.5">
                                     تأكيد كلمة المرور الجديدة <span class="text-danger">*</span>
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-shield-check text-muted"></i></span>
+                                <div class="clinic-field-wrap">
+                                    <i class="bi bi-shield-check field-icon-end"></i>
                                     <input type="password" name="password_confirmation" id="password_confirmation" 
-                                           class="form-control border-start-0" 
+                                           class="form-control" 
+                                           style="padding-right: 42px; padding-left: 46px;" 
                                            required minlength="8" placeholder="أعد كتابة كلمة المرور الجديدة">
-                                    <button class="btn btn-outline-secondary border-start-0" type="button" onclick="togglePassVisibility('password_confirmation', this)">
+                                    <button type="button" class="field-toggle-btn" 
+                                            onclick="togglePassVisibility('password_confirmation', this)" title="إظهار / إخفاء كلمة المرور">
                                         <i class="bi bi-eye"></i>
                                     </button>
                                 </div>
@@ -352,4 +437,5 @@
     }
 </script>
 @endsection
+
 
