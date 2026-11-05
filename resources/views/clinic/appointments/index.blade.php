@@ -187,6 +187,17 @@
                                 <i class="bi bi-whatsapp"></i>
                             </a>
 
+                            @if($apt->status !== 'completed' && $apt->status !== 'cancelled')
+                                <!-- Edit Appointment Button -->
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-primary rounded-circle" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#editIndexAppointmentModal-{{ $apt->id }}" 
+                                        title="تعديل الموعد وإعادة الجدولة">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            @endif
+
                             <a href="{{ route('clinic.patients.show', $apt->patient) }}" class="btn btn-sm btn-outline-secondary rounded-circle" title="فتح الملف الطبي">
                                 <i class="bi bi-folder2-open"></i>
                             </a>
@@ -271,6 +282,85 @@
         </div>
     </div>
 </div>
+
+{{-- Modals for Editing Existing Appointments --}}
+@foreach($appointments as $apt)
+    @if($apt->status !== 'completed' && $apt->status !== 'cancelled')
+    <div class="modal fade" id="editIndexAppointmentModal-{{ $apt->id }}" tabindex="-1" aria-labelledby="editIndexAppointmentModalLabel-{{ $apt->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-dark">
+                        <i class="bi bi-pencil-square text-primary me-2"></i> تعديل موعد المريض: {{ $apt->patient->name }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('clinic.appointments.update', $apt) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">الطبيب المعالج <span class="text-danger">*</span></label>
+                                <select name="doctor_id" class="form-select" required>
+                                    @foreach($doctors as $doc)
+                                        <option value="{{ $doc->id }}" {{ $apt->doctor_id == $doc->id ? 'selected' : '' }}>
+                                            {{ $doc->name }} ({{ $doc->speciality }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">نوع الإجراء الطبي <span class="text-danger">*</span></label>
+                                <input type="text" name="service_type" class="form-control" value="{{ $apt->service_type }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">تاريخ الموعد الجديد <span class="text-danger">*</span></label>
+                                <input type="date" name="appointment_date" class="form-control" value="{{ $apt->appointment_date ? $apt->appointment_date->format('Y-m-d') : '' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">وقت الموعد الجديد <span class="text-danger">*</span></label>
+                                <input type="time" name="appointment_time" class="form-control" value="{{ \Carbon\Carbon::parse($apt->appointment_time)->format('H:i') }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">حالة الموعد</label>
+                                <select name="status" class="form-select">
+                                    <option value="scheduled" {{ $apt->status === 'scheduled' ? 'selected' : '' }}>مؤكد (Scheduled)</option>
+                                    <option value="waiting" {{ $apt->status === 'waiting' ? 'selected' : '' }}>في الانتظار (Waiting)</option>
+                                    <option value="in_consultation" {{ $apt->status === 'in_consultation' ? 'selected' : '' }}>في الكشف (In Consultation)</option>
+                                    <option value="cancelled" {{ $apt->status === 'cancelled' ? 'selected' : '' }}>ملغي (Cancelled)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 d-flex align-items-center">
+                                <div class="form-check mt-3">
+                                    <input class="form-check-input" type="checkbox" name="notify_patient" value="1" id="notifyPatientIndex-{{ $apt->id }}" checked>
+                                    <label class="form-check-label small fw-semibold text-dark" for="notifyPatientIndex-{{ $apt->id }}">
+                                        إعادة إرسال بطاقة التقويم (.ics) وتحديث واتساب للمريض
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label small fw-semibold">ملاحظات سريرية أو تعليمات خاصة</label>
+                                <textarea name="notes" class="form-control" rows="2" placeholder="أي تعليمات أو ملاحظات خاصة بالموعد...">{{ $apt->notes }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top bg-light rounded-bottom-4">
+                        <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                            <i class="bi bi-check-lg me-1"></i> حفظ وتحديث الموعد
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
+@endforeach
 
 @endsection
 

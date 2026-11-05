@@ -228,4 +228,81 @@ class AppointmentBookingNotificationTest extends TestCase
 
         $this->assertNotEmpty($attachments);
     }
+
+    /**
+     * Test updating/rescheduling an existing future appointment.
+     */
+    public function test_updating_future_appointment_modifies_record_and_resends_calendar_invite(): void
+    {
+        Mail::fake();
+
+        $appointment = Appointment::create([
+            'patient_id' => $this->patientWithEmail->id,
+            'doctor_id' => $this->doctor->id,
+            'appointment_date' => now()->addDays(2)->toDateString(),
+            'appointment_time' => '10:00',
+            'service_type' => 'كشف أولي',
+            'status' => 'scheduled',
+        ]);
+
+        $newDate = now()->addDays(5)->toDateString();
+
+        $response = $this->actingAs($this->receptionist)
+            ->put(route('clinic.appointments.update', $appointment), [
+                'doctor_id' => $this->doctor->id,
+                'appointment_date' => $newDate,
+                'appointment_time' => '15:30',
+                'service_type' => 'جلسة حشو تجميلي معدلة',
+                'notes' => 'تم تغيير الموعد بناء على طلب المريض',
+                'status' => 'scheduled',
+                'notify_patient' => '1',
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('email_sent', true);
+        $response->assertSessionHas('whatsapp_url');
+
+        $appointment->refresh();
+        $this->assertEquals($newDate, $appointment->appointment_date->toDateString());
+        $this->assertEquals('15:30', $appointment->appointment_time);
+        $this->assertEquals('جلسة حشو تجميلي معدلة', $appointment->service_type);
+
+        Mail::assertSent(AppointmentConfirmationMail::class, function ($mail) use ($appointment) {
+            return $mail->appointment->id === $appointment->id
+                && $mail->hasTo('fahad.patient@example.com');
+        });
+    }
+
+    /**
+     * Test AJAX updating appointment returns JSON response.
+     */
+    public function test_ajax_updating_appointment_returns_json(): void
+    {
+        Mail::fake();
+
+        $appointment = Appointment::create([
+            'patient_id' => $this->patientWithEmail->id,
+            'doctor_id' => $this->doctor->id,
+            'appointment_date' => now()->addDays(3)->toDateString(),
+            'appointment_time' => '11:00',
+            'service_type' => 'تنظيف جير',
+            'status' => 'scheduled',
+        ]);
+
+        $response = $this->actingAs($this->receptionist)
+            ->putJson(route('clinic.appointments.update', $appointment), [
+                'doctor_id' => $this->doctor->id,
+                'appointment_date' => now()->addDays(4)->toDateString(),
+                'appointment_time' => '12:00',
+                'service_type' => 'تنظيف جير وتلميع',
+                'status' => 'scheduled',
+                'notify_patient' => '0',
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'email_sent' => false,
+        ]);
+    }
 }

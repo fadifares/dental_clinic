@@ -139,6 +139,63 @@ class AppointmentController extends Controller
     }
 
     /**
+     * Update an existing appointment (reschedule, change doctor, service, or notes).
+     */
+    public function update(Request $request, Appointment $appointment): RedirectResponse|JsonResponse
+    {
+        $validated = $request->validate([
+            'doctor_id' => 'required|exists:doctors,id',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required',
+            'service_type' => 'required|string',
+            'notes' => 'nullable|string',
+            'status' => 'nullable|in:scheduled,waiting,in_consultation,completed,cancelled,no_show',
+        ]);
+
+        $appointment->update($validated);
+        $appointment->load(['patient', 'doctor', 'clinic']);
+
+        $patient = $appointment->patient;
+        $emailSent = false;
+
+        // If patient has an email and user opted to notify
+        if ($request->boolean('notify_patient', true) && $patient && ! empty($patient->email)) {
+            try {
+                Mail::to($patient->email)->send(new AppointmentConfirmationMail($appointment));
+                $emailSent = true;
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
+        $whatsappUrl = $appointment->getWhatsAppUrl();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم تعديل الموعد بنجاح'.($emailSent ? ' وإرسال التحديث لبريد المريض.' : '.'),
+                'appointment' => $appointment,
+                'whatsapp_url' => $whatsappUrl,
+                'email_sent' => $emailSent,
+                'patient_name' => $patient?->name,
+                'patient_phone' => $patient?->phone,
+            ]);
+        }
+
+        return back()
+            ->with('success', 'تم تعديل وتحديث بيانات الموعد بنجاح'.($emailSent ? ' وإرسال بطاقة التقويم المحدثة لبريد المريض.' : '.'))
+            ->with('whatsapp_url', $whatsappUrl)
+            ->with('whatsapp_patient_name', $patient?->name)
+            ->with('whatsapp_patient_phone', $patient?->phone)
+            ->with('email_sent', $emailSent)
+            ->with('patient_email', $patient?->email)
+            ->with('appointment_date', $appointment->appointment_date?->format('Y-m-d'))
+            ->with('appointment_time', $appointment->appointment_time)
+            ->with('doctor_name', $appointment->doctor?->name)
+            ->with('service_type', $appointment->service_type);
+    }
+
+    /**
      * Update appointment status via AJAX.
      */
     public function updateStatus(Request $request, Appointment $appointment): JsonResponse
