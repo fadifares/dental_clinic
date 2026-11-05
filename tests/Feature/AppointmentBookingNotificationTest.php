@@ -305,4 +305,66 @@ class AppointmentBookingNotificationTest extends TestCase
             'email_sent' => false,
         ]);
     }
+
+    /**
+     * Test past appointment cannot be updated and returns error.
+     */
+    public function test_past_appointment_cannot_be_updated(): void
+    {
+        $pastAppointment = Appointment::create([
+            'patient_id' => $this->patientWithEmail->id,
+            'doctor_id' => $this->doctor->id,
+            'appointment_date' => now()->subDays(2)->toDateString(),
+            'appointment_time' => '10:00',
+            'service_type' => 'كشف قديم',
+            'status' => 'scheduled',
+        ]);
+
+        $this->assertTrue($pastAppointment->isPast());
+        $this->assertFalse($pastAppointment->canBeEdited());
+
+        // Web request
+        $response = $this->actingAs($this->receptionist)
+            ->put(route('clinic.appointments.update', $pastAppointment), [
+                'doctor_id' => $this->doctor->id,
+                'appointment_date' => now()->toDateString(),
+                'appointment_time' => '12:00',
+                'service_type' => 'محاولة تعديل موعد سابق',
+            ]);
+
+        $response->assertSessionHas('error');
+
+        // JSON request
+        $jsonResponse = $this->actingAs($this->receptionist)
+            ->putJson(route('clinic.appointments.update', $pastAppointment), [
+                'doctor_id' => $this->doctor->id,
+                'appointment_date' => now()->toDateString(),
+                'appointment_time' => '12:00',
+                'service_type' => 'محاولة تعديل موعد سابق',
+            ]);
+
+        $jsonResponse->assertStatus(422);
+        $jsonResponse->assertJson(['success' => false]);
+    }
+
+    /**
+     * Test past appointment cannot be deleted.
+     */
+    public function test_past_appointment_cannot_be_deleted(): void
+    {
+        $pastAppointment = Appointment::create([
+            'patient_id' => $this->patientWithEmail->id,
+            'doctor_id' => $this->doctor->id,
+            'appointment_date' => now()->subDays(5)->toDateString(),
+            'appointment_time' => '09:00',
+            'service_type' => 'كشف سابق',
+            'status' => 'completed',
+        ]);
+
+        $response = $this->actingAs($this->receptionist)
+            ->delete(route('clinic.appointments.destroy', $pastAppointment));
+
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('appointments', ['id' => $pastAppointment->id]);
+    }
 }

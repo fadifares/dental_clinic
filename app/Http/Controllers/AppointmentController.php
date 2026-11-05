@@ -143,6 +143,17 @@ class AppointmentController extends Controller
      */
     public function update(Request $request, Appointment $appointment): RedirectResponse|JsonResponse
     {
+        if ($appointment->isPast()) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن تعديل المواعيد السابقة، المواعيد السابقة مخصصة للأرشفة والاطلاع فقط.',
+                ], 422);
+            }
+
+            return back()->with('error', 'لا يمكن تعديل المواعيد السابقة، المواعيد السابقة مخصصة للأرشفة والاطلاع فقط.');
+        }
+
         $validated = $request->validate([
             'doctor_id' => 'required|exists:doctors,id',
             'appointment_date' => 'required|date',
@@ -218,6 +229,10 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment): RedirectResponse
     {
+        if ($appointment->isPast()) {
+            return back()->with('error', 'لا يمكن إلغاء أو حذف المواعيد السابقة المحفوظة في الأرشيف.');
+        }
+
         $appointment->delete();
 
         return back()->with('success', 'تم إلغاء الموعد بنجاح.');

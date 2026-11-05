@@ -260,7 +260,7 @@
                             <td class="small text-muted">{{ $apt->notes ?? '-' }}</td>
                             <td class="text-center">
                                 <div class="d-inline-flex gap-1 align-items-center">
-                                    @if($apt->status !== 'completed' && $apt->status !== 'cancelled')
+                                    @if($apt->canBeEdited())
                                         <!-- Edit Appointment Button -->
                                         <button type="button" 
                                                 class="btn btn-sm btn-outline-primary rounded-circle" 
@@ -269,16 +269,14 @@
                                                 title="تعديل الموعد وإعادة الجدولة">
                                             <i class="bi bi-pencil"></i>
                                         </button>
-                                    @endif
 
-                                    <!-- Direct WhatsApp Button -->
-                                    <a href="{{ $apt->getWhatsAppUrl() }}" target="_blank" 
-                                       class="btn btn-sm btn-outline-success rounded-circle" 
-                                       title="إرسال تفاصيل الموعد عبر واتساب">
-                                        <i class="bi bi-whatsapp"></i>
-                                    </a>
+                                        <!-- Direct WhatsApp Button -->
+                                        <a href="{{ $apt->getWhatsAppUrl() }}" target="_blank" 
+                                           class="btn btn-sm btn-outline-success rounded-circle" 
+                                           title="إرسال تفاصيل الموعد عبر واتساب">
+                                            <i class="bi bi-whatsapp"></i>
+                                        </a>
 
-                                    @if($apt->status !== 'completed' && $apt->status !== 'cancelled')
                                         <!-- Cancel / Delete Appointment -->
                                         <form action="{{ route('clinic.appointments.destroy', $apt) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من إلغاء هذا الموعد؟')">
                                             @csrf
@@ -287,6 +285,15 @@
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
+                                    @else
+                                        <!-- Past Appointment: View Details Only -->
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-secondary rounded-circle" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#viewPatientAppointmentModal-{{ $apt->id }}" 
+                                                title="عرض تفاصيل الموعد السابق (أرشيف)">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
                                     @endif
                                 </div>
                             </td>
@@ -301,9 +308,9 @@
             </div>
         </div>
 
-        {{-- Modals for Editing Appointments --}}
+        {{-- Modals for Editing Appointments (Upcoming & Today Only) --}}
         @foreach($patient->appointments as $apt)
-            @if($apt->status !== 'completed' && $apt->status !== 'cancelled')
+            @if($apt->canBeEdited())
             <div class="modal fade" id="editPatientAppointmentModal-{{ $apt->id }}" tabindex="-1" aria-labelledby="editPatientAppointmentModalLabel-{{ $apt->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content rounded-4 border-0 shadow">
@@ -335,7 +342,7 @@
 
                                     <div class="col-md-6">
                                         <label class="form-label small fw-semibold">تاريخ الموعد الجديد <span class="text-danger">*</span></label>
-                                        <input type="date" name="appointment_date" class="form-control" value="{{ $apt->appointment_date ? $apt->appointment_date->format('Y-m-d') : '' }}" required>
+                                        <input type="date" name="appointment_date" class="form-control" value="{{ $apt->appointment_date ? $apt->appointment_date->format('Y-m-d') : '' }}" required min="{{ date('Y-m-d') }}">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-semibold">وقت الموعد الجديد <span class="text-danger">*</span></label>
@@ -374,6 +381,70 @@
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+            @endif
+        @endforeach
+
+        {{-- Modals for Viewing Past Appointments (Read-Only Archive) --}}
+        @foreach($patient->appointments as $apt)
+            @if($apt->isPast())
+            <div class="modal fade" id="viewPatientAppointmentModal-{{ $apt->id }}" tabindex="-1" aria-labelledby="viewPatientAppointmentModalLabel-{{ $apt->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 border-0 shadow">
+                        <div class="modal-header border-bottom bg-light">
+                            <h5 class="modal-title fw-bold text-dark fs-6" id="viewPatientAppointmentModalLabel-{{ $apt->id }}">
+                                <i class="bi bi-calendar-check text-secondary me-2"></i> تفاصيل الموعد السابق (أرشيف)
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <div class="alert alert-secondary py-2 px-3 small d-flex align-items-center mb-3">
+                                <i class="bi bi-info-circle-fill me-2 fs-5 text-secondary"></i>
+                                <span>هذا موعد سابق تم أرشفته، متاح للاطلاع على التفاصيل فقط دون إمكانية التعديل.</span>
+                            </div>
+
+                            <div class="list-group list-group-flush border rounded-3 overflow-hidden">
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-muted small fw-semibold">📅 تاريخ الموعد:</span>
+                                    <span class="fw-bold text-dark">{{ $apt->appointment_date ? $apt->appointment_date->format('Y-m-d') : '-' }}</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-muted small fw-semibold">⏰ توقيت الموعد:</span>
+                                    <span class="fw-bold text-dark font-monospace">
+                                        {{ \Carbon\Carbon::parse($apt->appointment_time)->format('h:i A') }}
+                                    </span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-muted small fw-semibold">👨‍⚕️ الطبيب المعالج:</span>
+                                    <span class="fw-bold text-dark">{{ $apt->doctor?->name ?? '-' }} ({{ $apt->doctor?->speciality ?? 'طب أسنان' }})</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-muted small fw-semibold">🩺 نوع الإجراء الطبي:</span>
+                                    <span class="badge bg-light text-dark border">{{ $apt->service_type }}</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-2">
+                                    <span class="text-muted small fw-semibold">📌 حالة الموعد:</span>
+                                    <span>
+                                        @if($apt->status === 'completed') <span class="badge bg-success">مكتمل</span>
+                                        @elseif($apt->status === 'in_consultation') <span class="badge bg-warning text-dark">في الكشف</span>
+                                        @elseif($apt->status === 'waiting') <span class="badge bg-info text-white">في الانتظار</span>
+                                        @elseif($apt->status === 'cancelled') <span class="badge bg-danger">ملغي</span>
+                                        @else <span class="badge bg-secondary">مؤكد</span> @endif
+                                    </span>
+                                </div>
+                                @if($apt->notes)
+                                <div class="list-group-item py-2">
+                                    <div class="text-muted small fw-semibold mb-1">📝 الملاحظات السريرية:</div>
+                                    <div class="p-2 bg-light rounded text-dark small">{{ $apt->notes }}</div>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top bg-light rounded-bottom-4">
+                            <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">إغلاق</button>
+                        </div>
                     </div>
                 </div>
             </div>

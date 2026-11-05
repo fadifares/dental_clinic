@@ -33,6 +33,34 @@ class Appointment extends Model
     }
 
     /**
+     * Determine if the appointment date is before today (past appointment).
+     */
+    public function isPast(): bool
+    {
+        if (! $this->appointment_date) {
+            return false;
+        }
+
+        return $this->appointment_date->toDateString() < now()->toDateString();
+    }
+
+    /**
+     * Determine if the appointment date is today or in the future.
+     */
+    public function isUpcoming(): bool
+    {
+        return ! $this->isPast();
+    }
+
+    /**
+     * Determine if the appointment is active and eligible for editing or cancellation.
+     */
+    public function canBeEdited(): bool
+    {
+        return $this->isUpcoming() && ! in_array($this->status, ['completed', 'cancelled']);
+    }
+
+    /**
      * Get the timezone for the appointment/clinic.
      */
     public function getTimezone(): string
