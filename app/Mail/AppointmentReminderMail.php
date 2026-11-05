@@ -48,6 +48,9 @@ class AppointmentReminderMail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return [
+            Attachment::fromData(fn () => $this->appointment->generateIcsContent(), 'appointment-invite.ics')
+                ->withMime('text/calendar; charset=UTF-8; method=REQUEST'),
+        ];
     }
 }

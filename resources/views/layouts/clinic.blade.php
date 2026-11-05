@@ -447,7 +447,43 @@
         </header>
 
         <!-- Flash Messages -->
-        @if(session('success'))
+        @if(session('whatsapp_url'))
+        <div class="m-4 mb-0 p-4 rounded-4 shadow-sm border" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border-color: #86efac !important;">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                        <span class="badge bg-success rounded-pill px-3 py-1"><i class="bi bi-check-circle-fill me-1"></i> تم تأكيد الحجز</span>
+                        @if(session('email_sent'))
+                            <span class="badge bg-info-subtle text-info border rounded-pill px-3 py-1">
+                                <i class="bi bi-calendar2-check-fill me-1"></i> تم إرسال بطاقة التقويم (.ics) وتنبيه 24 ساعة للبريد
+                            </span>
+                        @else
+                            <span class="badge bg-light text-muted border rounded-pill px-3 py-1">
+                                <i class="bi bi-info-circle me-1"></i> لم يُسجل بريد للمريض
+                            </span>
+                        @endif
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">
+                        موعد المريض: {{ session('whatsapp_patient_name') }} 
+                        <span class="text-muted fs-6 fw-normal">({{ session('appointment_date') }} الساعة {{ session('appointment_time') }})</span>
+                    </h5>
+                    <p class="text-muted small mb-0">
+                        @if(session('email_sent'))
+                            تم حفظ الجلسة وإرسال بطاقة iCalendar إلى بريد المريض لتثبيتها في تقويم هاتفه. يمكنك إرسال تفاصيل الموعد إلى واتساب المريض بنقرة واحدة:
+                        @else
+                            تم حفظ الجلسة بنجاح. يمكنك إرسال تفاصيل الموعد وتأكيده مباشرة إلى واتساب المريض بنقرة واحدة:
+                        @endif
+                    </p>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                    <a href="{{ session('whatsapp_url') }}" target="_blank" class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-whatsapp fs-5"></i>
+                        <span>إرسال عبر واتساب ({{ session('whatsapp_patient_phone') }})</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        @elseif(session('success'))
         <div class="alert alert-success alert-dismissible fade show m-4 mb-0 rounded-4 shadow-sm" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -539,7 +575,65 @@
     </div>
 </div>
 
+@if(session('whatsapp_url'))
+<!-- MODAL: Post-Appointment Confirmation & WhatsApp Trigger -->
+<div class="modal fade" id="appointmentSuccessModal" tabindex="-1" aria-labelledby="appointmentSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg text-center p-4">
+            <div class="mb-3">
+                <div class="rounded-circle bg-success-subtle text-success d-inline-flex align-items-center justify-content-center" style="width: 72px; height: 72px;">
+                    <i class="bi bi-calendar2-check-fill fs-1"></i>
+                </div>
+            </div>
+            <h4 class="fw-bold text-dark mb-1">تم تأكيد حجز الموعد بنجاح!</h4>
+            <p class="text-muted small mb-3">
+                المريض: <strong class="text-dark">{{ session('whatsapp_patient_name') }}</strong><br>
+                <span>📅 {{ session('appointment_date') }} &bull; ⏰ {{ session('appointment_time') }}</span>
+                @if(session('doctor_name'))
+                    <br><span class="text-secondary">👨‍⚕️ د. {{ session('doctor_name') }} ({{ session('service_type') }})</span>
+                @endif
+            </p>
+
+            @if(session('email_sent'))
+            <div class="alert alert-info-subtle border border-info-subtle text-start small py-2 px-3 mb-3 rounded-3">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="bi bi-envelope-check-fill text-info fs-5 mt-1"></i>
+                    <div>
+                        <strong class="text-info-emphasis">تم إرسال بطاقة التقويم (.ics):</strong>
+                        <div class="text-muted" style="font-size: 0.8rem;">
+                            أُرسلت دعوة التقويم التفاعلية لبريد المريض (<span class="font-monospace text-dark">{{ session('patient_email') }}</span>) متضمنة تنبيهاً تذكيرياً تلقائياً قبل الموعد بـ 24 ساعة.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <div class="d-grid gap-2">
+                <a href="{{ session('whatsapp_url') }}" target="_blank" class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-whatsapp fs-4"></i>
+                    <span>إرسال تفاصيل الموعد عبر واتساب</span>
+                </a>
+                <button type="button" class="btn btn-light rounded-pill text-muted small py-2" data-bs-dismiss="modal">
+                    إغلاق ومتابعة
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <script>
+    // Auto-show Post Appointment Confirmation Modal
+    @if(session('whatsapp_url'))
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalEl = document.getElementById('appointmentSuccessModal');
+        if (modalEl && typeof bootstrap !== 'undefined') {
+            var modal = new bootstrap.Modal(modalEl);
+            modal.show();
+        }
+    });
+    @endif
+
     // Live Search in Topbar via jQuery
     $(function () {
         let searchTimeout;

@@ -180,6 +180,13 @@
                                 </button>
                             </form>
 
+                            <!-- Direct WhatsApp Notification Button -->
+                            <a href="{{ $apt->getWhatsAppUrl() }}" target="_blank" 
+                               class="btn btn-sm btn-outline-success rounded-circle" 
+                               title="إرسال تفاصيل وتأكيد الموعد عبر واتساب للمريض ({{ $apt->patient->phone }})">
+                                <i class="bi bi-whatsapp"></i>
+                            </a>
+
                             <a href="{{ route('clinic.patients.show', $apt->patient) }}" class="btn btn-sm btn-outline-secondary rounded-circle" title="فتح الملف الطبي">
                                 <i class="bi bi-folder2-open"></i>
                             </a>

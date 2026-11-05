@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AppointmentConfirmationMail;
 use App\Mail\AppointmentReminderMail;
 use App\Models\Appointment;
 use App\Models\Doctor;
@@ -60,6 +61,27 @@ class AppointmentController extends Controller
      */
     public function store(Request $request): RedirectResponse|JsonResponse
     {
+        // Gracefully support finding/creating patient if quick-booked from dashboard with patient_name & phone
+        if (! $request->filled('patient_id') && $request->filled('patient_name') && $request->filled('patient_phone')) {
+            $patient = Patient::firstOrCreate(
+                ['phone' => $request->input('patient_phone')],
+                [
+                    'name' => $request->input('patient_name'),
+                    'file_number' => 'PT-'.((Patient::max('id') ?? 1000) + 1),
+                    'gender' => 'male',
+                ]
+            );
+            $request->merge(['patient_id' => $patient->id]);
+        }
+
+        if (! $request->filled('appointment_date')) {
+            $request->merge(['appointment_date' => now()->toDateString()]);
+        }
+
+        if (! $request->filled('service_type')) {
+            $request->merge(['service_type' => 'كشف واستشارة طبية']);
+        }
+
         $validated = $request->validate([
             'patient_id' => 'required|exists:patients,id',
             'doctor_id' => 'required|exists:doctors,id',
@@ -73,17 +95,47 @@ class AppointmentController extends Controller
             'status' => 'scheduled',
         ]));
 
-        if ($request->wantsJson()) {
-            $appointment->load(['patient', 'doctor']);
+        $appointment->load(['patient', 'doctor', 'clinic']);
 
+        $patient = $appointment->patient;
+        $emailSent = false;
+
+        // 1. Immediately send Calendar Invite (.ics with 1-day advance reminder) if patient has email
+        if ($patient && ! empty($patient->email)) {
+            try {
+                Mail::to($patient->email)->send(new AppointmentConfirmationMail($appointment));
+                $emailSent = true;
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
+        // 2. Build WhatsApp direct URL for patient's registered phone
+        $whatsappUrl = $appointment->getWhatsAppUrl();
+
+        if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'تم تسجيل الموعد بنجاح.',
+                'message' => 'تم تسجيل الموعد بنجاح'.($emailSent ? ' وإرسال دعوة التقويم لبريد المريض.' : '.'),
                 'appointment' => $appointment,
+                'whatsapp_url' => $whatsappUrl,
+                'email_sent' => $emailSent,
+                'patient_name' => $patient?->name,
+                'patient_phone' => $patient?->phone,
             ]);
         }
 
-        return back()->with('success', 'تم حجز الموعد بنجاح.');
+        return back()
+            ->with('success', 'تم حجز الموعد بنجاح'.($emailSent ? ' وتم إرسال بطاقة التقويم التفاعلية (.ics) إلى بريد المريض.' : '.'))
+            ->with('whatsapp_url', $whatsappUrl)
+            ->with('whatsapp_patient_name', $patient?->name)
+            ->with('whatsapp_patient_phone', $patient?->phone)
+            ->with('email_sent', $emailSent)
+            ->with('patient_email', $patient?->email)
+            ->with('appointment_date', $appointment->appointment_date?->format('Y-m-d'))
+            ->with('appointment_time', $appointment->appointment_time)
+            ->with('doctor_name', $appointment->doctor?->name)
+            ->with('service_type', $appointment->service_type);
     }
 
     /**

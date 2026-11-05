@@ -326,8 +326,13 @@ $(document).ready(function () {
                 service_type: $('#modalProcedure').val(),
                 appointment_time: $('#modalTime').val()
             },
-            success: function () {
+            success: function (res) {
                 $('#newAppointmentModal').modal('hide');
+                if (res && res.whatsapp_url) {
+                    if (confirm('تم تأكيد حجز الموعد بنجاح' + (res.email_sent ? ' وإرسال دعوة التقويم (.ics) لبريد المريض.' : '.') + '\n\nهل ترغب في إرسال تفاصيل الموعد ورابط التقويم عبر واتساب للمريض الآن؟')) {
+                        window.open(res.whatsapp_url, '_blank');
+                    }
+                }
                 window.location.reload();
             },
             error: function () {
