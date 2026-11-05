@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Appointment;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
@@ -28,11 +29,20 @@ class AppointmentConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         $dateStr = $this->appointment->appointment_date ? $this->appointment->appointment_date->format('Y-m-d') : '';
-        $timeStr = $this->appointment->appointment_time ?? '';
+        $rawTime = $this->appointment->appointment_time ?? '';
+        $timeFormatted = $rawTime;
+        try {
+            if ($rawTime) {
+                $p = Carbon::parse($rawTime);
+                $timeFormatted = $p->format('h:i').' '.($p->format('A') === 'PM' ? 'مساءً' : 'صباحاً');
+            }
+        } catch (\Throwable) {
+        }
+
         $clinicName = $this->appointment->clinic?->name ?? 'Dental Pro';
 
         return new Envelope(
-            subject: "تأكيد حجز موعدك الطبي ({$dateStr} {$timeStr}) - {$clinicName}",
+            subject: "تأكيد حجز موعدك الطبي ({$dateStr} - {$timeFormatted}) - {$clinicName}",
         );
     }
 

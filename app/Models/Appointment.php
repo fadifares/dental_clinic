@@ -33,13 +33,21 @@ class Appointment extends Model
     }
 
     /**
-     * Get carbon start datetime of the appointment.
+     * Get the timezone for the appointment/clinic.
+     */
+    public function getTimezone(): string
+    {
+        return config('app.timezone') ?: 'Africa/Cairo';
+    }
+
+    /**
+     * Get carbon start datetime of the appointment in local clinic timezone.
      */
     public function getStartDateTime(): Carbon
     {
         $dateStr = $this->appointment_date ? $this->appointment_date->format('Y-m-d') : now()->toDateString();
         $timeStr = $this->appointment_time ?? '12:00:00';
-        $tz = config('app.timezone') ?: 'Africa/Cairo';
+        $tz = $this->getTimezone();
 
         try {
             return Carbon::parse("{$dateStr} {$timeStr}", $tz);
@@ -49,7 +57,7 @@ class Appointment extends Model
     }
 
     /**
-     * Get carbon end datetime (defaults to 45 mins after start).
+     * Get carbon end datetime (defaults to 45 mins after start) in local clinic timezone.
      */
     public function getEndDateTime(): Carbon
     {
@@ -77,9 +85,11 @@ class Appointment extends Model
         $uid = 'apt-'.$this->id.'-'.($this->created_at?->timestamp ?? time()).'@dentalpro.test';
         $dtStamp = gmdate('Ymd\THis\Z');
 
-        // Output as RFC 5545 Local Floating Time (without trailing Z) so calendar apps do NOT shift by UTC offset
-        $dtStart = $start->format('Ymd\THis');
-        $dtEnd = $end->format('Ymd\THis');
+        // Convert the local clinic appointment time to UTC (Z) so that when Google Calendar,
+        // Apple Calendar, or Outlook render the event in the patient's local timezone (e.g. GMT+02:00),
+        // it displays the EXACT scheduled local time (e.g. 7:00 PM) without any offset shift.
+        $dtStart = $start->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
+        $dtEnd = $end->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
 
         $escape = function ($str) {
             return addcslashes((string) $str, ",;\\\n\r");
@@ -178,15 +188,14 @@ class Appointment extends Model
         $start = $this->getStartDateTime();
         $end = $this->getEndDateTime();
 
-        // Local format without Z + timezone parameter
-        $startStr = $start->format('Ymd\THis');
-        $endStr = $end->format('Ymd\THis');
-        $tz = config('app.timezone') ?: 'Africa/Cairo';
+        // Convert to UTC with Z so Google Calendar aligns with user's local timezone
+        $startStr = $start->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
+        $endStr = $end->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
 
         $title = urlencode('موعد في عيادة الأسنان - '.($this->service_type ?? 'كشف'));
         $details = urlencode('موعد طبي مع '.($this->doctor?->name ?? 'طبيب الأسنان')."\nالخدمة: ".($this->service_type ?? 'كشف أسنان')."\nالمريض: ".($this->patient?->name ?? ''));
         $location = urlencode(($this->clinic?->name ?? 'عيادة الأسنان').' - '.($this->clinic?->address ?? ''));
 
-        return "https://calendar.google.com/calendar/render?action=TEMPLATE&text={$title}&dates={$startStr}/{$endStr}&ctz={$tz}&details={$details}&location={$location}";
+        return "https://calendar.google.com/calendar/render?action=TEMPLATE&text={$title}&dates={$startStr}/{$endStr}&details={$details}&location={$location}";
     }
 }
