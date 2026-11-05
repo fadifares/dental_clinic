@@ -71,7 +71,9 @@ class Appointment extends Model
     {
         $start = $this->getStartDateTime();
         $end = $this->getEndDateTime();
+        $tz = $this->getTimezone();
         $patientName = $this->patient?->name ?? 'المريض';
+        $patientEmail = $this->patient?->email ?? '';
         $rawDoctor = (string) ($this->doctor?->name ?? 'طبيب الأسنان');
         $doctorName = str_starts_with(trim($rawDoctor), 'د.') ? trim($rawDoctor) : 'د. '.trim($rawDoctor);
         $clinicName = $this->clinic?->name ?? 'مركز Dental Pro لطب الأسنان';
@@ -82,14 +84,12 @@ class Appointment extends Model
         $description = "موعد طبي في عيادة الأسنان\nالمريض: {$patientName}\nالطبيب: {$doctorName}\nنوع الإجراء: {$service}\nيرجى الحضور قبل الموعد بـ 10 دقائق.\nالعيادة: {$clinicName}";
         $location = "{$clinicName} - {$clinicAddress}";
 
-        $uid = 'apt-'.$this->id.'-'.($this->created_at?->timestamp ?? time()).'@dentalpro.test';
+        $uid = 'apt-'.$this->id.'@dental.go-2web.com';
         $dtStamp = gmdate('Ymd\THis\Z');
+        $sequence = $this->updated_at ? max(0, $this->updated_at->timestamp - ($this->created_at?->timestamp ?? $this->updated_at->timestamp)) : 0;
 
-        // Convert the local clinic appointment time to UTC (Z) so that when Google Calendar,
-        // Apple Calendar, or Outlook render the event in the patient's local timezone (e.g. GMT+02:00),
-        // it displays the EXACT scheduled local time (e.g. 7:00 PM) without any offset shift.
-        $dtStart = $start->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
-        $dtEnd = $end->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
+        $organizerEmail = config('mail.from.address') ?: 'app@go-2web.com';
+        $organizerName = config('mail.from.name') ?: $clinicName;
 
         $escape = function ($str) {
             return addcslashes((string) $str, ",;\\\n\r");
@@ -101,16 +101,40 @@ class Appointment extends Model
             'PRODID:-//Dental Pro ERP//Appointments//AR',
             'CALSCALE:GREGORIAN',
             'METHOD:REQUEST',
+            'BEGIN:VTIMEZONE',
+            'TZID:Africa/Cairo',
+            'X-LIC-LOCATION:Africa/Cairo',
+            'BEGIN:STANDARD',
+            'DTSTART:20231027T000000',
+            'TZOFFSETFROM:+0300',
+            'TZOFFSETTO:+0200',
+            'TZNAME:EET',
+            'END:STANDARD',
+            'BEGIN:DAYLIGHT',
+            'DTSTART:20240426T000000',
+            'TZOFFSETFROM:+0200',
+            'TZOFFSETTO:+0300',
+            'TZNAME:EEST',
+            'END:DAYLIGHT',
+            'END:VTIMEZONE',
             'BEGIN:VEVENT',
             'UID:'.$uid,
+            'SEQUENCE:'.$sequence,
             'DTSTAMP:'.$dtStamp,
-            'DTSTART:'.$dtStart,
-            'DTEND:'.$dtEnd,
+            'DTSTART;TZID=Africa/Cairo:'.$start->format('Ymd\THis'),
+            'DTEND;TZID=Africa/Cairo:'.$end->format('Ymd\THis'),
+            'ORGANIZER;CN='.$escape($organizerName).':mailto:'.$organizerEmail,
+        ];
+
+        if (! empty($patientEmail)) {
+            $lines[] = 'ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN='.$escape($patientName).':mailto:'.$patientEmail;
+        }
+
+        $lines = array_merge($lines, [
             'SUMMARY:'.$escape($summary),
             'DESCRIPTION:'.$escape($description),
             'LOCATION:'.$escape($location),
             'STATUS:CONFIRMED',
-            'SEQUENCE:0',
             'BEGIN:VALARM',
             'TRIGGER:-P1D',
             'ACTION:DISPLAY',
@@ -118,7 +142,7 @@ class Appointment extends Model
             'END:VALARM',
             'END:VEVENT',
             'END:VCALENDAR',
-        ];
+        ]);
 
         return implode("\r\n", $lines);
     }
@@ -187,15 +211,15 @@ class Appointment extends Model
     {
         $start = $this->getStartDateTime();
         $end = $this->getEndDateTime();
+        $tz = $this->getTimezone();
 
-        // Convert to UTC with Z so Google Calendar aligns with user's local timezone
-        $startStr = $start->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
-        $endStr = $end->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
+        $startStr = $start->format('Ymd\THis');
+        $endStr = $end->format('Ymd\THis');
 
         $title = urlencode('موعد في عيادة الأسنان - '.($this->service_type ?? 'كشف'));
         $details = urlencode('موعد طبي مع '.($this->doctor?->name ?? 'طبيب الأسنان')."\nالخدمة: ".($this->service_type ?? 'كشف أسنان')."\nالمريض: ".($this->patient?->name ?? ''));
         $location = urlencode(($this->clinic?->name ?? 'عيادة الأسنان').' - '.($this->clinic?->address ?? ''));
 
-        return "https://calendar.google.com/calendar/render?action=TEMPLATE&text={$title}&dates={$startStr}/{$endStr}&details={$details}&location={$location}";
+        return "https://calendar.google.com/calendar/render?action=TEMPLATE&text={$title}&dates={$startStr}/{$endStr}&ctz={$tz}&details={$details}&location={$location}";
     }
 }

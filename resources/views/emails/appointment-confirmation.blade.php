@@ -4,6 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تأكيد حجز موعدك الطبي - {{ $appointment->clinic->name ?? 'Dental Pro' }}</title>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "موعد أسنان: {{ $appointment->service_type ?? 'كشف واستشارة' }}",
+      "startDate": "{{ $appointment->getStartDateTime()->toIso8601String() }}",
+      "endDate": "{{ $appointment->getEndDateTime()->toIso8601String() }}",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "location": {
+        "@type": "Place",
+        "name": "{{ $appointment->clinic->name ?? 'عيادة الأسنان' }}",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "{{ $appointment->clinic->address ?? 'الفرع الرئيسي' }}"
+        }
+      },
+      "organizer": {
+        "@type": "Organization",
+        "name": "{{ $appointment->clinic->name ?? 'مركز Dental Pro لطب الأسنان' }}",
+        "email": "{{ config('mail.from.address', 'app@go-2web.com') }}"
+      },
+      "performer": {
+        "@type": "Person",
+        "name": "{{ $appointment->doctor?->name ?? 'طبيب الأسنان' }}"
+      },
+      "description": "موعد طبي للمريض {{ $appointment->patient?->name ?? '' }} في عيادة الأسنان"
+    }
+    </script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
@@ -221,7 +250,7 @@
                     @endphp
                     @if($parsedTime)
                         {{ $parsedTime->format('h:i') }} {{ $parsedTime->format('A') === 'PM' ? 'مساءً' : 'صباحاً' }}
-                        <span style="font-size: 12px; color: #64748b;">({{ $appointment->appointment_time }})</span>
+                        <span style="font-size: 12px; color: #64748b;">(بتوقيت العيادة)</span>
                     @else
                         {{ $appointment->appointment_time ?? '12:00' }}
                     @endif
