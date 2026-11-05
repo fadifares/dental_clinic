@@ -594,7 +594,7 @@
                 المريض: <strong class="text-dark">{{ session('whatsapp_patient_name') }}</strong><br>
                 <span>📅 {{ session('appointment_date') }} &bull; ⏰ {{ session('appointment_time') }}</span>
                 @if(session('doctor_name'))
-                    <br><span class="text-secondary">👨‍⚕️ د. {{ session('doctor_name') }} ({{ session('service_type') }})</span>
+                    <br><span class="text-secondary">👨‍⚕️ {{ str_starts_with(session('doctor_name'), 'د.') ? session('doctor_name') : 'د. ' . session('doctor_name') }} ({{ session('service_type') }})</span>
                 @endif
             </p>
 

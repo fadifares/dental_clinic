@@ -63,13 +63,14 @@ class Appointment extends Model
         $start = $this->getStartDateTime();
         $end = $this->getEndDateTime();
         $patientName = $this->patient?->name ?? 'المريض';
-        $doctorName = $this->doctor?->name ?? 'طبيب الأسنان';
+        $rawDoctor = (string) ($this->doctor?->name ?? 'طبيب الأسنان');
+        $doctorName = str_starts_with(trim($rawDoctor), 'د.') ? trim($rawDoctor) : 'د. '.trim($rawDoctor);
         $clinicName = $this->clinic?->name ?? 'مركز Dental Pro لطب الأسنان';
         $clinicAddress = $this->clinic?->address ?? 'الفرع الرئيسي';
         $service = $this->service_type ?? 'كشف واستشارة طبية';
 
-        $summary = "موعد أسنان: {$service} - د. {$doctorName}";
-        $description = "موعد طبي في عيادة الأسنان\nالمريض: {$patientName}\nالطبيب: د. {$doctorName}\nنوع الإجراء: {$service}\nيرجى الحضور قبل الموعد بـ 10 دقائق.\nالعيادة: {$clinicName}";
+        $summary = "موعد أسنان: {$service} - {$doctorName}";
+        $description = "موعد طبي في عيادة الأسنان\nالمريض: {$patientName}\nالطبيب: {$doctorName}\nنوع الإجراء: {$service}\nيرجى الحضور قبل الموعد بـ 10 دقائق.\nالعيادة: {$clinicName}";
         $location = "{$clinicName} - {$clinicAddress}";
 
         $uid = 'apt-'.$this->id.'-'.($this->created_at?->timestamp ?? time()).'@dentalpro.test';
@@ -100,7 +101,7 @@ class Appointment extends Model
             'BEGIN:VALARM',
             'TRIGGER:-P1D',
             'ACTION:DISPLAY',
-            'DESCRIPTION:'.$escape("تذكير: موعدك الطبي غداً في عيادة الأسنان ({$service}) مع د. {$doctorName}"),
+            'DESCRIPTION:'.$escape("تذكير: موعدك الطبي غداً في عيادة الأسنان ({$service}) مع {$doctorName}"),
             'END:VALARM',
             'END:VEVENT',
             'END:VCALENDAR',
@@ -131,7 +132,8 @@ class Appointment extends Model
         }
 
         $patientName = $this->patient?->name ?? 'عزيزنا المراجع';
-        $doctorName = $this->doctor?->name ?? 'طبيب العيادة';
+        $rawDoctor = (string) ($this->doctor?->name ?? 'طبيب العيادة');
+        $doctorName = str_starts_with(trim($rawDoctor), 'د.') ? trim($rawDoctor) : 'د. '.trim($rawDoctor);
         $doctorSpec = $this->doctor?->speciality ?? 'طب وجراحة الأسنان';
         $clinicName = $this->clinic?->name ?? 'مركز Dental Pro لطب الأسنان';
         $clinicAddress = $this->clinic?->address ?? 'الفرع الرئيسي';
@@ -143,7 +145,7 @@ class Appointment extends Model
         $msg = "🦷 *تأكيد حجز موعد طبي - {$clinicName}*\n\n"
              ."مرحباً بك عزيزنا *{$patientName}*،\n"
              ."تم تأكيد حجز موعد جلستك القادمة بنجاح وفق التفاصيل التالية:\n\n"
-             ."👨‍⚕️ *الطبيب المعالج:* د. {$doctorName} ({$doctorSpec})\n"
+             ."👨‍⚕️ *الطبيب المعالج:* {$doctorName} ({$doctorSpec})\n"
              ."📅 *التاريخ:* {$dateStr}\n"
              ."⏰ *الوقت:* {$timeStr}\n"
              ."🩺 *نوع الإجراء:* {$service}\n"
