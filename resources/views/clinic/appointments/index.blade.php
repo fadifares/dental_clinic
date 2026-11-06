@@ -154,15 +154,15 @@
                     <td class="text-center">
                         <div class="d-inline-flex gap-1 align-items-center">
                             @if($apt->status === 'scheduled')
-                                <button class="btn btn-sm btn-warning rounded-pill btn-change-status" data-status="waiting" title="تسجيل وصول">
+                                <button class="btn btn-sm btn-warning rounded-pill btn-change-status" data-id="{{ $apt->id }}" data-status="waiting" title="تسجيل وصول">
                                     <i class="bi bi-person-check"></i> وصول
                                 </button>
                             @elseif($apt->status === 'waiting')
-                                <button class="btn btn-sm btn-primary rounded-pill btn-change-status" data-status="in_consultation" title="دخول الكشف">
+                                <button class="btn btn-sm btn-primary rounded-pill btn-change-status" data-id="{{ $apt->id }}" data-status="in_consultation" title="دخول الكشف">
                                     <i class="bi bi-box-arrow-in-right"></i> دخول
                                 </button>
                             @elseif($apt->status === 'in_consultation')
-                                <button class="btn btn-sm btn-success rounded-pill btn-change-status" data-status="completed" title="إنهاء الجلسة">
+                                <button class="btn btn-sm btn-success rounded-pill btn-change-status" data-id="{{ $apt->id }}" data-status="completed" title="إنهاء الجلسة">
                                     <i class="bi bi-check-lg"></i> إكمال
                                 </button>
                             @else
@@ -455,21 +455,48 @@
         });
 
         // Fast AJAX Status Switcher
-        $(document).on('click', '.btn-change-status', function () {
+        $(document).on('click', '.btn-change-status', function (e) {
+            e.preventDefault();
             const btn = $(this);
-            const row = btn.closest('tr');
-            const appointmentId = row.data('appointment-id');
+            const aptId = btn.data('id') || btn.closest('tr').data('appointment-id');
             const newStatus = btn.data('status');
 
+            if (!aptId || !newStatus) {
+                alert('بيانات الموعد غير مكتملة.');
+                return;
+            }
+
+            const originalHtml = btn.html();
+            btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> جاري التحديث...');
+
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
             $.ajax({
-                url: `/clinic/appointments/${appointmentId}/status`,
-                method: "PATCH",
-                data: { status: newStatus },
+                url: `/clinic/appointments/${aptId}/status`,
+                method: "POST",
+                data: {
+                    _method: "PATCH",
+                    _token: csrfToken,
+                    status: newStatus
+                },
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
                 success: function (res) {
                     window.location.reload();
                 },
-                error: function () {
-                    alert('تعذر تحديث حالة الموعد.');
+                error: function (xhr) {
+                    btn.prop('disabled', false).html(originalHtml);
+                    let msg = 'تعذر تحديث حالة الموعد.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        msg = xhr.responseJSON.message;
+                    } else if (xhr.status === 419) {
+                        msg = 'انتهت صلاحية الجلسة، يرجى تحديث الصفحة والمحاولة مجدداً.';
+                    } else if (xhr.status === 403) {
+                        msg = 'ليس لديك الصلاحية لتغيير حالة هذا الموعد.';
+                    }
+                    alert(msg);
                 }
             });
         });

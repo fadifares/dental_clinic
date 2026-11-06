@@ -287,25 +287,43 @@ $(document).ready(function () {
     });
 
     // Change Appointment Status via AJAX
-    $(document).on('click', '.btn-change-status', function () {
+    $(document).on('click', '.btn-change-status', function (e) {
+        e.preventDefault();
         const btn = $(this);
         const aptId = btn.data('id') || btn.closest('tr').data('appointment-id');
         const newStatus = btn.data('status');
 
-        if (!aptId) return;
+        if (!aptId || !newStatus) return;
 
-        btn.prop('disabled', true);
+        const originalHtml = btn.html();
+        btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>');
+
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         $.ajax({
             url: `/clinic/appointments/${aptId}/status`,
-            method: "PATCH",
-            data: { status: newStatus },
+            method: "POST",
+            data: {
+                _method: "PATCH",
+                _token: csrfToken,
+                status: newStatus
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
             success: function () {
                 window.location.reload();
             },
-            error: function () {
-                btn.prop('disabled', false);
-                alert('تعذر تحديث حالة الموعد. تأكد من صلاحيات حسابك.');
+            error: function (xhr) {
+                btn.prop('disabled', false).html(originalHtml);
+                let msg = 'تعذر تحديث حالة الموعد. تأكد من صلاحيات حسابك.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                } else if (xhr.status === 419) {
+                    msg = 'انتهت صلاحية الجلسة، يرجى تحديث الصفحة والمحاولة مجدداً.';
+                }
+                alert(msg);
             }
         });
     });

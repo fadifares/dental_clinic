@@ -211,11 +211,17 @@ class AppointmentController extends Controller
      */
     public function updateStatus(Request $request, Appointment $appointment): JsonResponse
     {
-        $validated = $request->validate([
-            'status' => 'required|in:scheduled,waiting,in_consultation,completed,cancelled,no_show',
-        ]);
+        $status = trim((string) $request->input('status', ''));
 
-        $appointment->update(['status' => $validated['status']]);
+        $allowedStatuses = ['scheduled', 'waiting', 'in_consultation', 'completed', 'cancelled', 'no_show'];
+        if (! in_array($status, $allowedStatuses, true)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'حالة الموعد المحددة غير صالحة.',
+            ], 422);
+        }
+
+        $appointment->update(['status' => $status]);
 
         return response()->json([
             'success' => true,
