@@ -131,7 +131,7 @@
     <nav class="navbar navbar-expand-lg saas-navbar sticky-top py-3">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center gap-2.5 text-white fw-bold" href="{{ route('appmanager.index') }}">
-                <img src="{{ asset('images/logo.png') }}" alt="Dental SaaS" width="38" height="38" class="rounded-3 shadow-sm object-fit-contain bg-white p-1">
+                <img src="{{ asset('images/logo.png') }}" alt="Dental SaaS" width="34" height="34" class="img-fluid flex-shrink-0" style="object-fit: contain; aspect-ratio: 1/1;">
                 <div>
                     <span class="fs-5">Dental<span class="text-info">SaaS</span></span>
                     <span class="badge bg-info-subtle text-info border border-info-subtle ms-1" style="font-size: 0.65rem;">مدير التطبيق App Manager</span>

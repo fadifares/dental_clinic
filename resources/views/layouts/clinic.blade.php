@@ -250,7 +250,7 @@
         <!-- Logo & Mobile Close Button -->
         <div class="p-3 border-bottom border-secondary d-flex align-items-center justify-content-between flex-shrink-0">
             <a href="{{ route('clinic.dashboard') }}" class="d-flex align-items-center gap-2.5 text-white text-decoration-none">
-                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro" width="40" height="40" class="rounded-3 shadow-sm object-fit-contain bg-white p-1">
+                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro" width="38" height="38" class="img-fluid flex-shrink-0" style="object-fit: contain; aspect-ratio: 1/1;">
                 <div>
                     <span class="fs-5 fw-bold d-block text-white">دنتال<span class="text-info">برو</span></span>
                     <span class="small text-secondary" style="font-size: 0.75rem;">نظام إدارة العيادات الشامل</span>

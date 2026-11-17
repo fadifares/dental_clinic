@@ -73,7 +73,7 @@
     <nav class="navbar navbar-expand-xl clinic-solid-nav py-2.5">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2.5 fw-bold text-dark me-0" href="{{ url('/') }}">
-                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro Logo" width="46" height="46" class="rounded-3 shadow-sm object-fit-contain">
+                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro Logo" width="40" height="40" class="img-fluid flex-shrink-0" style="object-fit: contain; aspect-ratio: 1/1;">
                 <div>
                     <span class="fw-extrabold text-dark tracking-tight fs-5">Dental<span class="text-primary">Pro</span> <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-6 py-0 px-2 rounded-pill align-middle">ERP</span></span>
                     <span class="d-block text-muted fw-normal" style="font-size: 0.7rem; letter-spacing: -0.2px;">المنظومة السحابية الذكية لعيادات الأسنان</span>
@@ -143,8 +143,8 @@
         <div class="container">
             <div class="row g-4 pb-4">
                 <div class="col-lg-4">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <img src="{{ asset('images/logo.png') }}" alt="Dental Pro Logo" width="46" height="46" class="rounded-3 shadow-sm object-fit-contain bg-white p-1">
+                    <div class="d-flex align-items-center gap-2.5 mb-3">
+                        <img src="{{ asset('images/logo.png') }}" alt="Dental Pro Logo" width="42" height="42" class="img-fluid flex-shrink-0" style="object-fit: contain; aspect-ratio: 1/1;">
                         <div>
                             <h4 class="fw-bold mb-0 text-white">Dental<span class="text-primary">Pro</span> <span class="badge bg-primary text-white fs-6 py-0 px-2 rounded-pill align-middle">ERP</span></h4>
                             <span class="small text-white-50">المنظومة السحابية المتكاملة لطب وجراحة الأسنان</span>

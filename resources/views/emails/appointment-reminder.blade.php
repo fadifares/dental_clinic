@@ -147,7 +147,7 @@
     <!-- Header -->
     <div class="email-header">
         <div style="margin-bottom: 12px;">
-            <img src="{{ asset('images/logo.png') }}" alt="Dental Pro" width="54" height="54" style="background:#ffffff; border-radius:12px; padding:4px; box-shadow:0 4px 10px rgba(0,0,0,0.15); display:inline-block; vertical-align:middle;">
+            <img src="{{ asset('images/logo.png') }}" alt="Dental Pro" width="56" height="56" style="display:inline-block; vertical-align:middle; object-fit:contain; aspect-ratio:1/1;">
         </div>
         <h1 class="clinic-brand">Dental Pro Clinic</h1>
         <div class="clinic-tagline">المركز المتخصص لطب وجراحة وتجميل الأسنان</div>

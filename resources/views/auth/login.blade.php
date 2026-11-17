@@ -45,7 +45,7 @@
         <!-- Logo & Header -->
         <div class="text-center mb-4">
             <a href="{{ url('/') }}" class="d-inline-block text-decoration-none mb-3">
-                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro Clinic" width="80" height="80" class="rounded-4 shadow-sm object-fit-contain p-1.5 border bg-white">
+                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro Clinic" width="72" height="72" class="img-fluid" style="object-fit: contain; aspect-ratio: 1/1;">
             </a>
             <h4 class="fw-bold text-dark mb-1">دنتال<span class="text-primary">برو</span> كلينيك</h4>
             <p class="text-muted small">بوابة تسجيل الدخول للكادر الطبي والإداري المعتمد</p>
