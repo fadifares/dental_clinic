@@ -20,8 +20,9 @@
     <title>@yield('title', 'Dental Pro ERP | المنظومة السحابية الذكية لإدارة عيادات ومراكز طب الأسنان')</title>
     <meta name="description" content="منظومة Dental Pro ERP السحابية المتكاملة لطب وجراحة الأسنان: السجل الطبي الرقمي EMR، مخطط الأسنان التفاعلي 32 سن، الفوترة الإلكترونية ZATCA، وإدارة المواعيد والمعامل.">
 
-    <!-- Google Fonts & Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦷</text></svg>">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
     
     <!-- Core Vendor Scripts (Synchronous for inline Blade scripts) -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -71,10 +72,8 @@
     <!-- Main Navigation Bar -->
     <nav class="navbar navbar-expand-xl clinic-solid-nav py-2.5">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-dark me-0" href="{{ url('/') }}">
-                <span class="d-inline-flex align-items-center justify-content-center rounded-3 shadow-sm text-white" style="width: 42px; height: 42px; background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);">
-                    <i class="bi bi-heart-pulse-fill fs-5"></i>
-                </span>
+            <a class="navbar-brand d-flex align-items-center gap-2.5 fw-bold text-dark me-0" href="{{ url('/') }}">
+                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro Logo" width="46" height="46" class="rounded-3 shadow-sm object-fit-contain">
                 <div>
                     <span class="fw-extrabold text-dark tracking-tight fs-5">Dental<span class="text-primary">Pro</span> <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-6 py-0 px-2 rounded-pill align-middle">ERP</span></span>
                     <span class="d-block text-muted fw-normal" style="font-size: 0.7rem; letter-spacing: -0.2px;">المنظومة السحابية الذكية لعيادات الأسنان</span>
@@ -145,9 +144,7 @@
             <div class="row g-4 pb-4">
                 <div class="col-lg-4">
                     <div class="d-flex align-items-center gap-2 mb-3">
-                        <span class="d-inline-flex align-items-center justify-content-center rounded-3 shadow-sm text-white" style="width: 44px; height: 44px; background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);">
-                            <i class="bi bi-heart-pulse-fill fs-5"></i>
-                        </span>
+                        <img src="{{ asset('images/logo.png') }}" alt="Dental Pro Logo" width="46" height="46" class="rounded-3 shadow-sm object-fit-contain bg-white p-1">
                         <div>
                             <h4 class="fw-bold mb-0 text-white">Dental<span class="text-primary">Pro</span> <span class="badge bg-primary text-white fs-6 py-0 px-2 rounded-pill align-middle">ERP</span></h4>
                             <span class="small text-white-50">المنظومة السحابية المتكاملة لطب وجراحة الأسنان</span>

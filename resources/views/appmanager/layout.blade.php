@@ -6,7 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'لوحة تحكم مدير المنصة (App Manager) | Dental SaaS')</title>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -128,10 +130,8 @@
     <!-- SaaS Navigation Topbar -->
     <nav class="navbar navbar-expand-lg saas-navbar sticky-top py-3">
         <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center gap-2 text-white fw-bold" href="{{ route('appmanager.index') }}">
-                <span class="rounded-3 bg-primary bg-gradient d-flex align-items-center justify-content-center text-white shadow-sm" style="width: 38px; height: 38px;">
-                    <i class="bi bi-grid-1x2-fill"></i>
-                </span>
+            <a class="navbar-brand d-flex align-items-center gap-2.5 text-white fw-bold" href="{{ route('appmanager.index') }}">
+                <img src="{{ asset('images/logo.png') }}" alt="Dental SaaS" width="38" height="38" class="rounded-3 shadow-sm object-fit-contain bg-white p-1">
                 <div>
                     <span class="fs-5">Dental<span class="text-info">SaaS</span></span>
                     <span class="badge bg-info-subtle text-info border border-info-subtle ms-1" style="font-size: 0.65rem;">مدير التطبيق App Manager</span>

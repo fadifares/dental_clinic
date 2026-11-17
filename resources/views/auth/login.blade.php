@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول | نظام إدارة عيادات الأسنان Dental Pro</title>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦷</text></svg>">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <style>
@@ -42,9 +44,9 @@
     <div class="login-card p-4 p-md-5 mx-auto">
         <!-- Logo & Header -->
         <div class="text-center mb-4">
-            <div class="clinic-stat-icon bg-primary text-white mx-auto mb-3 shadow-sm" style="width: 58px; height: 58px; font-size: 1.8rem;">
-                <i class="bi bi-heart-pulse-fill"></i>
-            </div>
+            <a href="{{ url('/') }}" class="d-inline-block text-decoration-none mb-3">
+                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro Clinic" width="80" height="80" class="rounded-4 shadow-sm object-fit-contain p-1.5 border bg-white">
+            </a>
             <h4 class="fw-bold text-dark mb-1">دنتال<span class="text-primary">برو</span> كلينيك</h4>
             <p class="text-muted small">بوابة تسجيل الدخول للكادر الطبي والإداري المعتمد</p>
         </div>

@@ -443,6 +443,7 @@
         <!-- Eyebrow Badge & Announcement -->
         <div class="text-center mb-4">
             <div class="saas-pill-badge mb-2">
+                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro" width="22" height="22" class="rounded-circle object-fit-contain bg-white">
                 <span class="saas-pill-pulse"></span>
                 <span>المنظومة السحابية المتكاملة لطب وجراحة وتجميل الأسنان | Dental Pro ERP</span>
                 <span class="badge bg-primary text-white rounded-pill px-2 py-0 ms-1">V4.2</span>
@@ -2231,9 +2232,12 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow-2xl">
             <div class="modal-header bg-gradient text-white p-4" style="background: linear-gradient(135deg, #0b1329 0%, #0284c7 100%);">
-                <div>
-                    <span class="badge bg-warning text-dark px-2 py-1 rounded-pill small mb-1">ديمو حي مخصص</span>
-                    <h5 class="modal-title fw-bold mb-0" id="requestDemoModalTitle">طلب تجربة مجانية وعرض توضيحي</h5>
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ asset('images/logo.png') }}" alt="Dental Pro" width="46" height="46" class="rounded-3 shadow-sm bg-white p-1 object-fit-contain">
+                    <div>
+                        <span class="badge bg-warning text-dark px-2 py-1 rounded-pill small mb-1">ديمو حي مخصص</span>
+                        <h5 class="modal-title fw-bold mb-0" id="requestDemoModalTitle">طلب تجربة مجانية وعرض توضيحي</h5>
+                    </div>
                 </div>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="إغلاق"></button>
             </div>

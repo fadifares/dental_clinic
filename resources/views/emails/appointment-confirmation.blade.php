@@ -213,7 +213,10 @@
 <div class="email-container">
     <!-- Header -->
     <div class="email-header">
-        <h1 class="clinic-brand">🦷 {{ $appointment->clinic->name ?? 'Dental Pro Clinic' }}</h1>
+        <div style="margin-bottom: 12px;">
+            <img src="{{ asset('images/logo.png') }}" alt="Dental Pro" width="54" height="54" style="background:#ffffff; border-radius:12px; padding:4px; box-shadow:0 4px 10px rgba(0,0,0,0.15); display:inline-block; vertical-align:middle;">
+        </div>
+        <h1 class="clinic-brand">{{ $appointment->clinic->name ?? 'Dental Pro Clinic' }}</h1>
         <div class="clinic-tagline">المنظومة الذكية لطب وجراحة وتجميل الأسنان</div>
     </div>
 

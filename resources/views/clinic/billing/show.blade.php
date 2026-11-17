@@ -137,9 +137,7 @@
     <!-- Clinic Header & Brand (Loaded Dynamically from Clinic Settings) -->
     <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
         <div class="d-flex align-items-center gap-3">
-            <div class="rounded-3 bg-primary text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 56px; height: 56px; font-size: 1.8rem;">
-                🦷
-            </div>
+            <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['clinic_name'] }}" width="56" height="56" class="rounded-3 shadow-sm object-fit-contain border p-1 bg-white">
             <div>
                 <h4 class="fw-bold mb-1 text-dark">{{ $settings['clinic_name'] }}</h4>
                 <div class="small text-muted">
@@ -343,9 +341,7 @@
     <!-- Clinic Header & Brand (Loaded Dynamically from Clinic Settings) -->
     <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
         <div class="d-flex align-items-center gap-3">
-            <div class="rounded-3 bg-success text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 56px; height: 56px; font-size: 1.8rem;">
-                🧾
-            </div>
+            <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['clinic_name'] }}" width="56" height="56" class="rounded-3 shadow-sm object-fit-contain border p-1 bg-white">
             <div>
                 <h4 class="fw-bold mb-1 text-dark">{{ $settings['clinic_name'] }}</h4>
                 <div class="small text-muted">

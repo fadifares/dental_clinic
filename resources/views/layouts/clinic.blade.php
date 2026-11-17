@@ -6,7 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'لوحة تحكم عيادة الأسنان | Dental Pro ERP')</title>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦷</text></svg>">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
     
     <!-- Core Vendor Scripts (Synchronous for inline Blade scripts) -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -247,10 +249,8 @@
     <aside class="clinic-sidebar shadow d-print-none">
         <!-- Logo & Mobile Close Button -->
         <div class="p-3 border-bottom border-secondary d-flex align-items-center justify-content-between flex-shrink-0">
-            <a href="{{ route('clinic.dashboard') }}" class="d-flex align-items-center gap-2 text-white text-decoration-none">
-                <span class="clinic-stat-icon bg-primary text-white" style="width: 42px; height: 42px;">
-                    <i class="bi bi-heart-pulse-fill"></i>
-                </span>
+            <a href="{{ route('clinic.dashboard') }}" class="d-flex align-items-center gap-2.5 text-white text-decoration-none">
+                <img src="{{ asset('images/logo.png') }}" alt="Dental Pro" width="40" height="40" class="rounded-3 shadow-sm object-fit-contain bg-white p-1">
                 <div>
                     <span class="fs-5 fw-bold d-block text-white">دنتال<span class="text-info">برو</span></span>
                     <span class="small text-secondary" style="font-size: 0.75rem;">نظام إدارة العيادات الشامل</span>
