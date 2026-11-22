@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'meta' => [
+        'page_access_token' => env('META_PAGE_ACCESS_TOKEN'),
+        'page_id' => env('META_PAGE_ID'),
+        'instagram_account_id' => env('META_INSTAGRAM_ACCOUNT_ID'),
+        'graph_version' => env('META_GRAPH_VERSION', 'v21.0'),
+    ],
+
 ];
