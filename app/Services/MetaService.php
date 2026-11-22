@@ -49,7 +49,7 @@ class MetaService
         try {
             $target = ! empty($this->pageId) ? $this->pageId : 'me';
             $response = Http::get("{$this->graphUrl}/{$target}", [
-                'fields' => 'id,name,link,fan_count,category,tasks',
+                'fields' => 'id,name,link,fan_count,category',
                 'access_token' => $this->pageAccessToken,
             ]);
 
@@ -272,6 +272,122 @@ class MetaService
                 'success' => false,
                 'error' => $e->getMessage(),
             ];
+        }
+    }
+
+    /**
+     * Get recent Facebook posts along with their comments.
+     *
+     * @return array{success: bool, posts?: array, error?: string}
+     */
+    public function getFacebookPosts(int $limit = 10): array
+    {
+        if (! $this->isConfigured()) {
+            return ['success' => false, 'error' => 'META_PAGE_ACCESS_TOKEN is missing.'];
+        }
+
+        try {
+            $target = ! empty($this->pageId) ? $this->pageId : 'me';
+            $response = Http::get("{$this->graphUrl}/{$target}/posts", [
+                'fields' => 'id,message,created_time,comments{id,message,from,created_time}',
+                'limit' => $limit,
+                'access_token' => $this->pageAccessToken,
+            ]);
+
+            if ($response->successful()) {
+                return ['success' => true, 'posts' => $response->json('data', [])];
+            }
+
+            return ['success' => false, 'error' => $this->extractErrorMessage($response)];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Reply to a Facebook comment.
+     *
+     * @return array{success: bool, comment_id?: string, error?: string}
+     */
+    public function replyToFacebookComment(string $commentId, string $message): array
+    {
+        if (! $this->isConfigured()) {
+            return ['success' => false, 'error' => 'META_PAGE_ACCESS_TOKEN is missing.'];
+        }
+
+        try {
+            $response = Http::asForm()->post("{$this->graphUrl}/{$commentId}/comments", [
+                'message' => $message,
+                'access_token' => $this->pageAccessToken,
+            ]);
+
+            if ($response->successful()) {
+                return ['success' => true, 'comment_id' => $response->json('id')];
+            }
+
+            return ['success' => false, 'error' => $this->extractErrorMessage($response)];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Get recent Instagram media along with their comments.
+     *
+     * @return array{success: bool, media?: array, error?: string}
+     */
+    public function getInstagramMedia(int $limit = 10): array
+    {
+        if (! $this->isConfigured()) {
+            return ['success' => false, 'error' => 'META_PAGE_ACCESS_TOKEN is missing.'];
+        }
+
+        try {
+            $igId = $this->resolveInstagramAccountId();
+            if (empty($igId)) {
+                return ['success' => false, 'error' => 'Instagram Business Account ID not resolved.'];
+            }
+
+            $response = Http::get("{$this->graphUrl}/{$igId}/media", [
+                'fields' => 'id,caption,media_type,permalink,comments{id,text,username,timestamp}',
+                'limit' => $limit,
+                'access_token' => $this->pageAccessToken,
+            ]);
+
+            if ($response->successful()) {
+                return ['success' => true, 'media' => $response->json('data', [])];
+            }
+
+            return ['success' => false, 'error' => $this->extractErrorMessage($response)];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Reply to an Instagram comment.
+     *
+     * @return array{success: bool, comment_id?: string, error?: string}
+     */
+    public function replyToInstagramComment(string $commentId, string $message): array
+    {
+        if (! $this->isConfigured()) {
+            return ['success' => false, 'error' => 'META_PAGE_ACCESS_TOKEN is missing.'];
+        }
+
+        try {
+            $response = Http::asForm()->post("{$this->graphUrl}/{$commentId}/replies", [
+                'message' => $message,
+                'access_token' => $this->pageAccessToken,
+            ]);
+
+            if ($response->successful()) {
+                return ['success' => true, 'comment_id' => $response->json('id')];
+            }
+
+            return ['success' => false, 'error' => $this->extractErrorMessage($response)];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
